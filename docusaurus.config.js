@@ -12,7 +12,7 @@ const darkCodeTheme = themes.dracula
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
+  title: 'MystikoNetwork Docs',
   tagline: 'Dinosaurs are cool',
   favicon: 'img/favicon.ico',
 
@@ -24,8 +24,8 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'mystikonetwork', // Usually your GitHub org/user name.
+  projectName: 'mystiko-docs', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -69,7 +69,7 @@ const config = {
         contextualSearch: true
       },
       // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'img/mystiko-social-card.jpg',
       docs: {
         sidebar: {
           hideable: true,
@@ -79,8 +79,9 @@ const config = {
         hideOnScroll: true,
         title: 'Mystiko Docs',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'Mystiko Logo',
+          src: 'img/mystiko-logo-white.svg',
+          srcDark: 'img/mystiko-logo-black.svg',
         },
         items: [
           {
