@@ -44,12 +44,12 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          breadcrumbs: false,
           routeBasePath: '/',
-          sidebarPath: './sidebars.js',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
+          sidebarPath: require.resolve('./sidebars.js'),
+          showLastUpdateTime: true,
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/mystikonetwork/mystiko-docs/blob/main/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -70,11 +70,6 @@ const config = {
       },
       // Replace with your project's social card
       image: 'img/mystiko-social-card.jpg',
-      docs: {
-        sidebar: {
-          hideable: true,
-        },
-      },
       navbar: {
         hideOnScroll: true,
         title: 'Mystiko Docs',
@@ -107,7 +102,7 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Twitter',
+                label: 'X',
                 href: 'https://x.com/MystikoNetwork',
               },
               {
