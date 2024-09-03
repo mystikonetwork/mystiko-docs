@@ -26,6 +26,8 @@ const config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'mystikonetwork', // Usually your GitHub org/user name.
   projectName: 'mystiko-docs', // Usually your repo name.
+  deploymentBranch: 'deploy',
+  trailingSlash: false,
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
