@@ -1,5 +1,0 @@
----
-title: Overview
----
-
-# Mystiko Core
