@@ -6,13 +6,12 @@ const Banner = () => {
     return (
         <div className={styles.banner__container}>
             <div className={styles.banner__text}>
-                <h2>WalletConnect Docs</h2>
+                <h2>Mystiko Docs</h2>
                 <p>
-                    WalletConnect gives developers the tools to build user experiences that make digital ownership effortless, intuitive, and secure.
+                    Mystiko.Network offers a secure, interoperable ZK environment for both regular users and developers. Developers can build any dApp powered by Mystiko.Network via simple integration of Mystiko's universal ZK SDK.
                 </p>
             </div>
-            <div className={styles.banner__backdrop} />
-            <img className={styles.banner__image} src={logo} alt="WalletConnect Logo" />
+            <img className={styles.banner__image} src='/img/mystiko-logo-white.svg' alt="Reown Banner" />
         </div>
     )
 }

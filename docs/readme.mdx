@@ -1,27 +1,89 @@
 ---
-title: Welcome
+title: Overview
 ---
 
 import Wrapper from './components/home/Wrapper'
+import Banner from './components/home/Banner'
+
 import twitterLogo from '../static/assets/home/x-logo-white.png'
 import discordLogo from '../static/assets/home/discord.png'
 import githubLogo from '../static/assets/home/githubLogo.png'
+import Link from '@docusaurus/Link'
+
+<div className="home__divider" />
+
+<Banner />
 
 ## MystikoNetwork SDKs
 
-Test
+Integrate our suite of SDKs.
+
+<Wrapper
+  type="large"
+  items={[
+    {
+      name: 'Rust',
+      icon: '/assets/home/rust-logo.svg',
+      href: '/sdks/rust/overview',
+      description: 'Get started with Mystiko SDKs in Rust.'
+    },
+    {
+      name: 'Flutter',
+      icon: '/assets/home/flutter-logo.svg',
+      href: '/sdks/flutter/overview',
+      description: 'Get started with Mystiko SDKs in Flutter.'
+    },
+    {
+      name: 'JavaScript',
+      icon: '/assets/home/javascript-logo.svg',
+      href: '/sdks/javascript/overview',
+      description: 'Get started with Mystiko SDKs in JavaScript.'
+    },
+    {
+      name: 'NodeJs',
+      icon: '/assets/home/nodejs-logo.svg',
+      href: '/sdks/nodejs/overview',
+      description: 'Get started with Mystiko SDKs in NodeJs.'
+    }
+  ]}
+/>
 
 <hr className="home__divider" />
 
 ## Features
 
-Test
+#### Cross chain connectivity to all.
+Mystiko.Network’s zk-snarks protocol (Mystiko Protocol) can be easily implemented to almost all major blockchain Layer 1 like Ethereum, BSC, Solana, Polkadot, Avalanche, Polygon, etc. and Layer 2 like zkSync, Arbitrum, OP, etc. as well as all popular blockchain applications. The ability to integrate the ZK protocol with all blockchains, enables the omni-connectivity to all Web3 infrastructures, thus making Mystiko.Network the base layer of Web3.
+
+#### Full financial ZK Environment.
+Mystiko Protocol utilizes secure zero-knowledge proof technology together with advanced encryption and shield address designs to break the link between users' deposit wallet address on source chains and withdrawal address on destination chains, making it untraceable and unlinkable to other users. Such features guarantee that users’ financial data, including account balance, asset holdings, and trade history, is fully within a trusted environment.
+
+#### Lower transaction fees.
+With the implementation of zero-knowledge based scaling technology, transaction fees on Mystiko.Network will be lower than those of ZK Layers.
+
+#### Complete user control.
+Mystiko Protocol is a non-custodial protocol, in which users keep custody of their cryptocurrencies while operating on Mystiko.Network. Only the users themselvers, not Mystiko.Network or anyone else, have control over their cryptocurrencies throughout the whole process.
+
+#### Easy and convenient user experience.
+Mystiko.Network offers users a single-click cross chain ZK transaction experience in an all-in-one wallet that supports multiple blockchains and cross chain bridges, and supports arbitrary withdrawal amount from the same deposit.
+
+#### Aggregating major bridges.
+Mystiko Protocol is being implemented to most popular cross chain bridges in Web3. Users could choose their preferred bridge services with one click from Mystiko Wallet.
+
+#### Fast.
+Due to the complexity of cross chain transactions, the zk circuit size is about 3x as that of other ZK protocols. Yet, Mystiko Protocol has made several technical improvements making the verification cost 3-5x lower than what an individual ZK Layer can offer.
+
+#### Security of funds.
+On Mystiko.Network, individual's notes(proofs of users’ cryptocurrency deposits) are encrypted and even in the very unlikely extreme case when one’s proof is hacked, the hacker cannot withdraw one’s assets since in Mystiko Protocol design, withdrawal requires one’s private key. Encrypted private keys are different from zero knowledge proof private keys on Mystiko.Network for better security, a design not yet supported by other ZK protocols.
+
+#### Encryption for the Good, Not for the Bad in Post Tornado Cash Era.
+Mystiko designed the first decentralized auditing system for on-chain ZK transactions. In Mystiko’s decentralized auditing system, a decentralized auditing committee will be established and such a committee will support auditing the transaction flow of suspicious deposits from bad actors while protecting the data of regular users.
 
 <hr className="home__divider" />
 
 ## Join our community
 
-Test
+Share your experience, contribute, or ask questions.
 
 <Wrapper
     type="small"
@@ -46,3 +108,28 @@ Test
         }
     ]}
 />
+
+## How to contribute
+
+<div className="cloud__wrapper" style={{ padding: '1.67rem' }}>
+    Every page footer has an <strong>Edit this page</strong> link.
+    <br /> Change the Markdown, open a Pull Request and we’ll merge it!
+    <Link to="https://github.com/mystikonetwork/mystiko-docs/" target="_blank">
+        Docs Repo
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            height={20}
+            width={20}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+            />
+        </svg>
+    </Link>
+</div>

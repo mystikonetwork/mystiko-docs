@@ -408,7 +408,7 @@ img[alt='web3modal-customisation'] {
   position: relative;
 }
 
-.menu_outer_list:not(:nth-child(1))::before {
+.menu_outer_list:not(:nth-child(2))::before {
   content: '';
   display: block;
   position: absolute;
@@ -1374,7 +1374,7 @@ article img {
 .home__wrapper {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 

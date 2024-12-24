@@ -60,14 +60,31 @@ export default {
       items: [
         {
           type: 'category',
-          label: 'Core',
+          label: 'Flutter',
           collapsed: false,
           collapsible: true,
-          className: 'sidebar__logo sidebar__logo--appkit',
           items: [
-              'core/overview'
+              'sdks/flutter/overview'
           ]
         },
+        {
+          type: 'category',
+          label: 'Rust',
+          collapsed: false,
+          collapsible: true,
+          items: [
+            'sdks/rust/overview'
+          ]
+        },
+        {
+          type: 'category',
+          label: 'NodeJs',
+          collapsed: false,
+          collapsible: true,
+          items: [
+            'sdks/nodejs/overview'
+          ]
+        }
       ]
     },
     relayer,
