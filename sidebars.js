@@ -60,6 +60,15 @@ export default {
       items: [
         {
           type: 'category',
+          label: 'Rust',
+          collapsed: false,
+          collapsible: true,
+          items: [
+            'sdks/rust/overview'
+          ]
+        },
+        {
+          type: 'category',
           label: 'Flutter',
           collapsed: false,
           collapsible: true,
@@ -69,11 +78,11 @@ export default {
         },
         {
           type: 'category',
-          label: 'Rust',
+          label: 'JavaScript',
           collapsed: false,
           collapsible: true,
           items: [
-            'sdks/rust/overview'
+            'sdks/javascript/overview'
           ]
         },
         {
@@ -87,8 +96,8 @@ export default {
         }
       ]
     },
-    relayer,
     roller,
+    relayer,
   ]
 }
 
