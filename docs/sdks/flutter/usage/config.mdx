@@ -1,0 +1,645 @@
+---
+title: Config
+---
+import Table from "../../../components/Table";
+
+Details about Mystiko configuration and related interfaces.
+
+## Data Structure
+- [MystikoConfig](#get)
+- [CircuitConfig](#circuitconfig)
+- [ChainConfig](#chainconfig)
+- [BridgeConfig](#findbridge)
+- [DepositContractConfig](#depositcontractconfig)
+- [PoolContractConfig](#poolcontractconfig)
+- [ContractConfig](#findcontractbyaddress)
+
+## Get
+Get `MystikoConfig`.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<MystikoConfig, ConfigError> response = await api.get();
+```
+`MystikoConfig` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'version'},
+            'Type': 'String',
+            'Description': 'Mystiko version.'
+        },
+        {
+            'Property': {code: 'chainConfigs'},
+            'Type': 'Map<Int, ChainConfig>',
+            'Description': 'Chain configs map, key is chain id.'
+        },
+        {
+            'Property': {code: 'bridgeConfigs'},
+            'Type': 'Map<Int, BridgeConfig>',
+            'Description': 'Bridge configs map, key is bridge type.'
+        },
+        {
+            'Property': {code: 'gitRevision'},
+            'Type': 'String',
+            'Description': 'Git revision.'
+        },
+        {
+            'Property': {code: 'sequencerConfig'},
+            'Type': 'ClientOptions',
+            'Description': 'Sequencer config.'
+        },
+        {
+            'Property': {code: 'packerConfig'},
+            'Type': 'PackerConfig',
+            'Description': 'Packer config.'
+        },
+        {
+            'Property': {code: 'countryBlacklist'},
+            'Type': 'List<String>',
+            'Description': 'Country blacklist.'
+        },
+        {
+            'Property': {code: 'circuitConfigs'},
+            'Type': 'List<CircuitConfig>',
+            'Description': 'Circuit configs.'
+        }
+    ]}
+/>
+
+## CircuitConfig
+    `CircuitConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Circuit name.'
+            },
+            {
+                'Property': {code: 'circuitType'},
+                'Type': 'CircuitType',
+                'Description': 'Circuit type.'
+            },
+            {
+                'Property': {code: 'isDefault'},
+                'Type': 'bool',
+                'Description': 'Is default circuit.'
+            },
+            {
+                'Property': {code: 'programFile'},
+                'Type': 'List<String>',
+                'Description': 'Program files.'
+            },
+            {
+                'Property': {code: 'abiFile'},
+                'Type': 'List<String>',
+                'Description': 'ABI files.'
+            },
+            {
+                'Property': {code: 'provingKeyFile'},
+                'Type': 'List<String>',
+                'Description': 'Proving key files.'
+            },
+            {
+                'Property': {code: 'verifyingKeyFile'},
+                'Type': 'List<String>',
+                'Description': 'Verifying key files.'
+            }
+        ]}
+    />
+
+### FindDefaultCircuit
+Find default circuit config by circuit type.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<CircuitConfig, ConfigError> response = await api.findDefaultCircuit(CircuitType.CIRCUIT_TYPE_ROLLUP_1);
+```
+List of supported`CircuitType`:
+```dart
+CircuitType.CIRCUIT_TYPE_ROLLUP_1;
+CircuitType.CIRCUIT_TYPE_ROLLUP_2;
+CircuitType.CIRCUIT_TYPE_ROLLUP_4;
+CircuitType.CIRCUIT_TYPE_ROLLUP_8;
+CircuitType.CIRCUIT_TYPE_ROLLUP_16;
+CircuitType.CIRCUIT_TYPE_ROLLUP_32;
+CircuitType.CIRCUIT_TYPE_ROLLUP_64;
+CircuitType.CIRCUIT_TYPE_ROLLUP_128;
+CircuitType.CIRCUIT_TYPE_ROLLUP_256;
+CircuitType.CIRCUIT_TYPE_ROLLUP_512;
+CircuitType.CIRCUIT_TYPE_ROLLUP_1024;
+
+CircuitType.CIRCUIT_TYPE_TRANSACTION1X0;
+CircuitType.CIRCUIT_TYPE_TRANSACTION1X1;
+CircuitType.CIRCUIT_TYPE_TRANSACTION1X2;
+CircuitType.CIRCUIT_TYPE_TRANSACTION2X0;
+CircuitType.CIRCUIT_TYPE_TRANSACTION2X1;
+CircuitType.CIRCUIT_TYPE_TRANSACTION2X2;
+```
+
+### FindCircuit
+Find circuit config by circuit name.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<CircuitConfig, ConfigError> response = await api.findCircuit('circuitName');
+```
+
+## ChainConfig
+    `ChainConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'chainId'},
+                'Type': 'Int',
+                'Description': 'Chain id.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Chain name.'
+            },
+            {
+                'Property': {code: 'assetSymbol'},
+                'Type': 'String',
+                'Description': 'Native asset symbol.'
+            },
+            {
+                'Property': {code: 'assetDecimals'},
+                'Type': 'Int',
+                'Description': 'Native asset decimals.'
+            },
+            {
+                'Property': {code: 'explorerUrl'},
+                'Type': 'String',
+                'Description': 'Explorer URL.'
+            },
+            {
+                'Property': {code: 'explorerApiUrl'},
+                'Type': 'String',
+                'Description': 'Explorer API URL.'
+            },
+            {
+                'Property': {code: 'explorerPrefix'},
+                'Type': 'String',
+                'Description': 'Explorer prefix.'
+            },
+            {
+                'Property': {code: 'providerQuorumPercentage'},
+                'Type': 'Int',
+                'Description': 'Provider quorum percentage.'
+            },
+            {
+                'Property': {code: 'signerEndpoint'},
+                'Type': 'String',
+                'Description': 'Signer endpoint.'
+            },
+            {
+                'Property': {code: 'eventDelayBlocks'},
+                'Type': 'Int',
+                'Description': 'Event delay blocks.'
+            },
+            {
+                'Property': {code: 'eventFilterSize'},
+                'Type': 'Int',
+                'Description': 'Event filter size.'
+            },
+            {
+                'Property': {code: 'sequencerFetchSize'},
+                'Type': 'Int',
+                'Description': 'Sequencer fetch size.'
+            },
+            {
+                'Property': {code: 'mainAssetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Main asset config.'
+            },
+            {
+                'Property': {code: 'providerType'},
+                'Type': 'ProviderType',
+                'Description': 'Provider type.'
+            },
+            {
+                'Property': {code: 'transactionType'},
+                'Type': 'TransactionType',
+                'Description': 'Transaction type.'
+            },
+            {
+                'Property': {code: 'assetConfigs'},
+                'Type': 'Map<String, AssetConfig>',
+                'Description': 'Asset configs map, key is asset contract address.'
+            },
+            {
+                'Property': {code: 'depositContractConfigs'},
+                'Type': 'Map<String, DepositContractConfig>',
+                'Description': 'Deposit contract configs map, key is deposit contract address.'
+            },
+            {
+                'Property': {code: 'poolContractConfigs'},
+                'Type': 'Map<String, PoolContractConfig>',
+                'Description': 'Pool contract configs map, key is pool contract address.'
+            },
+            {
+                'Property': {code: 'recommendedAmounts'},
+                'Type': 'List<String>',
+                'Description': 'Recommended amounts.'
+            },
+            {
+                'Property': {code: 'providerConfigs'},
+                'Type': 'List<ProvierConfig>',
+                'Description': 'Provider configs.'
+            },
+            {
+                'Property': {code: 'granularities'},
+                'Type': 'List<Int>',
+                'Description': 'Granularities.'
+            }
+        ]}
+    />
+
+### FindChain
+Find chain config by chain id.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<ChainConfig, ConfigError> response = await api.findChain(1);
+```
+
+### FindPeerChains
+Find peer chains by chain id.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<List<ChainConfig>, ConfigError> response = await api.findPeerChains(1);
+```
+
+## FindAssetSymbols
+Find asset symbols by chain id and peer chain id.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<List<String>, ConfigError> response = await api.findAssetSymbols(1, 97);
+```
+
+## FindBridges
+Find bridge type by chain id, peer chain id and asset symbol.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<List<BridgeType>, ConfigError> response = await api.findBridges(1, 97, 'ETH');
+```
+
+## FindBridge
+Find bridge config by bridge type.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<BridgeConfig, ConfigError> response = await api.findBridge(BridgeType.BRIDGE_TYPE_LOOP);
+```
+List of supported`BridgeType`:
+```dart
+BridgeType.BRIDGE_TYPE_LOOP;
+BridgeType.BRIDGE_TYPE_POLY;
+BridgeType.BRIDGE_TYPE_TBRIDGE;
+BridgeType.BRIDGE_TYPE_CELER;
+BridgeType.BRIDGE_TYPE_LAYER_ZERO;
+BridgeType.BRIDGE_TYPE_AXELAR;
+BridgeType.BRIDGE_TYPE_WORMHOLE;
+```
+    `BridgeConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Bridge name.'
+            },
+            {
+                'Property': {code: 'bridgeType'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'explorerUrl'},
+                'Type': 'String',
+                'Description': 'Explorer URL.'
+            },
+            {
+                'Property': {code: 'explorerPrefix'},
+                'Type': 'String',
+                'Description': 'Explorer prefix.'
+            },
+            {
+                'Property': {code: 'apiUrl'},
+                'Type': 'String',
+                'Description': 'API URL.'
+            },
+            {
+                'Property': {code: 'apiPrefix'},
+                'Type': 'String',
+                'Description': 'API prefix.'
+            }
+        ]}
+    />
+
+## DepositContractConfig
+    `DepositContractConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'version'},
+                'Type': 'Int',
+                'Description': 'Deposit Contract Version.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Contract name.'
+            },
+            {
+                'Property': {code: 'address'},
+                'Type': 'String',
+                'Description': 'Contract address.'
+            },
+            {
+                'Property': {code: 'startBlock'},
+                'Type': 'Int',
+                'Description': 'Start block.'
+            },
+            {
+                'Property': {code: 'disabled'},
+                'Type': 'bool',
+                'Description': 'Is disabled.'
+            },
+            {
+                'Property': {code: 'minAmount'},
+                'Type': 'String',
+                'Description': 'Minimum amount.'
+            },
+            {
+                'Property': {code: 'maxAmount'},
+                'Type': 'String',
+                'Description': 'Maximum amount.'
+            },
+            {
+                'Property': {code: 'poolContractConfig'},
+                'Type': 'PoolContractConfig',
+                'Description': 'Pool contract config.'
+            },
+            {
+                'Property': {code: 'bridgeType'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'contractType'},
+                'Type': 'ContractType',
+                'Description': 'Contract type.'
+            },
+            {
+                'Property': {code: 'minBridgeFee'},
+                'Type': 'String',
+                'Description': 'Minimum bridge fee.'
+            },
+            {
+                'Property': {code: 'minExecutorFee'},
+                'Type': 'String',
+                'Description': 'Minimum executor fee.'
+            },
+            {
+                'Property': {code: 'serviceFee'},
+                'Type': 'Int',
+                'Description': 'Service fee.'
+            },
+            {
+                'Property': {code: 'serviceFeeDivider'},
+                'Type': 'Int',
+                'Description': 'Service fee divider.'
+            },
+            {
+                'Property': {code: 'bridgeFeeAssetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Bridge fee asset config.'
+            },
+            {
+                'Property': {code: 'executorFeeAssetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Executor fee asset config.'
+            },
+            {
+                'Property': {code: 'peerChainId'},
+                'Type': 'Int',
+                'Description': 'Peer chain id.'
+            },
+            {
+                'Property': {code: 'peerContractAddress'},
+                'Type': 'String',
+                'Description': 'Peer contract address.'
+            }
+        ]}
+    />
+
+### FindDepositContract
+Find deposit contract config by chain id, peer chain id, asset symbol and bridge type.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<DepositContractConfig, ConfigError> response = await api.findDepositContract(1, 97, 'ETH', BridgeType.BRIDGE_TYPE_LOOP);
+```
+
+### FindDepositContractByAddress
+Find deposit contract config by chain id and deposit contract address.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<DepositContractConfig, ConfigError> response = await api.findDepositContractByAddress(1, '0x123456');
+```
+
+## PoolContractConfig
+    `PoolContractConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'version'},
+                'Type': 'Int',
+                'Description': 'Pool Contract Version.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Contract name.'
+            },
+            {
+                'Property': {code: 'address'},
+                'Type': 'String',
+                'Description': 'Contract address.'
+            },
+            {
+                'Property': {code: 'startBlock'},
+                'Type': 'Int',
+                'Description': 'Start block.'
+            },
+            {
+                'Property': {code: 'poolName'},
+                'Type': 'String',
+                'Description': 'Pool name.'
+            },
+            {
+                'Property': {code: 'minRollupFee'},
+                'Type': 'String',
+                'Description': 'Minimum rollup fee.'
+            },
+            {
+                'Property': {code: 'contractType'},
+                'Type': 'ContractType',
+                'Description': 'Contract type.'
+            },
+            {
+                'Property': {code: 'bridgeType'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'assetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Asset config.'
+            },
+            {
+                'Property': {code: 'circuitConfigs'},
+                'Type': 'List<CircuitConfig>',
+                'Description': 'Circuit configs.'
+            },
+            {
+                'Property': {code: 'circuits'},
+                'Type': 'List<String>',
+                'Description': 'Circuits.'
+            }
+        ]}
+    />
+
+### FindPoolContract
+Find pool contract config by chain id, asset symbol, bridge type and version.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<PoolContractConfig, ConfigError> response = await api.findPoolContract(1, 'ETH', BridgeType.BRIDGE_TYPE_LOOP, 2);
+```
+
+### FindPoolContracts
+Find pool contracts by chain id, asset symbol and bridge type.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<List<PoolContractConfig>, ConfigError> response = await api.findPoolContracts(1, 'ETH', BridgeType.BRIDGE_TYPE_LOOP);
+```
+
+### FindPoolContractByAddress
+Find pool contract config by chain id and pool contract address.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<PoolContractConfig, ConfigError> response = await api.findPoolContractByAddress(1, '0x123456');
+```
+
+## FindContractByAddress
+Find contract config by chain id and contract address.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<ContractConfig, ConfigError> response = await api.findContractByAddress(1, '0x123456');
+```
+    `ContractConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'version'},
+                'Type': 'Int',
+                'Description': 'Contract version.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Contract name.'
+            },
+            {
+                'Property': {code: 'address'},
+                'Type': 'String',
+                'Description': 'Contract address.'
+            },
+            {
+                'Property': {code: 'startBlock'},
+                'Type': 'Int',
+                'Description': 'Start block.'
+            },
+            {
+                'Property': {code: 'disabled'},
+                'Type': 'bool',
+                'Description': 'Is disabled.'
+            },
+            {
+                'Property': {code: 'minRollupFee'},
+                'Type': 'String',
+                'Description': 'Minimum rollup fee.'
+            },
+            {
+                'Property': {code: 'assetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Asset config.'
+            },
+            {
+                'Property': {code: 'bridgeType'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'contractType'},
+                'Type': 'ContractType',
+                'Description': 'Contract type.'
+            }
+        ]}
+    />
+List of supported`ContractType`:
+```dart
+ContractType.CONTRACT_TYPE_DEPOSIT;
+ContractType.CONTRACT_TYPE_POOL;
+```
+
+## GetTransactionUrl
+Get transaction url by chain id and transaction hash.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<String, ConfigError> response = await api.getTransactionUrl(1, '0x123456');
+```
+
+## SupportedAssetSymbols
+Get supported asset symbols by chain id.
+    ```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoConfigApi api = await Mystiko.mystikoConfigApi();
+Response<List<String>, ConfigError> response = await api.supportedAssetSymbols(1);
+```

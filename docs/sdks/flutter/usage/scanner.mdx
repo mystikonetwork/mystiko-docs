@@ -1,0 +1,215 @@
+---
+title: Scanner
+---
+import Table from "../../../components/Table";
+
+Mystiko Scanner Related APIs.
+
+## Scan
+
+Scan related transactions.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoScannerApi api = await Mystiko.mystikoScannerApi();
+Response<ScannerScanResult, ScannerError> response = api.scan(ScannerScanOptions());
+```
+
+The parameter list for `ScannerScanOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the wallet.'
+        },
+        {
+            'Parameter': { code: 'batchSize' },
+            'Required': 'false',
+            'Description': 'The number of transactions to scan in each batch.'
+        },
+        {
+            'Parameter': { code: 'concurrency' },
+            'Required': 'false',
+            'Description': 'The number of concurrent requests.'
+        },
+        {
+            'Parameter': { code: 'shieldedAddresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to scan.'
+        }
+    ]}
+/>
+
+## Reset
+
+Scanner reset.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoScannerApi api = await Mystiko.mystikoScannerApi();
+Response<ScannerResetResult, ScannerError> response = api.reset(ScannerResetOptions());
+```
+
+The parameter list for `ScannerResetOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'resetToId' },
+            'Required': 'false',
+            'Description': 'The transaction ID to reset to.'
+        },
+        {
+            'Parameter': { code: 'shieldedAddresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to reset.'
+        }
+    ]}
+/>
+
+## Balance
+
+Scan balance.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoScannerApi api = await Mystiko.mystikoScannerApi();
+Response<BalanceResult, ScannerError> response = api.balance(BalanceOptions());
+```
+
+The parameter list for `BalanceOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'withSpent' },
+            'Required': 'false',
+            'Description': 'Whether to include spent transactions.'
+        },
+        {
+            'Parameter': { code: 'shieldedAddresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to scan.'
+        },
+        {
+            'Parameter': { code: 'chainIds' },
+            'Required': 'false',
+            'Description': 'The list of chain IDs to scan.'
+        },
+        {
+            'Parameter': { code: 'assetSymbols' },
+            'Required': 'false',
+            'Description': 'The list of asset symbols to scan.'
+        },
+        {
+            'Parameter': { code: 'contractAddresses' },
+            'Required': 'false',
+            'Description': 'The list of contract addresses to scan.'
+        },
+        {
+            'Parameter': { code: 'bridgeTypes' },
+            'Required': 'false',
+            'Description': 'The list of bridge types to scan.'
+        }
+    ]}
+/>
+
+## Assets
+
+Scan assets.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoScannerApi api = await Mystiko.mystikoScannerApi();
+Response<List<AssetsByChain>, ScannerError> response = api.assets(AssetsOptions());
+```
+
+The parameter list for `AssetsOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'shieldedAddresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to scan.'
+        }
+    ]}
+/>
+
+## ChainAssets
+
+Scan assets by chain id.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoScannerApi api = await Mystiko.mystikoScannerApi();
+Response<AssetsByChain, ScannerError> response = api.chainAssets(1, AssetsOptions());
+```
+
+## ImportAssets
+
+Import assets.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoScannerApi api = await Mystiko.mystikoScannerApi();
+Response<AssetImportResult, ScannerError> response = api.importAssets(AssetImportOptions());
+```
+
+The parameter list for `AssetImportOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the wallet.'
+        },
+        {
+            'Parameter': { code: 'chains' },
+            'Required': 'true',
+            'Description': 'The list of chain import options.'
+        },
+        {
+            'Parameter': { code: 'queryTimeoutMs' },
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        }
+    ]}
+/>
+
+## Sync
+
+Scanner sync.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoScannerApi api = await Mystiko.mystikoScannerApi();
+Response<BalanceResult, ScannerError> response = api.sync(ScannerSyncOptions());
+```
+
+The parameter list for `ScannerSyncOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the wallet.'
+        },
+        {
+            'Parameter': { code: 'concurrency' },
+            'Required': 'false',
+            'Description': 'The number of concurrent requests.'
+        }
+    ]}
+/>

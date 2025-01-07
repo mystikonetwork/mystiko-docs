@@ -1,0 +1,236 @@
+---
+title: Synchronizer
+---
+import Table from "../../../components/Table";
+
+The Synchronizer helps you synchronize on-chain data to the local environment.
+
+## Data Structure
+`SynchronizerStatus`
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'chains' },
+            'Type': 'List<ChainStatus>',
+            'Description': 'Chain status list'
+        }
+    ]}
+/>
+
+`ChainStatus`
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'chainId' },
+            'Type': 'Int',
+            'Description': 'Chain id'
+        },
+        {
+            'Property': { code: 'syncedBlock' },
+            'Type': 'Int',
+            'Description': 'Synced block number'
+        },
+        {
+            'Property': { code: 'targetBlock' },
+            'Type': 'Int',
+            'Description': 'Target block number'
+        },
+        {
+            'Property': { code: 'contracts' },
+            'Type': 'List<ContractStatus>',
+            'Description': 'Contract status list'
+        }
+    ]}
+/>
+
+`ContractStatus`
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'contractAddress' },
+            'Type': 'String',
+            'Description': 'Contract address'
+        },
+        {
+            'Property': { code: 'syncedBlock' },
+            'Type': 'Int',
+            'Description': 'Synced block number'
+        }
+    ]}
+/>
+
+## ChainSyncedBlock
+
+Sync block data according to chain id.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoSynchronizerApi api = await Mystiko.mystikoSynchronizerApi();
+Response<Int64, SynchronizerError> response = await api.chainSyncedBlock(1);
+```
+
+## ContractSyncedBlock
+
+Sync block data according to chain id and contract address.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoSynchronizerApi api = await Mystiko.mystikoSynchronizerApi();
+Response<Int64, SynchronizerError> response = await api.contractSyncedBlock(1, '0x123456');
+```
+
+## Status
+
+Check the Sync Status.
+
+Parameter: `withContracts` Indicates whether to include contract-related data in the synchronization status.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoSynchronizerApi api = await Mystiko.mystikoSynchronizerApi();
+Response<SynchronizerStatus, SynchronizerError> response = await api.status(true);
+```
+
+## Sync
+
+Sync the data.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoSynchronizerApi api = await Mystiko.mystikoSynchronizerApi();
+Response<void, SynchronizerError> response = await api.sync(SynchronizerSyncOptions());
+```
+
+The parameter list for `SynchronizerSyncOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'disableDatapackerFetcher' },
+            'Required': 'false',
+            'Description': 'Disable the datapacker fetcher.'
+        },
+        {
+            'Parameter': { code: 'enableDatapackerFetcherValidate' },
+            'Required': 'false',
+            'Description': 'Enable the datapacker fetcher validate.'
+        },
+        {
+            'Parameter': { code: 'disableSequencerFetcher' },
+            'Required': 'false',
+            'Description': 'Disable the sequencer fetcher.'
+        },
+        {
+            'Parameter': { code: 'enableSequencerFetcherValidate' },
+            'Required': 'false',
+            'Description': 'Enable the sequencer fetcher validate.'
+        },
+        {
+            'Parameter': { code: 'disableProviderFetcher' },
+            'Required': 'false',
+            'Description': 'Disable the provider fetcher.'
+        },
+        {
+            'Parameter': { code: 'disableProviderFetcherValidate' },
+            'Required': 'false',
+            'Description': 'Disable the provider fetcher validate.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidator' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidatorIntegrityCheck' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator integrity check.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidatorSequenceCheck' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator sequence check.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidatorCounterCheck' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator counter check.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidatorTreeCheck' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator tree check.'
+        },
+        {
+            'Parameter': { code: 'fetcherFetchTimeoutMs' },
+            'Required': 'false',
+            'Description': 'The fetcher fetch timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'fetcherQueryLoadedBlockTimeoutMs' },
+            'Required': 'false',
+            'Description': 'The fetcher query loaded block timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'validatorValidateConcurrency' },
+            'Required': 'false',
+            'Description': 'The validator validate concurrency.'
+        },
+        {
+            'Parameter': { code: 'chainIds' },
+            'Required': 'false',
+            'Description': 'The chain ids.'
+        }
+    ]}
+/>
+
+## Reset
+
+Reset the synchronization data.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoSynchronizerApi api = await Mystiko.mystikoSynchronizerApi();
+Response<void, SynchronizerError> response = await api.reset(SynchronizerResetOptions());
+```
+
+The parameter list for `SynchronizerResetOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'chains' },
+            'Required': 'false',
+            'Description': 'Reset chain options'
+        }
+    ]}
+/>
+
+`ResetChainOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'chainId' },
+            'Required': 'true',
+            'Description': 'The chain id.'
+        },
+        {
+            'Parameter': { code: 'contract_addresses' },
+            'Required': 'false',
+            'Description': 'The contract addresses.'
+        },
+        {
+            'Parameter': { code: 'block_number' },
+            'Required': 'false',
+            'Description': 'The block number.'
+        }
+    ]}
+/>

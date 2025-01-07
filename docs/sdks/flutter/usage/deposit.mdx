@@ -1,0 +1,934 @@
+---
+title: Deposit
+---
+
+import Table from "../../../components/Table";
+
+Mystiko Deposit Related APIs.
+
+## Data Structure
+- [DepositQuote](#quote)
+- [DepositSummary](#summary)
+- [Deposit](#create)
+
+## Quote
+
+Retrieve quote information for a deposit.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<DepositQuote, DepositError> response = await api.quote(QuoteDepositOptions(chainId: 1, asset_symbol: 'MTT'));
+```
+
+`QuoteDepositOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'chain_id' },
+            'Required': 'true',
+            'Description': 'Chain id.'
+        },
+        {
+            'Parameter': { code: 'asset_symbol' },
+            'Required': 'true',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Parameter': { code: 'query_timeout_ms' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'dst_chain_id' },
+            'Required': 'false',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Parameter': { code: 'bridge_type' },
+            'Required': 'false',
+            'Description': 'Bridge type.'
+        },
+    ]}
+/>
+
+`DepositQuote` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'assetSymbol' },
+            'Type': 'String',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Property': { code: 'assetDecimals' },
+            'Type': 'Int',
+            'Description': 'Asset decimals.'
+        },
+        {
+            'Property': { code: 'minAmount' },
+            'Type': 'Double',
+            'Description': 'Minimum amount.'
+        },
+        {
+            'Property': { code: 'minDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Minimum decimal amount.'
+        },
+        {
+            'Property': { code: 'maxAmount' },
+            'Type': 'Double',
+            'Description': 'Maximum amount.'
+        },
+        {
+            'Property': { code: 'maxDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Maximum decimal amount.'
+        },
+        {
+            'Property': { code: 'minRollupFeeAmount' },
+            'Type': 'Double',
+            'Description': 'Minimum rollup fee amount.'
+        },
+        {
+            'Property': { code: 'minRollupFeeDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Minimum rollup fee decimal amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeAssetSymbol' },
+            'Type': 'String',
+            'Description': 'Rollup fee asset symbol.'
+        },
+        {
+            'Property': { code: 'rollupFeeAssetDecimals' },
+            'Type': 'Int',
+            'Description': 'Rollup fee asset decimals.'
+        },
+        {
+            'Property': { code: 'minBridgeFeeAmount' },
+            'Type': 'Double',
+            'Description': 'Minimum bridge fee amount.'
+        },
+        {
+            'Property': { code: 'minBridgeFeeDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Minimum bridge fee decimal amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetSymbol' },
+            'Type': 'String',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetDecimals' },
+            'Type': 'Int',
+            'Description': 'Bridge fee asset decimals.'
+        },
+        {
+            'Property': { code: 'minExecutorFeeAmount' },
+            'Type': 'Double',
+            'Description': 'Minimum executor fee amount.'
+        },
+        {
+            'Property': { code: 'minExecutorFeeDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Minimum executor fee decimal amount.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetSymbol' },
+            'Type': 'String',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetDecimals' },
+            'Type': 'Int',
+            'Description': 'Executor fee asset decimals.'
+        },
+        {
+            'Property': { code: 'recommendedAmounts' },
+            'Type': 'List<Double>',
+            'Description': 'Recommended amounts.'
+        },
+        {
+            'Property': { code: 'recommendedDecimalAmounts' },
+            'Type': 'List<String>',
+            'Description': 'Recommended decimal amounts.'
+        },
+    ]}
+/>
+
+## Summary
+
+Retrieve summary information for a deposit.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+CreateDepositOptions options = CreateDepositOptions(
+  chain_id: 5,
+  asset_symbol: 'MTT',
+  amount: 10,
+  shielded_address: '0x123456789',
+);
+Response<DepositSummary, DepositError> response = await api.summary(options);
+```
+
+`CreateDepositOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'chain_id' },
+            'Required': 'true',
+            'Description': 'Chain id.'
+        },
+        {
+            'Parameter': { code: 'asset_symbol' },
+            'Required': 'true',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Parameter': { code: 'amount' },
+            'Required': 'true',
+            'Description': 'Amount.'
+        },
+        {
+            'Parameter': { code: 'shielded_address' },
+            'Required': 'true',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Parameter': { code: 'dst_chain_id' },
+            'Required': 'false',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Parameter': { code: 'rollup_fee_amount' },
+            'Required': 'false',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Parameter': { code: 'bridge_fee_amount' },
+            'Required': 'false',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Parameter': { code: 'executor_fee_amount' },
+            'Required': 'false',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Parameter': { code: 'query_timeout_ms' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'deposit_quote' },
+            'Required': 'false',
+            'Description': 'Deposit quote.'
+        },
+        {
+            'Parameter': { code: 'bridge_type' },
+            'Required': 'false',
+            'Description': 'Bridge type.'
+        },
+    ]}
+/>
+
+`DepositSummary` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'chainId' },
+            'Type': 'Int',
+            'Description': 'Chain id.'
+        },
+        {
+            'Property': { code: 'assetSymbol' },
+            'Type': 'String',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Property': { code: 'assetDecimals' },
+            'Type': 'Int',
+            'Description': 'Asset decimals.'
+        },
+        {
+            'Property': { code: 'amount' },
+            'Type': 'Double',
+            'Description': 'Amount.'
+        },
+        {
+            'Property': { code: 'decimalAmount' },
+            'Type': 'String',
+            'Description': 'Decimal amount.'
+        },
+        {
+            'Property': { code: 'shieldedAddress' },
+            'Type': 'String',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Property': { code: 'rollupFeeAmount' },
+            'Type': 'Double',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Rollup fee decimal amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeAssetSymbol' },
+            'Type': 'String',
+            'Description': 'Rollup fee asset symbol.'
+        },
+        {
+            'Property': { code: 'rollupFeeAssetDecimals' },
+            'Type': 'Int',
+            'Description': 'Rollup fee asset decimals.'
+        },
+        {
+            'Property': { code: 'dstChainId' },
+            'Type': 'Int',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAmount' },
+            'Type': 'Double',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Bridge fee decimal amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetSymbol' },
+            'Type': 'String',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetDecimals' },
+            'Type': 'Int',
+            'Description': 'Bridge fee asset decimals.'
+        },
+        {
+            'Property': { code: 'executorFeeAmount' },
+            'Type': 'Double',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Property': { code: 'executorFeeDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Executor fee decimal amount.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetSymbol' },
+            'Type': 'String',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetDecimals' },
+            'Type': 'Int',
+            'Description': 'Executor fee asset decimals.'
+        },
+        {
+            'Property': { code: 'bridgeType' },
+            'Type': 'BridgeType',
+            'Description': 'Bridge type.'
+        },
+        {
+            'Property': { code: 'totalAmounts' },
+            'Type': 'Map<String, Double>',
+            'Description': 'Total amounts.'
+        },
+        {
+            'Property': { code: 'totalDecimalAmounts' },
+            'Type': 'Map<String, String>',
+            'Description': 'Total decimal amounts.'
+        },
+    ]}
+/>
+
+## Create
+
+Create a Deposit request.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+CreateDepositOptions options = CreateDepositOptions(
+  chain_id: 5,
+  asset_symbol: 'MTT',
+  amount: 10,
+  shielded_address: '0x123456789',
+);
+Response<Deposit, DepositError> response = await api.create(options);
+```
+
+`CreateDepositOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'chainId' },
+            'Required': 'true',
+            'Description': 'Chain id.'
+        },
+        {
+            'Parameter': { code: 'assetSymbol' },
+            'Required': 'true',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Parameter': { code: 'amount' },
+            'Required': 'true',
+            'Description': 'Amount.'
+        },
+        {
+            'Parameter': { code: 'shieldedAddress' },
+            'Required': 'true',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Parameter': { code: 'dstChainId' },
+            'Required': 'false',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Parameter': { code: 'rollupFeeAmount' },
+            'Required': 'false',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Parameter': { code: 'bridgeFeeAmount' },
+            'Required': 'false',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Parameter': { code: 'executorFeeAmount' },
+            'Required': 'false',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Parameter': { code: 'queryTimeoutMs' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'depositQuote' },
+            'Required': 'false',
+            'Description': 'Deposit quote.'
+        },
+        {
+            'Parameter': { code: 'bridgeType' },
+            'Required': 'false',
+            'Description': 'Bridge type.'
+        },
+    ]}
+/>
+
+`Deposit` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'id' },
+            'Type': 'String',
+            'Description': 'Id.'
+        },
+        {
+            'Property': { code: 'createdAt' },
+            'Type': 'Int',
+            'Description': 'Created at.'
+        },
+        {
+            'Property': { code: 'updatedAt' },
+            'Type': 'Int',
+            'Description': 'Updated at.'
+        },
+        {
+            'Property': { code: 'chainId' },
+            'Type': 'Int',
+            'Description': 'Chain id.'
+        },
+        {
+            'Property': { code: 'contractAddress' },
+            'Type': 'String',
+            'Description': 'Contract address.'
+        },
+        {
+            'Property': { code: 'poolAddress' },
+            'Type': 'String',
+            'Description': 'Pool address.'
+        },
+        {
+            'Property': { code: 'dstChainId' },
+            'Type': 'Int',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Property': { code: 'dstChainContractAddress' },
+            'Type': 'String',
+            'Description': 'Destination chain contract address.'
+        },
+        {
+            'Property': { code: 'dstPoolAddress' },
+            'Type': 'String',
+            'Description': 'Destination pool address.'
+        },
+        {
+            'Property': { code: 'commitmentHash' },
+            'Type': 'String',
+            'Description': 'Commitment hash.'
+        },
+        {
+            'Property': { code: 'hashK' },
+            'Type': 'String',
+            'Description': 'Hash K.'
+        },
+        {
+            'Property': { code: 'randomS' },
+            'Type': 'String',
+            'Description': 'Random S.'
+        },
+        {
+            'Property': { code: 'encryptedNote' },
+            'Type': 'String',
+            'Description': 'Encrypted note.'
+        },
+        {
+            'Property': { code: 'assetSymbol' },
+            'Type': 'String',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Property': { code: 'assetDecimals' },
+            'Type': 'Int',
+            'Description': 'Asset decimals.'
+        },
+        {
+            'Property': { code: 'amount' },
+            'Type': 'Double',
+            'Description': 'Amount.'
+        },
+        {
+            'Property': { code: 'decimalAmount' },
+            'Type': 'String',
+            'Description': 'Decimal amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeAmount' },
+            'Type': 'Double',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Rollup fee decimal amount.'
+        },
+        {
+            'Property': { code: 'shieldedAddress' },
+            'Type': 'String',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Property': { code: 'walletId' },
+            'Type': 'String',
+            'Description': 'Wallet id.'
+        },
+        {
+            'Property': { code: 'assetAddress' },
+            'Type': 'String',
+            'Description': 'Asset address.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAmount' },
+            'Type': 'Double',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Bridge fee decimal amount.'
+        },
+        {
+            'Property': { code: 'executorFeeAmount' },
+            'Type': 'Double',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Property': { code: 'executorFeeDecimalAmount' },
+            'Type': 'String',
+            'Description': 'Executor fee decimal amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetAddress' },
+            'Type': 'String',
+            'Description': 'Bridge fee asset address.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetSymbol' },
+            'Type': 'String',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetDecimals' },
+            'Type': 'Int',
+            'Description': 'Bridge fee asset decimals.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetAddress' },
+            'Type': 'String',
+            'Description': 'Executor fee asset address.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetSymbol' },
+            'Type': 'String',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetDecimals' },
+            'Type': 'Int',
+            'Description': 'Executor fee asset decimals.'
+        },
+        {
+            'Property': { code: 'queuedTransactionHash' },
+            'Type': 'String',
+            'Description': 'Queued transaction hash.'
+        },
+        {
+            'Property': { code: 'includedTransactionHash' },
+            'Type': 'String',
+            'Description': 'Included transaction hash.'
+        },
+        {
+            'Property': { code: 'srcChainTransactionHash' },
+            'Type': 'String',
+            'Description': 'Source chain transaction hash.'
+        },
+        {
+            'Property': { code: 'assetApproveTransactionHash' },
+            'Type': 'List<String>',
+            'Description': 'Asset approve transaction hash.'
+        },
+        {
+            'Property': { code: 'errorMessage' },
+            'Type': 'String',
+            'Description': 'Error message.'
+        },
+        {
+            'Property': { code: 'bridgeType' },
+            'Type': 'BridgeType',
+            'Description': 'Bridge type.'
+        },
+        {
+            'Property': { code: 'status' },
+            'Type': 'DepositStatus',
+            'Description': 'Deposit status.'
+        },
+    ]}
+/>
+
+## Send
+
+Send a deposit transaction using a private key.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+SendDepositOptions options = SendDepositOptions(
+    depositId: 'id',
+    privateKey: 'privateKey',
+);
+Response<Deposit, DepositError> response = await api.send(options);
+```
+
+`SendDepositOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'depositId' },
+            'Required': 'true',
+            'Description': 'Deposit id.'
+        },
+        {
+            'Parameter': { code: 'privateKey' },
+            'Required': 'true',
+            'Description': 'Private key.'
+        },
+        {
+            'Parameter': { code: 'signerProvider' },
+            'Required': 'false',
+            'Description': 'Signer provider.'
+        },
+        {
+            'Parameter': { code: 'queryTimeoutMs' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'assetApproveConfirmations' },
+            'Required': 'false',
+            'Description': 'Asset approve confirmations.'
+        },
+        {
+            'Parameter': { code: 'depositConfirmations' },
+            'Required': 'false',
+            'Description': 'Deposit confirmations.'
+        },
+        {
+            'Parameter': { code: 'txSendTimeoutMs' },
+            'Required': 'false',
+            'Description': 'Transaction send timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'txWaitTimeoutMs' },
+            'Required': 'false',
+            'Description': 'Transaction wait timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'txWaitIntervalMs' },
+            'Required': 'false',
+            'Description': 'Transaction wait interval in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'assetApproveTx' },
+            'Required': 'false',
+            'Description': 'Asset approve transaction.'
+        },
+        {
+            'Parameter': { code: 'depositTx' },
+            'Required': 'false',
+            'Description': 'Deposit transaction.'
+        },
+        {
+            'Parameter': { code: 'screeningMessage' },
+            'Required': 'false',
+            'Description': 'Screening message.'
+        },
+    ]}
+/>
+
+### SendWithGrpc
+
+Send a deposit transaction by signing through the given gRPC interface.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+SendDepositOptions options = SendDepositOptions(depositId: 'id');
+ClientOptions clientOptions = ClientOptions(host: 'localhost', port: 50051);
+Response<Deposit, DepositError> response = await api.sendWithGrpc(options, clientOptions);
+```
+
+`ClientOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'host' },
+            'Required': 'true',
+            'Description': 'Host.'
+        },
+        {
+            'Parameter': { code: 'port' },
+            'Required': 'true',
+            'Description': 'Port.'
+        },
+        {
+            'Parameter': { code: 'isSsl' },
+            'Required': 'false',
+            'Description': 'Is SSL.'
+        },
+        {
+            'Parameter': { code: 'sslCert' },
+            'Required': 'false',
+            'Description': 'SSL cert.'
+        },
+        {
+            'Parameter': { code: 'sslCertPath' },
+            'Required': 'false',
+            'Description': 'SSL cert path.'
+        },
+        {
+            'Parameter': { code: 'sslServerName' },
+            'Required': 'false',
+            'Description': 'SSL server name.'
+        },
+    ]}
+/>
+
+## Find
+
+Query deposit data using `QueryFilter`.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<List<Deposit>, DepositError> response = await api.find(QueryFilter());
+```
+
+### FindAll
+
+Query all Deposit data.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<List<Deposit>, DepositError> response = await api.findAll();
+```
+
+### FindOne
+
+Find a single Deposit record using `QueryFilter`.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<Deposit, DepositError> response = await api.findOne(QueryFilter);
+```
+
+### FindById
+
+Find a single Deposit record by its ID.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<Deposit, DepositError> response = await api.findById('id');
+```
+
+## Count
+
+Query the count of data that matches the `QueryFilter` criteria.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<Int64, DepositError> response = await api.count(QueryFilter());
+```
+
+### CountAll
+
+Query the total count of all Deposit data.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<Int64, DepositError> response = await api.countAll();
+```
+
+## Update
+
+Update a Deposit record.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<Deposit, DepositError> response = await api.update(Deposit());
+```
+
+### UpdateBatch
+
+Batch update Deposit records.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+List<Deposit> deposits = [Deposit(), Deposit()];
+Response<List<Deposit>, DepositError> response = await api.updateBatch(deposits);
+```
+
+### UpdateByFilter
+
+Update Deposit records based on the conditions specified in the `QueryFilter`.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+List<ColumnValuePair> pairs = [ColumnValuePair(column: 'chainId', value: ColumnValue(i64Value: 1))];
+Response<void, DepositError> response = await api.updateByFilter(pairs, QueryFilter());
+```
+
+### UpdateAll
+
+Update all Deposit records.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+List<ColumnValuePair> pairs = [ColumnValuePair()];
+Response<void, DepositError> response = await api.updateAll(pairs);
+```
+
+## Delete
+
+Delete a Deposit record.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<void, DepositError> response = await api.delete(Deposit());
+```
+
+### DeleteBatch
+
+Batch delete Deposit records.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+List<Deposit> deposits = [Deposit(), Deposit()];
+Response<void, DepositError> response = await api.deleteBatch(deposits);
+```
+
+### DeleteByFilter
+
+Delete Deposit records based on the conditions specified in the `QueryFilter`.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<void, DepositError> response = await api.deleteByFilter(QueryFilter());
+```
+
+### DeleteAll
+
+Delete all Deposit records.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoDepositApi api = await Mystiko.mystikoDepositApi();
+Response<void, DepositError> response = await api.deleteAll();
+```

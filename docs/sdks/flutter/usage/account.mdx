@@ -1,0 +1,254 @@
+---
+title: Account
+---
+import Table from '../../../components/Table';
+
+The account module provides a series of methods related to Mystiko accounts.
+
+## Data Structure
+An account is an object generated from protobuf with the following properties:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'id' },
+            'Type': 'String',
+            'Description': 'The unique identifier of the account.'
+        },
+        {
+            'Property': { code: 'createdAt' },
+            'Type': 'Int64',
+            'Description': 'The timestamp when the account was created.'
+        },
+        {
+            'Property': { code: 'updatedAt' },
+            'Type': 'Int64',
+            'Description': 'The timestamp when the account was last updated.'
+        },
+        {
+            'Property': { code: 'name' },
+            'Type': 'String',
+            'Description': 'The name of the account.'
+        },
+        {
+            'Property': { code: 'shieldedAddress' },
+            'Type': 'String',
+            'Description': 'The shielded address of the account.'
+        },
+        {
+            'Property': { code: 'publicKey' },
+            'Type': 'String',
+            'Description': 'The public key of the account.'
+        },
+        {
+            'Property': { code: 'encryptedSecretKey' },
+            'Type': 'String',
+            'Description': 'The encrypted secret key of the account.'
+        },
+        {
+            'Property': { code: 'walletId' },
+            'Type': 'String',
+            'Description': 'The unique identifier of the wallet to which the account belongs.'
+        },
+        {
+            'Property': { code: 'scannedToId' },
+            'Type': 'String',
+            'Description': 'The unique identifier of the last scanned transaction.'
+        }
+    ]}
+/>
+
+## Create
+Create an Account.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<Account, AccountError> response = await api.create(CreateAccountOptions(walletPassword: 'pass@word1!'));
+```
+The parameter list for `CreateAccountOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the encrypted wallet.'
+        },
+        {
+            'Parameter': { code: 'name' },
+            'Required': 'false',
+            'Description': 'The name of the account.'
+        },
+        {
+            'Parameter': { code: 'secretKey' },
+            'Required': 'false',
+            'Description': 'The secret key of the account.'
+        }
+    ]}
+/>
+
+## Count
+Query the number of accounts in the wallet based on specific conditions.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<Int64, AccountError> response = await accountApi.count(QueryFilter(conditions: [
+  Condition(subFilters: [
+    ExtendedSubFilter.equal('shieldAddress', columnValueFrom('xxx'))
+  ])
+]));
+```
+For information on how to construct a QueryFilter, please refer to [this section](../queryFilter).
+
+### CountAll
+Query the total number of accounts in the wallet.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<Int64, AccountError> response = await accountApi.countAll();
+```
+
+## Find
+Query accounts based on specific conditions.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<List<Account>, AccountError> response = await accountApi.find(QueryFilter(conditions: [
+  Condition(subFilters: [
+    ExtendedSubFilter.equal('name', columnValueFrom('xxx'))
+  ])
+]));
+```
+For information on how to construct a QueryFilter, please refer to [this section](../queryFilter).
+
+### FindAll
+Query all accounts in the wallet.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<List<Account>, AccountError> response = await accountApi.findAll();
+```
+
+### FindById
+Query an account by its unique identifier.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<Account, AccountError> response = await accountApi.findById('id');
+```
+
+### FindByShieldedAddress
+Query an account by its shielded address.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<Account, AccountError> response = await accountApi.findByShieldedAddress('shieldedAddress');
+```
+
+### FindByPublicKey
+Query an account by its public key.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<Account, AccountError> response = await accountApi.findByPublicKey('publicKey');
+```
+
+## Update
+The parameter list for `UpdateAccountOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the encrypted wallet.'
+        },
+        {
+            'Parameter': { code: 'name' },
+            'Required': 'false',
+            'Description': 'The name of the account.'
+        }
+    ]}
+/>
+
+### UpdateById
+Update an account by its unique identifier.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<Account, AccountError> response = await accountApi.updateById('id', UpdateAccountOptions(
+  walletPassword: 'pass@word1!',
+  name: 'name',
+));
+```
+
+### UpdateByShieldedAddress
+Update an account by its shielded address.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<Account, AccountError> response = await accountApi.updateByShieldedAddress('shieldedAddress', UpdateAccountOptions(
+  walletPassword: 'pass@word1!',
+  name: 'name',
+));
+```
+
+### UpdateByPublicKey
+Update an account by its public key.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<Account, AccountError> response = await accountApi.updateByPublicKey('publicKey', UpdateAccountOptions(
+  walletPassword: 'pass@word1!',
+  name: 'name',
+));
+```
+
+### UpdateEncryption
+Update the encryption of an account.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<List<Account>, AccountError> response = await accountApi.updateEncryption('oldWalletPassword', 'newWalletPassword');
+```
+
+## Export
+
+### ExportSecretKeyById
+Export the secret key of an account by its unique identifier.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<String, AccountError> response = await accountApi.exportSecretKeyById('walletPassword', 'id');
+```
+
+### ExportSecretKeyByPublicKey
+Export the secret key of an account by its public key.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<String, AccountError> response = await accountApi.exportSecretKeyByPublicKey('walletPassword', 'publicKey');
+```
+
+### ExportSecretKeyByShieldedAddress
+Export the secret key of an account by its shielded address.
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoAccountApi api = await Mystiko.mystikoAccountApi();
+Response<String, AccountError> response = await accountApi.exportSecretKeyByShieldedAddress('walletPassword', 'shieldedAddress');
+```
