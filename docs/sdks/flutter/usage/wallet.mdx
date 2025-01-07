@@ -1,0 +1,115 @@
+---
+title: Wallet
+---
+import Table from "../../../components/Table";
+
+Interfaces for managing the Mystiko wallet, including creating, checking, updating, and exporting operations.
+
+## Data Structure
+`Wallet` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'id' },
+            'Type': 'String',
+            'Description': 'The wallet ID.'
+        },
+        {
+            'Property': { code: 'createdAt' },
+            'Type': 'Int64',
+            'Description': 'The creation time of the wallet.'
+        },
+        {
+            'Property': { code: 'updatedAt' },
+            'Type': 'Int64',
+            'Description': 'The last update time of the wallet.'
+        },
+        {
+            'Property': { code: 'encryptedEntropy' },
+            'Type': 'String',
+            'Description': 'The encrypted entropy of the wallet.'
+        },
+        {
+            'Property': { code: 'hashedPassword' },
+            'Type': 'String',
+            'Description': 'The hashed password of the wallet.'
+        },
+        {
+            'Property': { code: 'accountNonce' },
+            'Type': 'int',
+            'Description': 'The account nonce of the wallet.'
+        }
+    ]}
+/>
+
+## Create
+
+Create a Mystiko Wallet.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoWalletApi api = await Mystiko.mystikoWalletApi();
+Response<Wallet, WalletError> response = await api.create(CreateWalletOptions(password: 'wAllet@123!'));
+```
+
+The parameter list for `CreateWalletOptions`:
+
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'password' },
+            'Required': 'true',
+            'Description': 'The password for the wallet.'
+        },
+        {
+            'Parameter': { code: 'mnemonicPhrase' },
+            'Required': 'false',
+            'Description': 'The mnemonic phrase for the wallet.'
+        }
+    ]}
+/>
+
+## Check
+
+### CheckCurrent
+Check current wallet.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoWalletApi api = await Mystiko.mystikoWalletApi();
+Response<Wallet, WalletError> response = await api.checkCurrent();
+```
+
+### CheckPassword
+Check the password of the wallet.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoWalletApi api = await Mystiko.mystikoWalletApi();
+Response<Wallet, WalletError> response = await api.checkPassword('wAllet@123!');
+```
+
+## UpdatePassword
+Update the password of the wallet.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoWalletApi api = await Mystiko.mystikoWalletApi();
+Response<Wallet, WalletError> response = await api.updatePassword('oldPassword', 'newPassword');
+```
+
+## ExportMnemonicPhrase
+Export the mnemonic phrase of the wallet.
+
+```dart
+import 'package:mystiko_flutter/mystiko_flutter.dart';
+
+MystikoWalletApi api = await Mystiko.mystikoWalletApi();
+Response<String, WalletError> response = await api.exportMnemonicPhrase('password');
+```

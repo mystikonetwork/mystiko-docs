@@ -73,7 +73,22 @@ export default {
           collapsed: false,
           collapsible: true,
           items: [
-              'sdks/flutter/overview'
+              'sdks/flutter/installation',
+              {
+                type: 'category',
+                label: 'Usage',
+                items: [
+                    'sdks/flutter/usage/overview',
+                    'sdks/flutter/usage/config',
+                    'sdks/flutter/usage/wallet',
+                    'sdks/flutter/usage/account',
+                    'sdks/flutter/usage/deposit',
+                    'sdks/flutter/usage/spend',
+                    'sdks/flutter/usage/scanner',
+                    'sdks/flutter/usage/synchronizer',
+                ]
+              },
+              'sdks/flutter/queryFilter',
           ]
         },
         {
