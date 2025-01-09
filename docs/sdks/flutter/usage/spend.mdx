@@ -2,42 +2,909 @@
 title: Spend
 ---
 
+import Table from "../../../components/Table";
+
 Mystiko Spend Related APIs.
+
+## Data Structures
+
+- [SpendQuote](#quote)
+- [SpendSummary](#summary)
+- [Spend](#create)
 
 ## Quote
 
+Retrieve quote information for a spend.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<SpendQuote, SpendError> = await api.quote(QuoteSpendOptions(chainId: 1, asset_symbol: 'MTT'));
+```
+
+`QuoteSpendOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': {code: 'chainId'},
+            'Required': 'true',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Parameter': {code: 'assetSymbol'},
+            'Required': 'true',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Parameter': {code: 'version'},
+            'Required': 'false',
+            'Description': 'The version of the spend.'
+        },
+        {
+            'Parameter': {code: 'amount'},
+            'Required': 'false',
+            'Description': 'The amount of the spend.'
+        },
+        {
+            'Parameter': {code: 'useRelayer'},
+            'Required': 'false',
+            'Description': 'Whether to use a relayer.'
+        },
+        {
+            'Parameter': {code: 'queryTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'spendType'},
+            'Required': 'false',
+            'Description': 'The type of spend.'
+        },
+        {
+            'Parameter': {code: 'bridgeType'},
+            'Required': 'false',
+            'Description': 'The bridge type.'
+        },
+    ]}
+/>
+
+`SpendQuote` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'valid'},
+            'Type': 'Bool',
+            'Description': 'Whether the quote is valid.'
+        },
+        {
+            'Property': {code: 'assetSymbol'},
+            'Type': 'String',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Property': {code: 'assetDecimals'},
+            'Type': 'Int',
+            'Description': 'The asset decimals.'
+        },
+        {
+            'Property': {code: 'currentBalance'},
+            'Type': 'Double',
+            'Description': 'The current balance.'
+        },
+        {
+            'Property': {code: 'currentDecimalBalance'},
+            'Type': 'String',
+            'Description': 'The current decimal balance.'
+        },
+        {
+            'Property': {code: 'numOfInputs'},
+            'Type': 'Int',
+            'Description': 'The number of inputs.'
+        },
+        {
+            'Property': {code: 'numOfOutputs'},
+            'Type': 'Int',
+            'Description': 'The number of outputs.'
+        },
+        {
+            'Property': {code: 'minRollupFee'},
+            'Type': 'Double',
+            'Description': 'The minimum rollup fee.'
+        },
+        {
+            'Property': {code: 'minRollupFeeDecimal'},
+            'Type': 'String',
+            'Description': 'The minimum rollup fee decimal.'
+        },
+        {
+            'Property': {code: 'rollupFeeAssetSymbol'},
+            'Type': 'String',
+            'Description': 'The rollup fee asset symbol.'
+        },
+        {
+            'Property': {code: 'rollupFeeAssetDecimals'},
+            'Type': 'Int',
+            'Description': 'The rollup fee asset decimals.'
+        },
+        {
+            'Property': {code: 'fixedAmounts'},
+            'Type': 'List<double>',
+            'Description': 'The fixed amounts.'
+        },
+        {
+            'Property': {code: 'fixedDecimalAmounts'},
+            'Type': 'List<string>',
+            'Description': 'The fixed decimal amounts.'
+        },
+        {
+            'Property': {code: 'selectedCommitments'},
+            'Type': 'List<string>',
+            'Description': 'The selected commitments.'
+        },
+        {
+            'Property': {code: 'gasRelayers'},
+            'Type': 'List<GasRelayer>',
+            'Description': 'The gas relayers.'
+        },
+        {
+            'Property': {code: 'maxGasRelayerFee'},
+            'Type': 'Double',
+            'Description': 'The maximum gas relayer fee.'
+        },
+        {
+            'Property': {code: 'maxGasRelayerFeeDecimal'},
+            'Type': 'String',
+            'Description': 'The maximum gas relayer fee decimal.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAssetSymbol'},
+            'Type': 'String',
+            'Description': 'The gas relayer fee asset symbol.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAssetDecimals'},
+            'Type': 'Int',
+            'Description': 'The gas relayer fee asset decimals.'
+        },
+        {
+            'Property': {code: 'invalidCode'},
+            'Type': 'SpendInvalidCode',
+            'Description': 'The invalid code.'
+        },
+        {
+            'Property': {code: 'amountRange'},
+            'Type': 'AmountRange',
+            'Description': 'The amount range.'
+        },
+    ]}
+/>
+
 ## Summary
+
+Retrieve summary information for a spend.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<SpendSummary, SpendError> response = await api.summary(CreateSpendOptions(
+  chainId: 1,
+  asset_symbol: 'MTT',
+  amount: 100,
+  recipient: '0x1234567890',
+  wallet_password: 'password',
+));
+```
+
+`CreateSpendOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': {code: 'chainId'},
+            'Required': 'true',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Parameter': {code: 'assetSymbol'},
+            'Required': 'true',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Parameter': {code: 'amount'},
+            'Required': 'true',
+            'Description': 'The amount of the spend.'
+        },
+        {
+            'Parameter': {code: 'recipient'},
+            'Required': 'true',
+            'Description': 'The recipient address.'
+        },
+        {
+            'Parameter': {code: 'walletPassword'},
+            'Required': 'true',
+            'Description': 'The wallet password.'
+        },
+        {
+            'Parameter': {code: 'version'},
+            'Required': 'false',
+            'Description': 'The version of the spend.'
+        },
+        {
+            'Parameter': {code: 'rollupFeeAmount'},
+            'Required': 'false',
+            'Description': 'The rollup fee amount.'
+        },
+        {
+            'Parameter': {code: 'gasRelayer'},
+            'Required': 'false',
+            'Description': 'The gas relayer.'
+        },
+        {
+            'Parameter': {code: 'queryTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'spendQuote'},
+            'Required': 'false',
+            'Description': 'The spend quote.'
+        },
+        {
+            'Parameter': {code: 'spendType'},
+            'Required': 'false',
+            'Description': 'The type of spend.'
+        },
+        {
+            'Parameter': {code: 'bridgeType'},
+            'Required': 'false',
+            'Description': 'The bridge type.'
+        },
+    ]}
+/>
+
+`SpendSummary` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'assetSymbol'},
+            'Type': 'String',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Property': {code: 'assetDecimals'},
+            'Type': 'Int',
+            'Description': 'The asset decimals.'
+        },
+        {
+            'Property': {code: 'currentBalance'},
+            'Type': 'Double',
+            'Description': 'The current balance.'
+        },
+        {
+            'Property': {code: 'currentDecimalBalance'},
+            'Type': 'String',
+            'Description': 'The current decimal balance.'
+        },
+        {
+            'Property': {code: 'newBalance'},
+            'Type': 'Double',
+            'Description': 'The new balance.'
+        },
+        {
+            'Property': {code: 'newDecimalBalance'},
+            'Type': 'String',
+            'Description': 'The new decimal balance.'
+        },
+        {
+            'Property': {code: 'amount'},
+            'Type': 'Double',
+            'Description': 'The amount.'
+        },
+        {
+            'Property': {code: 'decimalAmount'},
+            'Type': 'String',
+            'Description': 'The decimal amount.'
+        },
+        {
+            'Property': {code: 'recipient'},
+            'Type': 'String',
+            'Description': 'The recipient address.'
+        },
+        {
+            'Property': {code: 'rollupFeeAmount'},
+            'Type': 'Double',
+            'Description': 'The rollup fee amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeDecimalAmount'},
+            'Type': 'String',
+            'Description': 'The rollup fee decimal amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeTotalAmount'},
+            'Type': 'Double',
+            'Description': 'The rollup fee total amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeTotalDecimalAmount'},
+            'Type': 'String',
+            'Description': 'The rollup fee total decimal amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeAssetSymbol'},
+            'Type': 'String',
+            'Description': 'The rollup fee asset symbol.'
+        },
+        {
+            'Property': {code: 'rollupFeeAssetDecimals'},
+            'Type': 'Int',
+            'Description': 'The rollup fee asset decimals.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAmount'},
+            'Type': 'Double',
+            'Description': 'The gas relayer fee amount.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeDecimalAmount'},
+            'Type': 'String',
+            'Description': 'The gas relayer fee decimal amount.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAssetSymbol'},
+            'Type': 'String',
+            'Description': 'The gas relayer fee asset symbol.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAssetDecimals'},
+            'Type': 'Int',
+            'Description': 'The gas relayer fee asset decimals.'
+        },
+        {
+            'Property': {code: 'gasRelayerAddress'},
+            'Type': 'String',
+            'Description': 'The gas relayer address.'
+        },
+        {
+            'Property': {code: 'gasRelayerName'},
+            'Type': 'String',
+            'Description': 'The gas relayer name.'
+        },
+        {
+            'Property': {code: 'gasRelayerUrl'},
+            'Type': 'String',
+            'Description': 'The gas relayer URL.'
+        },
+    ]}
+/>
 
 ## Create
 
+Create a Spend request.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<Spend, SpendError> response = await api.create(CreateSpendOptions(
+  chainId: 1,
+  asset_symbol: 'MTT',
+  amount: 100,
+  recipient: '0x1234567890',
+  wallet_password: 'password',
+));
+```
+
+`Spend` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'id'},
+            'Type': 'String',
+            'Description': 'The ID of the spend.'
+        },
+        {
+            'Property': {code: 'createdAt'},
+            'Type': 'Int64',
+            'Description': 'The creation time of the spend.'
+        },
+        {
+            'Property': {code: 'updatedAt'},
+            'Type': 'Int64',
+            'Description': 'The update time of the spend.'
+        },
+        {
+            'Property': {code: 'chainId'},
+            'Type': 'Int64',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Property': {code: 'contractAddress'},
+            'Type': 'String',
+            'Description': 'The contract address.'
+        },
+        {
+            'Property': {code: 'assetSymbol'},
+            'Type': 'String',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Property': {code: 'assetDecimals'},
+            'Type': 'Int',
+            'Description': 'The asset decimals.'
+        },
+        {
+            'Property': {code: 'amount'},
+            'Type': 'Double',
+            'Description': 'The amount.'
+        },
+        {
+            'Property': {code: 'decimalAmount'},
+            'Type': 'String',
+            'Description': 'The decimal amount.'
+        },
+        {
+            'Property': {code: 'recipient'},
+            'Type': 'String',
+            'Description': 'The recipient address.'
+        },
+        {
+            'Property': {code: 'walletId'},
+            'Type': 'String',
+            'Description': 'The wallet ID.'
+        },
+        {
+            'Property': {code: 'inputCommitments'},
+            'Type': 'List<String>',
+            'Description': 'The input commitments.'
+        },
+        {
+            'Property': {code: 'outputCommitments'},
+            'Type': 'List<String>',
+            'Description': 'The output commitments.'
+        },
+        {
+            'Property': {code: 'nullifiers'},
+            'Type': 'List<String>',
+            'Description': 'The nullifiers.'
+        },
+        {
+            'Property': {code: 'signaturePublicKeyHashes'},
+            'Type': 'List<String>',
+            'Description': 'The signature public key hashes.'
+        },
+        {
+            'Property': {code: 'encryptedAuditorNotes'},
+            'Type': 'List<String>',
+            'Description': 'The encrypted auditor notes.'
+        },
+        {
+            'Property': {code: 'rollupFeeAmount'},
+            'Type': 'Double',
+            'Description': 'The rollup fee amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeDecimalAmount'},
+            'Type': 'String',
+            'Description': 'The rollup fee decimal amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeTotalAmount'},
+            'Type': 'Double',
+            'Description': 'The rollup fee total amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeTotalDecimalAmount'},
+            'Type': 'String',
+            'Description': 'The rollup fee total decimal amount.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAmount'},
+            'Type': 'Double',
+            'Description': 'The gas relayer fee amount.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeDecimalAmount'},
+            'Type': 'String',
+            'Description': 'The gas relayer fee decimal amount.'
+        },
+        {
+            'Property': {code: 'signaturePublicKey'},
+            'Type': 'String',
+            'Description': 'The signature public key.'
+        },
+        {
+            'Property': {code: 'assetAddress'},
+            'Type': 'String',
+            'Description': 'The asset address.'
+        },
+        {
+            'Property': {code: 'proof'},
+            'Type': 'String',
+            'Description': 'The proof.'
+        },
+        {
+            'Property': {code: 'rootHash'},
+            'Type': 'String',
+            'Description': 'The root hash.'
+        },
+        {
+            'Property': {code: 'gasRelayerAddress'},
+            'Type': 'String',
+            'Description': 'The gas relayer address.'
+        },
+        {
+            'Property': {code: 'gasRelayerUrl'},
+            'Type': 'String',
+            'Description': 'The gas relayer URL.'
+        },
+        {
+            'Property': {code: 'signature'},
+            'Type': 'String',
+            'Description': 'The signature.'
+        },
+        {
+            'Property': {code: 'randomAuditingPublicKey'},
+            'Type': 'String',
+            'Description': 'The random auditing public key.'
+        },
+        {
+            'Property': {code: 'errorMessage'},
+            'Type': 'String',
+            'Description': 'The error message.'
+        },
+        {
+            'Property': {code: 'transactionHash'},
+            'Type': 'String',
+            'Description': 'The transaction hash.'
+        },
+        {
+            'Property': {code: 'bridgeType'},
+            'Type': 'BridgeType',
+            'Description': 'The bridge type.'
+        },
+        {
+            'Property': {code: 'spendType'},
+            'Type': 'SpendType',
+            'Description': 'The spend type.'
+        },
+        {
+            'Property': {code: 'status'},
+            'Type': 'SpendStatus',
+            'Description': 'The spend status.'
+        },
+    ]}
+/>
+
 ## Send
+
+Send a spend transaction using a private key.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<Spend, SpendError> response = await api.send(SendSpendOptions(
+  spendId: 'id',
+  privateKey: 'privateKey',
+  walletPassword: 'password',
+));
+```
+
+`SendSpendOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': {code: 'spendId'},
+            'Required': 'true',
+            'Description': 'The ID of the spend.'
+        },
+        {
+            'Parameter': {code: 'walletPassword'},
+            'Required': 'true',
+            'Description': 'The wallet password.'
+        },
+        {
+            'Parameter': {code: 'privateKey'},
+            'Required': 'true',
+            'Description': 'The private key.'
+        },
+        {
+            'Parameter': {code: 'signerProvider'},
+            'Required': 'false',
+            'Description': 'The signer provider.'
+        },
+        {
+            'Parameter': {code: 'queryTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'spendConfirmations'},
+            'Required': 'false',
+            'Description': 'The spend confirmations.'
+        },
+        {
+            'Parameter': {code: 'txSendTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The transaction send timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'txWaitTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The transaction wait timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'txWaitIntervalMs'},
+            'Required': 'false',
+            'Description': 'The transaction wait interval in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'relayerWaitTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The relayer wait timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'relayerWaitIntervalMs'},
+            'Required': 'false',
+            'Description': 'The relayer wait interval in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'tx'},
+            'Required': 'false',
+            'Description': 'The transaction.'
+        },
+        {
+            'Parameter': {code: 'rawMerkleTree'},
+            'Required': 'false',
+            'Description': 'The raw Merkle tree.'
+        },
+        {
+            'Parameter': {code: 'rawZkProgram'},
+            'Required': 'false',
+            'Description': 'The raw ZK program.'
+        },
+        {
+            'Parameter': {code: 'rawZkProvingKey'},
+            'Required': 'false',
+            'Description': 'The raw ZK proving key.'
+        },
+        {
+            'Parameter': {code: 'rawZkVerifyingKey'},
+            'Required': 'false',
+            'Description': 'The raw ZK verifying key.'
+        },
+        {
+            'Parameter': {code: 'rawZkAbi'},
+            'Required': 'false',
+            'Description': 'The raw ZK ABI.'
+        },
+    ]}
+/>
 
 ### SendWithGrpc
 
+Send a spend transaction by signing through the given gRPC interface.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+SendSpendOptions sendOptions = SendSpendOptions(
+  spendId: 'id',
+  walletPassword: 'password',
+);
+ClientOptions clientOptions = ClientOptions(
+  host: 'localhost',
+  port: 9090,
+);
+Response<Spend, SpendError> response = await api.sendWithGrpc(sendOptions, clientOptions);
+```
+
+`ClientOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'host' },
+            'Required': 'true',
+            'Description': 'Host.'
+        },
+        {
+            'Parameter': { code: 'port' },
+            'Required': 'true',
+            'Description': 'Port.'
+        },
+        {
+            'Parameter': { code: 'isSsl' },
+            'Required': 'false',
+            'Description': 'Is SSL.'
+        },
+        {
+            'Parameter': { code: 'sslCert' },
+            'Required': 'false',
+            'Description': 'SSL cert.'
+        },
+        {
+            'Parameter': { code: 'sslCertPath' },
+            'Required': 'false',
+            'Description': 'SSL cert path.'
+        },
+        {
+            'Parameter': { code: 'sslServerName' },
+            'Required': 'false',
+            'Description': 'SSL server name.'
+        },
+    ]}
+/>
+
 ## Find
+
+Query Spend data using `QueryFilter`.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<List<Spend>, SpendError> response = await api.find(QueryFilter());
+```
 
 ### FindAll
 
+Query all Spend data.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<List<Spend>, SpendError> response = await api.findAll();
+```
+
 ### FindOne
+
+Find a single Spend record using `QueryFilter`.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<Spend, SpendError> response = await api.findOne(QueryFilter());
+```
 
 ### FindById
 
+Find a single Spend record by its ID.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+<Response<Spend, SpendError> response = await api.findById('id');
+```
+
 ## Count
+
+Query the count of data that matches the `QueryFilter` criteria.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<Int64, SpendError> response = await api.count(QueryFilter());
+```
 
 ### CountAll
 
+Query the total count of all Spend data.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<Int64, SpendError> response = await api.countAll();
+```
+
 ## Update
+
+Update a Spend record.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<Spend, SpendError> response = await api.update(Spend());
+```
 
 ### UpdateBatch
 
+Batch update Spend records.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+List<Spend> spends = [Spend(), Spend()];
+Response<List<Spend>, SpendError> response = await api.updateBatch(List<Spend>());
+```
+
 ### UpdateByFilter
+
+Update Spend records based on the conditions specified in the `QueryFilter`.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+List<ColumnValuePair> pairs = [ColumnValuePair(column: 'chainId', value: ColumnValue(i64Value: 1))];
+Response<void, SpendError> response = await api.updateByFilter(pairs, QueryFilter());
+```
 
 ### UpdateAll
 
+Update all Spend records.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+List<ColumnValuePair> pairs = [ColumnValuePair()];
+Response<void, SpendError> response = await api.updateAll(pairs);
+```
+
 ## Delete
+
+Delete a Spend record.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<void, SpendError> response = await api.delete(Spend());
+```
 
 ### DeleteBatch
 
+Batch delete Spend records.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+List<Spend> spends = [Spend(), Spend()];
+Response<void, SpendError> response = await api.deleteBatch(spends);
+```
+
 ### DeleteByFilter
 
+Delete Spend records based on the conditions specified in the `QueryFilter`.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<void, SpendError> response = await api.deleteByFilter(QueryFilter());
+```
+
 ### DeleteAll
+
+Delete all Spend records.
+
+```dart
+import 'package:mystiko_spend/mystiko_spend.dart';
+
+MystikoSpendApi api = await Mystiko.mystikoSpendApi();
+Response<void, SpendError> response = await api.deleteAll();
+```

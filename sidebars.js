@@ -88,7 +88,6 @@ export default {
                     'sdks/flutter/usage/synchronizer',
                 ]
               },
-              'sdks/flutter/queryFilter',
           ]
         },
         {
