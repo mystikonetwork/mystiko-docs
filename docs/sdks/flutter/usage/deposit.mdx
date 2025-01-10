@@ -28,27 +28,27 @@ Response<DepositQuote, DepositError> response = await api.quote(QuoteDepositOpti
     headers={['Parameter', 'Required', 'Description']}
     data={[
         {
-            'Parameter': { code: 'chain_id' },
+            'Parameter': { code: 'chainId' },
             'Required': 'true',
-            'Description': 'Chain id.'
+            'Description': 'The chain ID of the asset.'
         },
         {
-            'Parameter': { code: 'asset_symbol' },
+            'Parameter': { code: 'assetSymbol' },
             'Required': 'true',
             'Description': 'Asset symbol.'
         },
         {
-            'Parameter': { code: 'query_timeout_ms' },
+            'Parameter': { code: 'queryTimeoutMs' },
             'Required': 'false',
             'Description': 'Query timeout in milliseconds.'
         },
         {
-            'Parameter': { code: 'dst_chain_id' },
+            'Parameter': { code: 'dstChainId' },
             'Required': 'false',
             'Description': 'Destination chain id.'
         },
         {
-            'Parameter': { code: 'bridge_type' },
+            'Parameter': { code: 'bridgeType' },
             'Required': 'false',
             'Description': 'Bridge type.'
         },
@@ -376,69 +376,6 @@ CreateDepositOptions options = CreateDepositOptions(
 );
 Response<Deposit, DepositError> response = await api.create(options);
 ```
-
-`CreateDepositOptions`:
-
-<Table
-    headers={['Parameter', 'Required', 'Description']}
-    data={[
-        {
-            'Parameter': { code: 'chainId' },
-            'Required': 'true',
-            'Description': 'Chain id.'
-        },
-        {
-            'Parameter': { code: 'assetSymbol' },
-            'Required': 'true',
-            'Description': 'Asset symbol.'
-        },
-        {
-            'Parameter': { code: 'amount' },
-            'Required': 'true',
-            'Description': 'Amount.'
-        },
-        {
-            'Parameter': { code: 'shieldedAddress' },
-            'Required': 'true',
-            'Description': 'Shielded address.'
-        },
-        {
-            'Parameter': { code: 'dstChainId' },
-            'Required': 'false',
-            'Description': 'Destination chain id.'
-        },
-        {
-            'Parameter': { code: 'rollupFeeAmount' },
-            'Required': 'false',
-            'Description': 'Rollup fee amount.'
-        },
-        {
-            'Parameter': { code: 'bridgeFeeAmount' },
-            'Required': 'false',
-            'Description': 'Bridge fee amount.'
-        },
-        {
-            'Parameter': { code: 'executorFeeAmount' },
-            'Required': 'false',
-            'Description': 'Executor fee amount.'
-        },
-        {
-            'Parameter': { code: 'queryTimeoutMs' },
-            'Required': 'false',
-            'Description': 'Query timeout in milliseconds.'
-        },
-        {
-            'Parameter': { code: 'depositQuote' },
-            'Required': 'false',
-            'Description': 'Deposit quote.'
-        },
-        {
-            'Parameter': { code: 'bridgeType' },
-            'Required': 'false',
-            'Description': 'Bridge type.'
-        },
-    ]}
-/>
 
 `Deposit` data structure is as follows:
 
