@@ -1,0 +1,144 @@
+---
+title: Wallet
+---
+import Table from "../../../components/Table";
+
+Interfaces for managing the Mystiko wallet, including creating, checking, updating, and exporting operations.
+
+## Data Structure
+`Wallet` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'id' },
+            'Type': 'string',
+            'Description': 'The wallet ID.'
+        },
+        {
+            'Property': { code: 'createdAt' },
+            'Type': 'bigint',
+            'Description': 'The creation time of the wallet.'
+        },
+        {
+            'Property': { code: 'updatedAt' },
+            'Type': 'bigint',
+            'Description': 'The last update time of the wallet.'
+        },
+        {
+            'Property': { code: 'encryptedEntropy' },
+            'Type': 'string',
+            'Description': 'The encrypted entropy of the wallet.'
+        },
+        {
+            'Property': { code: 'hashedPassword' },
+            'Type': 'string',
+            'Description': 'The hashed password of the wallet.'
+        },
+        {
+            'Property': { code: 'accountNonce' },
+            'Type': 'number',
+            'Description': 'The account nonce of the wallet.'
+        },
+        {
+            'Property': { code: 'mnemonicType' },
+            'Type': 'MnemonicType',
+            'Description': 'The account mnemonic type.'
+        }
+    ]}
+/>
+List of supported `MnemonicType`:
+```node
+# Represents a mnemonic phrase used in web wallets, typically consisting of 12 words.
+MnemonicType.WEB;
+# Represents a mnemonic phrase used in Rust-based wallets, typically consisting of 24 words.
+MnemonicType.RUST;
+```
+## Create
+
+Create a Mystiko Wallet.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.CreateWalletOptions({
+    password: 'walletPassword',
+    mnemonic: {
+      mnemonicPhrase: "valley canyon ...",
+      mnemonicType: core.v1.MnemonicType.RUST,
+    },
+});
+const wallet = mystiko.wallet?.create(options);
+```
+The parameter list for `CreateWalletOptions`:
+
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'password' },
+            'Required': 'true',
+            'Description': 'The password for the wallet.'
+        },
+        {
+            'Parameter': { code: 'mnemonic' },
+            'Required': 'true',
+            'Description': 'MnemonicOptions for the wallet.'
+        }
+    ]}
+/>
+The parameter list for `MnemonicOptions`:
+
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'mnemonicPhrase' },
+            'Required': 'true',
+            'Description': 'Mnemonic phrase for the wallet.'
+        },
+        {
+            'Parameter': { code: 'mnemonicType' },
+            'Required': 'true',
+            'Description': 'MnemonicType for the wallet.'
+        }
+    ]}
+/>
+## Check
+
+### CheckCurrent
+Check current wallet.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const wallet = mystiko.wallet?.checkCurrent();
+```
+
+### CheckPassword
+Check the password of the wallet.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const wallet = mystiko.wallet?.checkPassword(walletPassword);
+```
+
+## UpdatePassword
+Update the password of the wallet.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const wallet = mystiko.wallet?.updatePassword(oldPassword, newPassword);
+```
+
+## ExportMnemonicPhrase
+Export the mnemonic phrase of the wallet.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const phrase = mystiko.wallet?.exportMnemonicPhrase(walletPassword);
+```

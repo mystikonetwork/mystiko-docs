@@ -1,0 +1,956 @@
+---
+title: Spend
+---
+
+import Table from "../../../components/Table";
+
+Mystiko Spend Related APIs.
+
+## Data Structures
+
+- [SpendQuote](#quote)
+- [SpendSummary](#summary)
+- [Spend](#create)
+
+## Quote
+
+Retrieve quote information for a spend.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core, common } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.QuoteSpendOptions({
+    chainId: BigInt(11155111),
+    assetSymbol: 'MTT',
+    bridgeType: common.v1.BridgeType.TBRIDGE,
+});
+const sendQuote = mystiko.spend?.quote(options);
+```
+
+`QuoteSpendOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': {code: 'chainId'},
+            'Required': 'true',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Parameter': {code: 'assetSymbol'},
+            'Required': 'true',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Parameter': {code: 'version'},
+            'Required': 'false',
+            'Description': 'The version of the spend.'
+        },
+        {
+            'Parameter': {code: 'amount'},
+            'Required': 'false',
+            'Description': 'The amount of the spend.'
+        },
+        {
+            'Parameter': {code: 'useRelayer'},
+            'Required': 'false',
+            'Description': 'Whether to use a relayer.'
+        },
+        {
+            'Parameter': {code: 'queryTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'spendType'},
+            'Required': 'false',
+            'Description': 'The type of spend.'
+        },
+        {
+            'Parameter': {code: 'bridgeType'},
+            'Required': 'false',
+            'Description': 'The bridge type.'
+        },
+    ]}
+/>
+
+`SpendQuote` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'valid'},
+            'Type': 'boolean',
+            'Description': 'Whether the quote is valid.'
+        },
+        {
+            'Property': {code: 'assetSymbol'},
+            'Type': 'string',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Property': {code: 'assetDecimals'},
+            'Type': 'number',
+            'Description': 'The asset decimals.'
+        },
+        {
+            'Property': {code: 'currentBalance'},
+            'Type': 'number',
+            'Description': 'The current balance.'
+        },
+        {
+            'Property': {code: 'currentDecimalBalance'},
+            'Type': 'string',
+            'Description': 'The current decimal balance.'
+        },
+        {
+            'Property': {code: 'numOfInputs'},
+            'Type': 'bigint',
+            'Description': 'The number of inputs.'
+        },
+        {
+            'Property': {code: 'numOfOutputs'},
+            'Type': 'bigint',
+            'Description': 'The number of outputs.'
+        },
+        {
+            'Property': {code: 'minRollupFee'},
+            'Type': 'number',
+            'Description': 'The minimum rollup fee.'
+        },
+        {
+            'Property': {code: 'minRollupFeeDecimal'},
+            'Type': 'string',
+            'Description': 'The minimum rollup fee decimal.'
+        },
+        {
+            'Property': {code: 'rollupFeeAssetSymbol'},
+            'Type': 'string',
+            'Description': 'The rollup fee asset symbol.'
+        },
+        {
+            'Property': {code: 'rollupFeeAssetDecimals'},
+            'Type': 'number',
+            'Description': 'The rollup fee asset decimals.'
+        },
+        {
+            'Property': {code: 'fixedAmounts'},
+            'Type': 'number[]',
+            'Description': 'The fixed amounts.'
+        },
+        {
+            'Property': {code: 'fixedDecimalAmounts'},
+            'Type': 'string[]',
+            'Description': 'The fixed decimal amounts.'
+        },
+        {
+            'Property': {code: 'selectedCommitments'},
+            'Type': 'string[]',
+            'Description': 'The selected commitments.'
+        },
+        {
+            'Property': {code: 'gasRelayers'},
+            'Type': 'GasRelayer[]',
+            'Description': 'The gas relayers.'
+        },
+        {
+            'Property': {code: 'maxGasRelayerFee'},
+            'Type': 'number',
+            'Description': 'The maximum gas relayer fee.'
+        },
+        {
+            'Property': {code: 'maxGasRelayerFeeDecimal'},
+            'Type': 'string',
+            'Description': 'The maximum gas relayer fee decimal.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAssetSymbol'},
+            'Type': 'string',
+            'Description': 'The gas relayer fee asset symbol.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAssetDecimals'},
+            'Type': 'number',
+            'Description': 'The gas relayer fee asset decimals.'
+        },
+        {
+            'Property': {code: 'invalidCode'},
+            'Type': 'SpendInvalidCode',
+            'Description': 'The invalid code.'
+        },
+        {
+            'Property': {code: 'amountRange'},
+            'Type': 'AmountRange',
+            'Description': 'The amount range.'
+        },
+    ]}
+/>
+
+## Summary
+
+Retrieve summary information for a spend.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core, common } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.CreateSpendOptions({
+    chainId: BigInt(11155111),
+    assetSymbol: 'MTT',
+    amount: 1,
+    spendType: core.v1.SpendType.WITHDRAW,
+    bridgeType: common.v1.BridgeType.TBRIDGE,
+});
+
+const spendSummary = mystiko.spend?.summary(options);
+```
+
+`CreateSpendOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': {code: 'chainId'},
+            'Required': 'true',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Parameter': {code: 'assetSymbol'},
+            'Required': 'true',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Parameter': {code: 'amount'},
+            'Required': 'true',
+            'Description': 'The amount of the spend.'
+        },
+        {
+            'Parameter': {code: 'recipient'},
+            'Required': 'true',
+            'Description': 'The recipient address.'
+        },
+        {
+            'Parameter': {code: 'walletPassword'},
+            'Required': 'true',
+            'Description': 'The wallet password.'
+        },
+        {
+            'Parameter': {code: 'version'},
+            'Required': 'false',
+            'Description': 'The version of the spend.'
+        },
+        {
+            'Parameter': {code: 'rollupFeeAmount'},
+            'Required': 'false',
+            'Description': 'The rollup fee amount.'
+        },
+        {
+            'Parameter': {code: 'gasRelayer'},
+            'Required': 'false',
+            'Description': 'The gas relayer.'
+        },
+        {
+            'Parameter': {code: 'queryTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'spendQuote'},
+            'Required': 'false',
+            'Description': 'The spend quote.'
+        },
+        {
+            'Parameter': {code: 'spendType'},
+            'Required': 'false',
+            'Description': 'The type of spend.'
+        },
+        {
+            'Parameter': {code: 'bridgeType'},
+            'Required': 'false',
+            'Description': 'The bridge type.'
+        },
+    ]}
+/>
+
+`SpendSummary` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'assetSymbol'},
+            'Type': 'string',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Property': {code: 'assetDecimals'},
+            'Type': 'number',
+            'Description': 'The asset decimals.'
+        },
+        {
+            'Property': {code: 'currentBalance'},
+            'Type': 'number',
+            'Description': 'The current balance.'
+        },
+        {
+            'Property': {code: 'currentDecimalBalance'},
+            'Type': 'string',
+            'Description': 'The current decimal balance.'
+        },
+        {
+            'Property': {code: 'newBalance'},
+            'Type': 'number',
+            'Description': 'The new balance.'
+        },
+        {
+            'Property': {code: 'newDecimalBalance'},
+            'Type': 'string',
+            'Description': 'The new decimal balance.'
+        },
+        {
+            'Property': {code: 'amount'},
+            'Type': 'number',
+            'Description': 'The amount.'
+        },
+        {
+            'Property': {code: 'decimalAmount'},
+            'Type': 'string',
+            'Description': 'The decimal amount.'
+        },
+        {
+            'Property': {code: 'recipient'},
+            'Type': 'string',
+            'Description': 'The recipient address.'
+        },
+        {
+            'Property': {code: 'rollupFeeAmount'},
+            'Type': 'number',
+            'Description': 'The rollup fee amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeDecimalAmount'},
+            'Type': 'string',
+            'Description': 'The rollup fee decimal amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeTotalAmount'},
+            'Type': 'number',
+            'Description': 'The rollup fee total amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeTotalDecimalAmount'},
+            'Type': 'string',
+            'Description': 'The rollup fee total decimal amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeAssetSymbol'},
+            'Type': 'string',
+            'Description': 'The rollup fee asset symbol.'
+        },
+        {
+            'Property': {code: 'rollupFeeAssetDecimals'},
+            'Type': 'number',
+            'Description': 'The rollup fee asset decimals.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAmount'},
+            'Type': 'number',
+            'Description': 'The gas relayer fee amount.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeDecimalAmount'},
+            'Type': 'string',
+            'Description': 'The gas relayer fee decimal amount.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAssetSymbol'},
+            'Type': 'string',
+            'Description': 'The gas relayer fee asset symbol.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAssetDecimals'},
+            'Type': 'number',
+            'Description': 'The gas relayer fee asset decimals.'
+        },
+        {
+            'Property': {code: 'gasRelayerAddress'},
+            'Type': 'string',
+            'Description': 'The gas relayer address.'
+        },
+        {
+            'Property': {code: 'gasRelayerName'},
+            'Type': 'string',
+            'Description': 'The gas relayer name.'
+        },
+        {
+            'Property': {code: 'gasRelayerUrl'},
+            'Type': 'string',
+            'Description': 'The gas relayer URL.'
+        },
+    ]}
+/>
+
+## Create
+
+Create a Spend request.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.CreateSpendOptions({
+    chainId: BigInt(11155111),
+    assetSymbol: 'MTT',
+    amount: 1,
+    bridgeType: common.v1.BridgeType.TBRIDGE,
+    walletPassword: 'walletPassword',
+});
+const spend = mystiko.spend?.create(options);
+```
+
+`Spend` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'id'},
+            'Type': 'string',
+            'Description': 'The ID of the spend.'
+        },
+        {
+            'Property': {code: 'createdAt'},
+            'Type': 'bigint',
+            'Description': 'The creation time of the spend.'
+        },
+        {
+            'Property': {code: 'updatedAt'},
+            'Type': 'bigint',
+            'Description': 'The update time of the spend.'
+        },
+        {
+            'Property': {code: 'chainId'},
+            'Type': 'bigint',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Property': {code: 'contractAddress'},
+            'Type': 'string',
+            'Description': 'The contract address.'
+        },
+        {
+            'Property': {code: 'assetSymbol'},
+            'Type': 'string',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Property': {code: 'assetDecimals'},
+            'Type': 'number',
+            'Description': 'The asset decimals.'
+        },
+        {
+            'Property': {code: 'amount'},
+            'Type': 'number',
+            'Description': 'The amount.'
+        },
+        {
+            'Property': {code: 'decimalAmount'},
+            'Type': 'string',
+            'Description': 'The decimal amount.'
+        },
+        {
+            'Property': {code: 'recipient'},
+            'Type': 'string',
+            'Description': 'The recipient address.'
+        },
+        {
+            'Property': {code: 'walletId'},
+            'Type': 'string',
+            'Description': 'The wallet ID.'
+        },
+        {
+            'Property': {code: 'inputCommitments'},
+            'Type': 'string[]',
+            'Description': 'The input commitments.'
+        },
+        {
+            'Property': {code: 'outputCommitments'},
+            'Type': 'string[]',
+            'Description': 'The output commitments.'
+        },
+        {
+            'Property': {code: 'nullifiers'},
+            'Type': 'string[]',
+            'Description': 'The nullifiers.'
+        },
+        {
+            'Property': {code: 'signaturePublicKeyHashes'},
+            'Type': 'string[]',
+            'Description': 'The signature public key hashes.'
+        },
+        {
+            'Property': {code: 'encryptedAuditorNotes'},
+            'Type': 'string[]',
+            'Description': 'The encrypted auditor notes.'
+        },
+        {
+            'Property': {code: 'rollupFeeAmount'},
+            'Type': 'number',
+            'Description': 'The rollup fee amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeDecimalAmount'},
+            'Type': 'string',
+            'Description': 'The rollup fee decimal amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeTotalAmount'},
+            'Type': 'number',
+            'Description': 'The rollup fee total amount.'
+        },
+        {
+            'Property': {code: 'rollupFeeTotalDecimalAmount'},
+            'Type': 'string',
+            'Description': 'The rollup fee total decimal amount.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeAmount'},
+            'Type': 'number',
+            'Description': 'The gas relayer fee amount.'
+        },
+        {
+            'Property': {code: 'gasRelayerFeeDecimalAmount'},
+            'Type': 'string',
+            'Description': 'The gas relayer fee decimal amount.'
+        },
+        {
+            'Property': {code: 'signaturePublicKey'},
+            'Type': 'string',
+            'Description': 'The signature public key.'
+        },
+        {
+            'Property': {code: 'assetAddress'},
+            'Type': 'string',
+            'Description': 'The asset address.'
+        },
+        {
+            'Property': {code: 'proof'},
+            'Type': 'string',
+            'Description': 'The proof.'
+        },
+        {
+            'Property': {code: 'rootHash'},
+            'Type': 'string',
+            'Description': 'The root hash.'
+        },
+        {
+            'Property': {code: 'gasRelayerAddress'},
+            'Type': 'string',
+            'Description': 'The gas relayer address.'
+        },
+        {
+            'Property': {code: 'gasRelayerUrl'},
+            'Type': 'string',
+            'Description': 'The gas relayer URL.'
+        },
+        {
+            'Property': {code: 'signature'},
+            'Type': 'string',
+            'Description': 'The signature.'
+        },
+        {
+            'Property': {code: 'randomAuditingPublicKey'},
+            'Type': 'string',
+            'Description': 'The random auditing public key.'
+        },
+        {
+            'Property': {code: 'errorMessage'},
+            'Type': 'string',
+            'Description': 'The error message.'
+        },
+        {
+            'Property': {code: 'transactionHash'},
+            'Type': 'string',
+            'Description': 'The transaction hash.'
+        },
+        {
+            'Property': {code: 'bridgeType'},
+            'Type': 'BridgeType',
+            'Description': 'The bridge type.'
+        },
+        {
+            'Property': {code: 'spendType'},
+            'Type': 'SpendType',
+            'Description': 'The spend type.'
+        },
+        {
+            'Property': {code: 'status'},
+            'Type': 'SpendStatus',
+            'Description': 'The spend status.'
+        },
+    ]}
+/>
+
+## Send
+
+Send a spend transaction using a private key.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.SendSpendOptions({
+    spendId: 'id',
+    walletPassword: 'walletPassword',
+    privateKey: 'private key of transaction signer'
+});
+const spend = mystiko.spend?.send(options);
+```
+
+`SendSpendOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': {code: 'spendId'},
+            'Required': 'true',
+            'Description': 'The ID of the spend.'
+        },
+        {
+            'Parameter': {code: 'walletPassword'},
+            'Required': 'true',
+            'Description': 'The wallet password.'
+        },
+        {
+            'Parameter': {code: 'privateKey'},
+            'Required': 'false',
+            'Description': 'The private key.'
+        },
+        {
+            'Parameter': {code: 'signerProvider'},
+            'Required': 'false',
+            'Description': 'The signer provider.'
+        },
+        {
+            'Parameter': {code: 'queryTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'spendConfirmations'},
+            'Required': 'false',
+            'Description': 'The spend confirmations.'
+        },
+        {
+            'Parameter': {code: 'txSendTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The transaction send timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'txWaitTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The transaction wait timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'txWaitIntervalMs'},
+            'Required': 'false',
+            'Description': 'The transaction wait interval in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'relayerWaitTimeoutMs'},
+            'Required': 'false',
+            'Description': 'The relayer wait timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'relayerWaitIntervalMs'},
+            'Required': 'false',
+            'Description': 'The relayer wait interval in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'tx'},
+            'Required': 'false',
+            'Description': 'The transaction.'
+        },
+        {
+            'Parameter': {code: 'rawMerkleTree'},
+            'Required': 'false',
+            'Description': 'The raw Merkle tree.'
+        },
+        {
+            'Parameter': {code: 'rawZkProgram'},
+            'Required': 'false',
+            'Description': 'The raw ZK program.'
+        },
+        {
+            'Parameter': {code: 'rawZkProvingKey'},
+            'Required': 'false',
+            'Description': 'The raw ZK proving key.'
+        },
+        {
+            'Parameter': {code: 'rawZkVerifyingKey'},
+            'Required': 'false',
+            'Description': 'The raw ZK verifying key.'
+        },
+        {
+            'Parameter': {code: 'rawZkAbi'},
+            'Required': 'false',
+            'Description': 'The raw ZK ABI.'
+        },
+    ]}
+/>
+
+### SendWithGrpc
+
+Send a spend transaction by signing through the given gRPC interface.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core, service } from '@mystikonetwork/protos';
+
+const options1 = new core.handler.v1.SendSpendOptions({
+    spendId: 'id',
+    walletPassword: 'walletPassword'
+});
+const options2 = new service.v1.ClientOptions({});
+const spend = mystiko.spend?.sendWithGrpc(options1, options2);
+```
+
+`ClientOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'host' },
+            'Required': 'true',
+            'Description': 'Host.'
+        },
+        {
+            'Parameter': { code: 'port' },
+            'Required': 'true',
+            'Description': 'Port.'
+        },
+        {
+            'Parameter': { code: 'isSsl' },
+            'Required': 'false',
+            'Description': 'Is SSL.'
+        },
+        {
+            'Parameter': { code: 'sslCert' },
+            'Required': 'false',
+            'Description': 'SSL cert.'
+        },
+        {
+            'Parameter': { code: 'sslCertPath' },
+            'Required': 'false',
+            'Description': 'SSL cert path.'
+        },
+        {
+            'Parameter': { code: 'sslServerName' },
+            'Required': 'false',
+            'Description': 'SSL server name.'
+        },
+    ]}
+/>
+
+## Find
+
+Query Spend data using `Filter`.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { storage } from '@mystikonetwork/protos';
+
+const filter = new storage.v1.SubFilter({
+    column: 'id',
+    values: ['id'],
+    operator: storage.v1.SubFilterOperator.IN,
+});
+const spends = mystiko.spend?.find(filter);
+```
+
+### FindAll
+
+Query all Spend data.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const spends = mystiko.spend?.find(undefined);
+```
+
+### FindOne
+
+Find a single Spend record using `Filter`.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { storage } from '@mystikonetwork/protos';
+
+const filter = new storage.v1.SubFilter({
+    column: 'id',
+    values: ['id'],
+    operator: storage.v1.SubFilterOperator.IN,
+});
+const spend = mystiko.spend?.findOne(filter);
+```
+
+### FindById
+
+Find a single Spend record by its ID.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const spend = mystiko.spend?.findById('id');
+```
+
+## Count
+
+Query the count of data that matches the `Filter` criteria.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { storage } from '@mystikonetwork/protos';
+
+const filter = new storage.v1.SubFilter({
+    column: 'id',
+    values: ['id'],
+    operator: storage.v1.SubFilterOperator.IN,
+});
+const total = mystiko.spend?.count(filter);
+```
+
+### CountAll
+
+Query the total count of all Spend data.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const total = mystiko.spend?.count(undefined);
+```
+
+## Update
+
+Update a Spend record.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const spend = mystiko.spend?.findById('id');
+spend.amount = 2000;
+const updatedSpend = mystiko.spend?.update(spend);
+```
+
+### UpdateBatch
+
+Batch update Spend records.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const spend = mystiko.spend?.findById("id");
+spend.amount = 2000;
+const newSpends = mystiko.spend?.updateBatch([spend]);
+```
+
+### UpdateByFilter
+
+Update Spend records based on the conditions specified in the `Filter`.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { api, storage } from '@mystikonetwork/protos';
+
+const columnValues = [
+    new api.handler.v1.ColumnValuePair({
+      column: 'amount',
+      value: new storage.v1.ColumnValue({
+        value: {
+          value: 2000,
+          case: 'f64Value',
+        },
+      }),
+    }),
+];
+const filter = new storage.v1.QueryFilter({
+    conditions: [],
+    conditionsOperator: storage.v1.ConditionOperator.OR,
+});
+mystiko.spend?.updateByValues(columnValues, filter);
+```
+
+### UpdateAll
+
+Update all Spend records.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { api, storage } from '@mystikonetwork/protos';
+
+const columnValues = [
+    new api.handler.v1.ColumnValuePair({
+      column: 'amount',
+      value: new storage.v1.ColumnValue({
+        value: {
+          value: 2000,
+          case: 'f64Value',
+        },
+      }),
+    }),
+];
+mystiko.spend?.updateByValues(columnValues, undefined);
+```
+
+## Delete
+
+Delete a Spend record.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const spend = mystiko.spend?.findById("id");
+mystiko.spend?.delete(spend);
+```
+
+### DeleteBatch
+
+Batch delete Spend records.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const spend = mystiko.spend?.findById("id");
+mystiko.spend?.deleteBatch(spend);
+```
+
+### DeleteByFilter
+
+Delete Spend records based on the conditions specified in the `Filter`.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { storage } from '@mystikonetwork/protos';
+
+const filter = new storage.v1.SubFilter({
+    column: 'id',
+    values: ['id'],
+    operator: storage.v1.SubFilterOperator.IN,
+});
+const total = mystiko.spend?.deleteByFilter(filter);
+```
+
+### DeleteAll
+
+Delete all Spend records.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+mystiko.spend?.deleteAll();
+```

@@ -31,6 +31,9 @@ try {
 ```
 The API is divided into multiple modules, including: `config`, `wallet`, `account`, `deposit`, `spend`, `scanner`, `synchronizer`. You can obtain the corresponding API object for each module using the following methods:
 
+_**mystiko must be initialized before using the API.**_
+
+```node
 ## Modules
 
 Links to sections on this page to view detailed method descriptions.

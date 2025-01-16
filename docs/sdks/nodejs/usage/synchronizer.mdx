@@ -1,0 +1,247 @@
+---
+title: Synchronizer
+---
+import Table from "../../../components/Table";
+
+The Synchronizer helps you synchronize on-chain data to the local environment.
+
+## Data Structure
+`SynchronizerStatus`
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'chains' },
+            'Type': 'ChainStatus[]',
+            'Description': 'The list of ChainStatus'
+        }
+    ]}
+/>
+
+`ChainStatus`
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'chainId' },
+            'Type': 'bigint',
+            'Description': 'Chain id'
+        },
+        {
+            'Property': { code: 'syncedBlock' },
+            'Type': 'bigint',
+            'Description': 'Synced block number'
+        },
+        {
+            'Property': { code: 'targetBlock' },
+            'Type': 'bigint',
+            'Description': 'Target block number'
+        },
+        {
+            'Property': { code: 'contracts' },
+            'Type': 'ContractStatus[]',
+            'Description': 'The list of ContractStatus'
+        }
+    ]}
+/>
+
+`ContractStatus`
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'contractAddress' },
+            'Type': 'string',
+            'Description': 'Contract address'
+        },
+        {
+            'Property': { code: 'syncedBlock' },
+            'Type': 'bigint',
+            'Description': 'Synced block number'
+        }
+    ]}
+/>
+
+## ChainSyncedBlock
+
+Sync block data according to chain id.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const blockNumber = mystiko.synchronizer?.chainSyncedBlock(BigInt(97));
+```
+
+## ContractSyncedBlock
+
+Sync block data according to chain id and contract address.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const blockNumber = mystiko.synchronizer?.contractSyncedBlock(
+    BigInt(11155111),
+    '0xAE77941b3bd4d2293E13A9a69E64A0ACFf5bBC55',
+);
+```
+
+## Status
+
+Check the Sync Status.
+
+Parameter: `withContracts` Indicates whether to include contract-related data in the synchronization status.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const synchronizerStatus = mystiko.synchronizer?.status(false);
+```
+
+## Sync
+
+Synchronize the transaction data for the Mystiko contract.
+The SynchronizerSyncOptions validatorValidateConcurrency level is enforced to 1 in the SDK.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.synchronizer.v1.SynchronizerSyncOptions({
+    chainIds: [BigInt(1)],
+});
+const synchronizerStatus = mystiko.synchronizer?.sync(options);
+```
+
+The parameter list for `SynchronizerSyncOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'disableDatapackerFetcher' },
+            'Required': 'false',
+            'Description': 'Disable the datapacker fetcher.'
+        },
+        {
+            'Parameter': { code: 'enableDatapackerFetcherValidate' },
+            'Required': 'false',
+            'Description': 'Enable the datapacker fetcher validate.'
+        },
+        {
+            'Parameter': { code: 'disableSequencerFetcher' },
+            'Required': 'false',
+            'Description': 'Disable the sequencer fetcher.'
+        },
+        {
+            'Parameter': { code: 'enableSequencerFetcherValidate' },
+            'Required': 'false',
+            'Description': 'Enable the sequencer fetcher validate.'
+        },
+        {
+            'Parameter': { code: 'disableProviderFetcher' },
+            'Required': 'false',
+            'Description': 'Disable the provider fetcher.'
+        },
+        {
+            'Parameter': { code: 'disableProviderFetcherValidate' },
+            'Required': 'false',
+            'Description': 'Disable the provider fetcher validate.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidator' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidatorIntegrityCheck' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator integrity check.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidatorSequenceCheck' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator sequence check.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidatorCounterCheck' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator counter check.'
+        },
+        {
+            'Parameter': { code: 'disableRuleValidatorTreeCheck' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator tree check.'
+        },
+        {
+            'Parameter': { code: 'fetcherFetchTimeoutMs' },
+            'Required': 'false',
+            'Description': 'The fetcher fetch timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'fetcherQueryLoadedBlockTimeoutMs' },
+            'Required': 'false',
+            'Description': 'The fetcher query loaded block timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'validatorValidateConcurrency' },
+            'Required': 'false',
+            'Description': 'The validator validate concurrency, enforced to 1 in the SDK.'
+        },
+        {
+            'Parameter': { code: 'chainIds' },
+            'Required': 'false',
+            'Description': 'The list of chain ids.'
+        }
+    ]}
+/>
+
+## Reset
+
+Reset the synchronization data.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.synchronizer.v1.SynchronizerResetOptions({
+    chains: [
+      new core.synchronizer.v1.ResetChainOptions({
+        chainId: BigInt(11155111),
+      }),
+    ],
+});
+const synchronizerStatus = mystiko.synchronizer?.reset(options);
+```
+
+The parameter list for `SynchronizerResetOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'chains' },
+            'Required': 'false',
+            'Description': 'The list of ResetChainOptions.'
+        }
+    ]}
+/>
+
+`ResetChainOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'chainId' },
+            'Required': 'true',
+            'Description': 'The chain id.'
+        },
+        {
+            'Parameter': { code: 'contract_addresses' },
+            'Required': 'false',
+            'Description': 'The contract addresses.'
+        },
+        {
+            'Parameter': { code: 'block_number' },
+            'Required': 'false',
+            'Description': 'The block number.'
+        }
+    ]}
+/>
