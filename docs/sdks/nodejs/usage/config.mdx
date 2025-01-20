@@ -1,0 +1,637 @@
+---
+title: Config
+---
+import Table from "../../../components/Table";
+
+Details about Mystiko configuration and related interfaces.
+
+## Data Structure
+- [MystikoConfig](#get)
+- [CircuitConfig](#circuitconfig)
+- [ChainConfig](#chainconfig)
+- [BridgeConfig](#findbridge)
+- [DepositContractConfig](#depositcontractconfig)
+- [PoolContractConfig](#poolcontractconfig)
+- [ContractConfig](#findcontractbyaddress)
+
+## Get
+Get `MystikoConfig`.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const mystikoConfig = mystiko.config?.get();
+```
+`MystikoConfig` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'version'},
+            'Type': 'string',
+            'Description': 'Mystiko version.'
+        },
+        {
+            'Property': {code: 'chainConfigs'},
+            'Type': '{[key: string]: ChainConfig;}',
+            'Description': 'Chain configs map, key is chain id.'
+        },
+        {
+            'Property': {code: 'bridgeConfigs'},
+            'Type': '{[key: number]: BridgeConfig;}',
+            'Description': 'Bridge configs map, key is bridge type.'
+        },
+        {
+            'Property': {code: 'gitRevision'},
+            'Type': 'string',
+            'Description': 'Git revision.'
+        },
+        {
+            'Property': {code: 'sequencerConfig'},
+            'Type': 'ClientOptions',
+            'Description': 'Sequencer config.'
+        },
+        {
+            'Property': {code: 'packerConfig'},
+            'Type': 'PackerConfig',
+            'Description': 'Packer config.'
+        },
+        {
+            'Property': {code: 'countryBlacklist'},
+            'Type': 'string[]',
+            'Description': 'Country blacklist.'
+        },
+        {
+            'Property': {code: 'circuitConfigs'},
+            'Type': 'CircuitConfig[]',
+            'Description': 'Circuit configs.'
+        }
+    ]}
+/>
+
+## CircuitConfig
+    `CircuitConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'name'},
+                'Type': 'string',
+                'Description': 'Circuit name.'
+            },
+            {
+                'Property': {code: 'circuitType'},
+                'Type': 'CircuitType',
+                'Description': 'Circuit type.'
+            },
+            {
+                'Property': {code: 'isDefault'},
+                'Type': 'boolean',
+                'Description': 'Is default circuit.'
+            },
+            {
+                'Property': {code: 'programFile'},
+                'Type': 'string[]',
+                'Description': 'Program files.'
+            },
+            {
+                'Property': {code: 'abiFile'},
+                'Type': 'string[]',
+                'Description': 'ABI files.'
+            },
+            {
+                'Property': {code: 'provingKeyFile'},
+                'Type': 'string[]',
+                'Description': 'Proving key files.'
+            },
+            {
+                'Property': {code: 'verifyingKeyFile'},
+                'Type': 'string[]',
+                'Description': 'Verifying key files.'
+            }
+        ]}
+    />
+
+### FindDefaultCircuit
+Find default circuit config by circuit type.
+```node
+import mystiko from '@mystikonetwork/node';
+import { common } from '@mystikonetwork/protos';
+
+const circuitConfig = mystiko.config?.findDefaultCircuit(common.v1.CircuitType.ROLLUP_1);
+```
+List of supported `CircuitType`:
+```node
+CircuitType.ROLLUP_1;
+CircuitType.ROLLUP_2;
+CircuitType.ROLLUP_4;
+CircuitType.ROLLUP_8;
+CircuitType.ROLLUP_16;
+CircuitType.ROLLUP_32;
+CircuitType.ROLLUP_64;
+CircuitType.ROLLUP_128;
+CircuitType.ROLLUP_256;
+CircuitType.ROLLUP_512;
+CircuitType.ROLLUP_1024;
+
+CircuitType.TRANSACTION1X0;
+CircuitType.TRANSACTION1X1;
+CircuitType.TRANSACTION1X2;
+CircuitType.TRANSACTION2X0;
+CircuitType.TRANSACTION2X1;
+CircuitType.TRANSACTION2X2;
+```
+
+### FindCircuit
+Find circuit config by circuit name.
+```node
+import mystiko from '@mystikonetwork/node';
+import { common } from '@mystikonetwork/protos';
+
+const circuitConfig = mystiko.config?.findCircuit('zokrates-1.0-rollup1');
+```
+
+## ChainConfig
+    `ChainConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'chainId'},
+                'Type': 'bigint',
+                'Description': 'Chain id.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'string',
+                'Description': 'Chain name.'
+            },
+            {
+                'Property': {code: 'assetSymbol'},
+                'Type': 'string',
+                'Description': 'Native asset symbol.'
+            },
+            {
+                'Property': {code: 'assetDecimals'},
+                'Type': 'number',
+                'Description': 'Native asset decimals.'
+            },
+            {
+                'Property': {code: 'explorerUrl'},
+                'Type': 'string',
+                'Description': 'Explorer URL.'
+            },
+            {
+                'Property': {code: 'explorerApiUrl'},
+                'Type': 'string',
+                'Description': 'Explorer API URL.'
+            },
+            {
+                'Property': {code: 'explorerPrefix'},
+                'Type': 'string',
+                'Description': 'Explorer prefix.'
+            },
+            {
+                'Property': {code: 'providerQuorumPercentage'},
+                'Type': 'number',
+                'Description': 'Provider quorum percentage.'
+            },
+            {
+                'Property': {code: 'signerEndpoint'},
+                'Type': 'string',
+                'Description': 'Signer endpoint.'
+            },
+            {
+                'Property': {code: 'eventDelayBlocks'},
+                'Type': 'bigint',
+                'Description': 'Event delay blocks.'
+            },
+            {
+                'Property': {code: 'eventFilterSize'},
+                'Type': 'bigint',
+                'Description': 'Event filter size.'
+            },
+            {
+                'Property': {code: 'sequencerFetchSize'},
+                'Type': 'bigint',
+                'Description': 'Sequencer fetch size.'
+            },
+            {
+                'Property': {code: 'mainAssetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Main asset config.'
+            },
+            {
+                'Property': {code: 'providerType'},
+                'Type': 'ProviderType',
+                'Description': 'Provider type.'
+            },
+            {
+                'Property': {code: 'transactionType'},
+                'Type': 'TransactionType',
+                'Description': 'Transaction type.'
+            },
+            {
+                'Property': {code: 'assetConfigs'},
+                'Type': '{[key: string]: AssetConfig;}',
+                'Description': 'Asset configs map, key is asset contract address.'
+            },
+            {
+                'Property': {code: 'depositContractConfigs'},
+                'Type': '{[key: string]: DepositContractConfig;}',
+                'Description': 'Deposit contract configs map, key is deposit contract address.'
+            },
+            {
+                'Property': {code: 'poolContractConfigs'},
+                'Type': '{[key: string]: PoolContractConfig;}',
+                'Description': 'Pool contract configs map, key is pool contract address.'
+            },
+            {
+                'Property': {code: 'recommendedAmounts'},
+                'Type': 'string[]',
+                'Description': 'Recommended amounts.'
+            },
+            {
+                'Property': {code: 'providerConfigs'},
+                'Type': 'ProviderConfig[]',
+                'Description': 'Provider configs.'
+            },
+            {
+                'Property': {code: 'granularities'},
+                'Type': 'bigint[]',
+                'Description': 'Granularities.'
+            }
+        ]}
+    />
+
+### FindChain
+Find chain config by chain id.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const chainConfig = mystiko.config?.findChain(BigInt(97));
+```
+
+### FindPeerChains
+Find peer chains by chain id.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const chainConfig = mystiko.config?.findChain(BigInt(11155111));
+```
+
+## FindAssetSymbols
+Find asset symbols by chain id and peer chain id.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const assetSymbols = mystiko.config?.findAssetSymbols(BigInt(97), BigInt(11155111));
+```
+
+## FindBridges
+Find bridge type by chain id, peer chain id and asset symbol.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const bridges = mystiko.config?.findBridges(BigInt(97), BigInt(11155111), 'MTT');
+```
+
+## FindBridge
+Find bridge config by bridge type.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const bridgeConfig = mystiko.config?.findBridge(common.v1.BridgeType.TBRIDGE);
+```
+List of supported `BridgeType`:
+```node
+BridgeType.LOOP;
+BridgeType.POLY;
+BridgeType.TBRIDGE;
+BridgeType.CELER;
+BridgeType.LAYER_ZERO;
+BridgeType.AXELAR;
+BridgeType.WORMHOLE;
+```
+    `BridgeConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'name'},
+                'Type': 'string',
+                'Description': 'Bridge name.'
+            },
+            {
+                'Property': {code: 'bridgeType'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'explorerUrl'},
+                'Type': 'string',
+                'Description': 'Explorer URL.'
+            },
+            {
+                'Property': {code: 'explorerPrefix'},
+                'Type': 'string',
+                'Description': 'Explorer prefix.'
+            },
+            {
+                'Property': {code: 'apiUrl'},
+                'Type': 'string',
+                'Description': 'API URL.'
+            },
+            {
+                'Property': {code: 'apiPrefix'},
+                'Type': 'string',
+                'Description': 'API prefix.'
+            }
+        ]}
+    />
+
+## DepositContractConfig
+    `DepositContractConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'version'},
+                'Type': 'number',
+                'Description': 'Deposit Contract Version.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'string',
+                'Description': 'Contract name.'
+            },
+            {
+                'Property': {code: 'address'},
+                'Type': 'string',
+                'Description': 'Contract address.'
+            },
+            {
+                'Property': {code: 'startBlock'},
+                'Type': 'bigint',
+                'Description': 'Start block.'
+            },
+            {
+                'Property': {code: 'disabled'},
+                'Type': 'boolean',
+                'Description': 'Is disabled.'
+            },
+            {
+                'Property': {code: 'minAmount'},
+                'Type': 'string',
+                'Description': 'Minimum amount.'
+            },
+            {
+                'Property': {code: 'maxAmount'},
+                'Type': 'string',
+                'Description': 'Maximum amount.'
+            },
+            {
+                'Property': {code: 'poolContractConfig'},
+                'Type': 'PoolContractConfig',
+                'Description': 'Pool contract config.'
+            },
+            {
+                'Property': {code: 'bridgeType'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'contractType'},
+                'Type': 'ContractType',
+                'Description': 'Contract type.'
+            },
+            {
+                'Property': {code: 'minBridgeFee'},
+                'Type': 'string',
+                'Description': 'Minimum bridge fee.'
+            },
+            {
+                'Property': {code: 'minExecutorFee'},
+                'Type': 'string',
+                'Description': 'Minimum executor fee.'
+            },
+            {
+                'Property': {code: 'serviceFee'},
+                'Type': 'number',
+                'Description': 'Service fee.'
+            },
+            {
+                'Property': {code: 'serviceFeeDivider'},
+                'Type': 'number',
+                'Description': 'Service fee divider.'
+            },
+            {
+                'Property': {code: 'bridgeFeeAssetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Bridge fee asset config.'
+            },
+            {
+                'Property': {code: 'executorFeeAssetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Executor fee asset config.'
+            },
+            {
+                'Property': {code: 'peerChainId'},
+                'Type': 'bigint',
+                'Description': 'Peer chain id.'
+            },
+            {
+                'Property': {code: 'peerContractAddress'},
+                'Type': 'string',
+                'Description': 'Peer contract address.'
+            }
+        ]}
+    />
+
+### FindDepositContract
+Find deposit contract config by chain id, peer chain id, asset symbol and bridge type.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const depositContractConfig = mystiko.config?.findDepositContract(
+    BigInt(11155111),
+    BigInt(97),
+    'MTT',
+    common.v1.BridgeType.TBRIDGE,
+);
+```
+
+### FindDepositContractByAddress
+Find deposit contract config by chain id and deposit contract address.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const depositContractConfig = mystiko.config?.findDepositContractByAddress(
+    BigInt(11155111),
+    '0x643DD956aC516808538BF979b8440AbcebC3bcdA',
+);
+```
+
+## PoolContractConfig
+    `PoolContractConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'version'},
+                'Type': 'number',
+                'Description': 'Pool Contract Version.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'string',
+                'Description': 'Contract name.'
+            },
+            {
+                'Property': {code: 'address'},
+                'Type': 'string',
+                'Description': 'Contract address.'
+            },
+            {
+                'Property': {code: 'startBlock'},
+                'Type': 'bigint',
+                'Description': 'Start block.'
+            },
+            {
+                'Property': {code: 'poolName'},
+                'Type': 'string',
+                'Description': 'Pool name.'
+            },
+            {
+                'Property': {code: 'minRollupFee'},
+                'Type': 'string',
+                'Description': 'Minimum rollup fee.'
+            },
+            {
+                'Property': {code: 'contractType'},
+                'Type': 'ContractType',
+                'Description': 'Contract type.'
+            },
+            {
+                'Property': {code: 'bridgeType'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'assetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Asset config.'
+            },
+            {
+                'Property': {code: 'circuitConfigs'},
+                'Type': 'CircuitConfig[]',
+                'Description': 'Circuit configs.'
+            },
+            {
+                'Property': {code: 'circuits'},
+                'Type': 'string[]',
+                'Description': 'Circuits.'
+            }
+        ]}
+    />
+
+### FindPoolContract
+Find pool contract config by chain id, asset symbol, bridge type and version.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const poolContractConfig = mystiko.config?.findPoolContract(BigInt(11155111), 'MTT', common.v1.BridgeType.TBRIDGE, 6);
+```
+
+### FindPoolContracts
+Find pool contracts by chain id, asset symbol and bridge type.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const poolContractConfig = mystiko.config?.findPoolContracts(BigInt(11155111), 'MTT', common.v1.BridgeType.TBRIDGE);
+```
+
+### FindPoolContractByAddress
+Find pool contract config by chain id and pool contract address.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const poolContractConfig = mystiko.config?.findPoolContractByAddress(
+    BigInt(11155111),
+    '0xAE77941b3bd4d2293E13A9a69E64A0ACFf5bBC55',
+);
+```
+
+## FindContractByAddress
+Find contract config by chain id and contract address.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const contractConfig = mystiko.config?.findContractByAddress(
+    BigInt(11155111),
+    '0xAE77941b3bd4d2293E13A9a69E64A0ACFf5bBC55',
+);
+```
+    `ContractConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'version'},
+                'Type': 'number',
+                'Description': 'Contract version.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'string',
+                'Description': 'Contract name.'
+            },
+            {
+                'Property': {code: 'address'},
+                'Type': 'string',
+                'Description': 'Contract address.'
+            },
+            {
+                'Property': {code: 'startBlock'},
+                'Type': 'bigint',
+                'Description': 'Start block.'
+            },
+            {
+                'Property': {code: 'disabled'},
+                'Type': 'boolean',
+                'Description': 'Is disabled.'
+            },
+            {
+                'Property': {code: 'minRollupFee'},
+                'Type': 'string',
+                'Description': 'Minimum rollup fee.'
+            },
+            {
+                'Property': {code: 'assetConfig'},
+                'Type': 'AssetConfig',
+                'Description': 'Asset config.'
+            },
+            {
+                'Property': {code: 'bridgeType'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'contractType'},
+                'Type': 'ContractType',
+                'Description': 'Contract type.'
+            }
+        ]}
+    />
+List of supported `ContractType`:
+```node
+ContractType.DEPOSIT;
+ContractType.POOL;
+```
+
+## GetTransactionUrl
+Get transaction url by chain id and transaction hash.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const txWithUrl = mystiko.config?.getTransactionUrl(BigInt(11155111), '0x1803ef0489ec2bda0abb7f564fa795959c0d1f4db7651236e34f879b317c074a');
+```

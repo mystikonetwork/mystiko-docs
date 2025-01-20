@@ -1,0 +1,250 @@
+---
+title: Account
+---
+import Table from '../../../components/Table';
+
+The account module provides a series of methods related to Mystiko accounts.
+
+## Data Structure
+An account is an object generated from protobuf with the following properties:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'id' },
+            'Type': 'string',
+            'Description': 'The unique identifier of the account.'
+        },
+        {
+            'Property': { code: 'createdAt' },
+            'Type': 'bigint',
+            'Description': 'The timestamp when the account was created.'
+        },
+        {
+            'Property': { code: 'updatedAt' },
+            'Type': 'bigint',
+            'Description': 'The timestamp when the account was last updated.'
+        },
+        {
+            'Property': { code: 'name' },
+            'Type': 'string',
+            'Description': 'The name of the account.'
+        },
+        {
+            'Property': { code: 'shieldedAddress' },
+            'Type': 'string',
+            'Description': 'The shielded address of the account.'
+        },
+        {
+            'Property': { code: 'publicKey' },
+            'Type': 'string',
+            'Description': 'The public key of the account.'
+        },
+        {
+            'Property': { code: 'encryptedSecretKey' },
+            'Type': 'string',
+            'Description': 'The encrypted secret key of the account.'
+        },
+        {
+            'Property': { code: 'walletId' },
+            'Type': 'string',
+            'Description': 'The unique identifier of the wallet to which the account belongs.'
+        },
+        {
+            'Property': { code: 'scannedToId' },
+            'Type': 'string',
+            'Description': 'The unique identifier of the last scanned transaction.'
+        }
+    ]}
+/>
+
+## Create
+Create an Account.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const options = new core.handler.v1.CreateAccountOptions({
+    walletPassword: WalletPassword,
+    name: 'test_account',
+});
+const account = mystiko.account?.create(options);
+```
+The parameter list for `CreateAccountOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the encrypted wallet.'
+        },
+        {
+            'Parameter': { code: 'name' },
+            'Required': 'false',
+            'Description': 'The name of the account.'
+        },
+        {
+            'Parameter': { code: 'secretKey' },
+            'Required': 'false',
+            'Description': 'The secret key of the account.'
+        }
+    ]}
+/>
+
+## Count
+Query the number of accounts in the wallet based on specific conditions.
+```node
+import mystiko from '@mystikonetwork/node';
+import { storage } from '@mystikonetwork/protos';
+
+const queryFilters = new storage.v1.SubFilter({
+    column: 'name',
+    values: [],
+    operator: storage.v1.SubFilterOperator.IS_NOT_NULL,
+});
+const total = mystiko.account?.count(queryFilters);
+```
+
+### CountAll
+Query the total number of accounts in the wallet.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const total = mystiko.account?.count(undefined);
+```
+
+## Find
+Query accounts based on specific conditions.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const filter = new storage.v1.SubFilter({
+    column: 'name',
+    values: ['test_account'],
+    operator: storage.v1.SubFilterOperator.IN,
+});
+const account = mystiko.account?.find(filter);
+```
+
+### FindAll
+Query all accounts in the wallet.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const account = mystiko.account?.find(undefined);
+```
+
+### FindById
+Query an account by its unique identifier.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const account = mystiko.account?.findById('accountId');
+```
+
+### FindByShieldedAddress
+Query an account by its shielded address.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const account = mystiko.account?.findByShieldedAddress('shieldedAddress');
+```
+
+### FindByPublicKey
+Query an account by its public key.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const account = mystiko.account?.findByPublicKey('publicKey');
+```
+
+## Update
+The parameter list for `UpdateAccountOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the encrypted wallet.'
+        },
+        {
+            'Parameter': { code: 'name' },
+            'Required': 'false',
+            'Description': 'The name of the account.'
+        }
+    ]}
+/>
+
+### UpdateById
+Update an account by its unique identifier.
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.UpdateAccountOptions({
+    walletPassword: "WalletPassword",
+    name: 'account1'
+});
+const account = mystiko.account?.updateById('accountId', options);
+```
+
+### UpdateByShieldedAddress
+Update an account by its shielded address.
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.UpdateAccountOptions({
+    walletPassword: "WalletPassword",
+    name: 'account1'
+});
+const account = mystiko.account?.updateByShieldedAddress('shieldedAddress', options);
+```
+
+### UpdateByPublicKey
+Update an account by its public key.
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.UpdateAccountOptions({
+    walletPassword: "WalletPassword",
+    name: 'account1'
+});
+const account = mystiko.account?.updateByPublicKey('publicKey', options);
+```
+
+### UpdateEncryption
+Update the encryption of an account.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const account = mystiko.account?.updateEncryption(oldPassword, newPassword);
+```
+
+## Export
+
+### ExportSecretKeyById
+Export the secret key of an account by its unique identifier.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const key = mystiko.account?.exportSecretKeyById('walletPassword', "accountId");
+```
+
+### ExportSecretKeyByPublicKey
+Export the secret key of an account by its public key.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const key = mystiko.account?.exportSecretKeyByPublicKey('walletPassword', "publicKey");
+```
+
+### ExportSecretKeyByShieldedAddress
+Export the secret key of an account by its shielded address.
+```node
+import mystiko from '@mystikonetwork/node';
+
+const key = mystiko.account?.exportSecretKeyByShieldedAddress('walletPassword', "shieldedAddress");
+```

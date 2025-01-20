@@ -1,0 +1,265 @@
+---
+title: Scanner
+---
+import Table from "../../../components/Table";
+
+Mystiko Scanner Related APIs.
+
+## Sync
+
+Sync current wallet deposit and spend transaction status.
+The ScannerSyncOptions concurrency level is enforced to 1 in the SDK.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.scanner.v1.ScannerSyncOptions({
+    walletPassword: WalletPassword,
+});
+const balanceResult = mystiko.scanner?.sync(options);
+```
+
+The parameter list for `ScannerSyncOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the wallet.'
+        },
+        {
+            'Parameter': { code: 'concurrency' },
+            'Required': 'false',
+            'Description': 'Concurrency level is enforced to 1 in the SDK.'
+        }
+    ]}
+/>
+
+## Scan
+
+Scan transactions related to the current wallet.
+The ScannerScanOptions concurrency level is enforced to 1 in the SDK.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.scanner.v1.ScannerScanOptions({
+    walletPassword: 'walletPassword',
+    shieldedAddresses: [],
+});
+const scanResult = mystiko.scanner?.scan(options);
+```
+
+The parameter list for `ScannerScanOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the wallet.'
+        },
+        {
+            'Parameter': { code: 'batchSize' },
+            'Required': 'false',
+            'Description': 'The number of transactions to scan in each batch.'
+        },
+        {
+            'Parameter': { code: 'concurrency' },
+            'Required': 'false',
+            'Description': 'Concurrency level is enforced to 1 in the SDK.'
+        },
+        {
+            'Parameter': { code: 'shieldedAddresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to scan.'
+        }
+    ]}
+/>
+
+## Reset
+
+Scanner reset.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.scanner.v1.ScannerResetOptions({
+    shieldedAddresses: [],
+});
+const resetResult = mystiko.scanner?.reset(options);
+```
+
+The parameter list for `ScannerResetOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'resetToId' },
+            'Required': 'false',
+            'Description': 'The transaction ID to reset to.'
+        },
+        {
+            'Parameter': { code: 'shieldedAddresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to reset.'
+        }
+    ]}
+/>
+
+
+## Import
+
+Import asset by transaction.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.scanner.v1.AssetImportOptions({
+    walletPassword: WalletPassword,
+    chains: [
+        {
+            chainId: BigInt(11155111),
+            txHashes: ['0x8e475d89817f12e8aec59cde31320c429cf330337267b1abb628ab4bd6e528ec'],
+        }
+    ],
+});
+const importResult = mystiko.scanner?.import(options);
+```
+
+The parameter list for `AssetImportOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'walletPassword' },
+            'Required': 'true',
+            'Description': 'The password of the wallet.'
+        },
+        {
+            'Parameter': { code: 'chains' },
+            'Required': 'true',
+            'Description': 'The list of chain import options.'
+        },
+        {
+            'Parameter': { code: 'queryTimeoutMs' },
+            'Required': 'false',
+            'Description': 'Timeout when query from provider.'
+        }
+    ]}
+/>
+
+The parameter list for `AssetChainImportOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'chainId' },
+            'Required': 'true',
+            'Description': 'The chain id.'
+        },
+        {
+            'Parameter': { code: 'txHashes' },
+            'Required': 'true',
+            'Description': 'The list of transactions hash to import.'
+        }
+    ]}
+/>
+
+## Balance
+
+Query account total balance.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.scanner.v1.BalanceOptions({
+    shieldedAddresses: [],
+    chainIds: [BigInt(11155111), BigInt(97)],
+    assetSymbols: ['MTT'],
+});
+const balance = mystiko.scanner?.balance(options);
+```
+
+The parameter list for `BalanceOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'withSpent' },
+            'Required': 'false',
+            'Description': 'Whether to include spent transactions.'
+        },
+        {
+            'Parameter': { code: 'shieldedAddresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to scan.'
+        },
+        {
+            'Parameter': { code: 'chainIds' },
+            'Required': 'false',
+            'Description': 'The list of chain IDs to scan.'
+        },
+        {
+            'Parameter': { code: 'assetSymbols' },
+            'Required': 'false',
+            'Description': 'The list of asset symbols to scan.'
+        },
+        {
+            'Parameter': { code: 'contractAddresses' },
+            'Required': 'false',
+            'Description': 'The list of contract addresses to scan.'
+        },
+        {
+            'Parameter': { code: 'bridgeTypes' },
+            'Required': 'false',
+            'Description': 'The list of bridge types to scan.'
+        }
+    ]}
+/>
+
+## Assets
+
+Query account assets details.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.scanner.v1.AssetsOptions({
+    shieldedAddresses: [shieldedAddress],
+});
+const assets = mystiko.scanner?.assets(options);
+```
+
+The parameter list for `AssetsOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'shieldedAddresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to scan.'
+        }
+    ]}
+/>
+
+## ChainAssets
+
+Query account assets details by chain.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.scanner.v1.AssetsOptions({
+    shieldedAddresses: [shieldedAddress],
+});
+const assets = mystiko.scanner?.chainAssets(BigInt(11155111), options);
+```

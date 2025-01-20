@@ -105,9 +105,23 @@ export default {
           collapsed: false,
           collapsible: true,
           items: [
-            'sdks/nodejs/overview'
+            'sdks/nodejs/installation',
+            {
+              type: 'category',
+              label: 'Usage',
+              items: [
+                'sdks/nodejs/usage/overview',
+                'sdks/nodejs/usage/config',
+                'sdks/nodejs/usage/wallet',
+                'sdks/nodejs/usage/account',
+                'sdks/nodejs/usage/deposit',
+                'sdks/nodejs/usage/spend',
+                'sdks/nodejs/usage/scanner',
+                'sdks/nodejs/usage/synchronizer',
+              ]
+            },
           ]
-        }
+        },
       ]
     },
     roller,

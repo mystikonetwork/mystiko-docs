@@ -1,0 +1,925 @@
+---
+title: Deposit
+---
+
+import Table from "../../../components/Table";
+
+Mystiko Deposit Related APIs.
+
+## Data Structure
+- [DepositQuote](#quote)
+- [DepositSummary](#summary)
+- [Deposit](#create)
+
+## Quote
+
+Retrieve quote information for a deposit.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core, common } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.QuoteDepositOptions({
+    chainId: BigInt(11155111),
+    assetSymbol: 'MTT',
+    dstChainId: BigInt(11155111),
+    bridgeType: common.v1.BridgeType.LOOP,
+});
+const depositQuote = mystiko.deposit?.quote(options);
+```
+
+`QuoteDepositOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'chainId' },
+            'Required': 'true',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Parameter': { code: 'assetSymbol' },
+            'Required': 'true',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Parameter': { code: 'queryTimeoutMs' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'dstChainId' },
+            'Required': 'false',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Parameter': { code: 'bridgeType' },
+            'Required': 'false',
+            'Description': 'Bridge type.'
+        },
+    ]}
+/>
+
+`DepositQuote` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'assetSymbol' },
+            'Type': 'string',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Property': { code: 'assetDecimals' },
+            'Type': 'number',
+            'Description': 'Asset decimals.'
+        },
+        {
+            'Property': { code: 'minAmount' },
+            'Type': 'number',
+            'Description': 'Minimum amount.'
+        },
+        {
+            'Property': { code: 'minDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Minimum decimal amount.'
+        },
+        {
+            'Property': { code: 'maxAmount' },
+            'Type': 'number',
+            'Description': 'Maximum amount.'
+        },
+        {
+            'Property': { code: 'maxDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Maximum decimal amount.'
+        },
+        {
+            'Property': { code: 'minRollupFeeAmount' },
+            'Type': 'number',
+            'Description': 'Minimum rollup fee amount.'
+        },
+        {
+            'Property': { code: 'minRollupFeeDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Minimum rollup fee decimal amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Rollup fee asset symbol.'
+        },
+        {
+            'Property': { code: 'rollupFeeAssetDecimals' },
+            'Type': 'number',
+            'Description': 'Rollup fee asset decimals.'
+        },
+        {
+            'Property': { code: 'minBridgeFeeAmount' },
+            'Type': 'number',
+            'Description': 'Minimum bridge fee amount.'
+        },
+        {
+            'Property': { code: 'minBridgeFeeDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Minimum bridge fee decimal amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetDecimals' },
+            'Type': 'number',
+            'Description': 'Bridge fee asset decimals.'
+        },
+        {
+            'Property': { code: 'minExecutorFeeAmount' },
+            'Type': 'number',
+            'Description': 'Minimum executor fee amount.'
+        },
+        {
+            'Property': { code: 'minExecutorFeeDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Minimum executor fee decimal amount.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetDecimals' },
+            'Type': 'number',
+            'Description': 'Executor fee asset decimals.'
+        },
+        {
+            'Property': { code: 'recommendedAmounts' },
+            'Type': 'number[]',
+            'Description': 'Recommended amounts.'
+        },
+        {
+            'Property': { code: 'recommendedDecimalAmounts' },
+            'Type': 'string[]',
+            'Description': 'Recommended decimal amounts.'
+        },
+    ]}
+/>
+
+## Summary
+
+Retrieve summary information for a deposit.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.CreateDepositOptions({
+    chainId: BigInt(11155111),
+    assetSymbol: 'MTT',
+    amount: 1,
+    shieldedAddress:
+      '13hMt2P6h8zp5t8Cxm5oAzTULg1boVEvzjaEPXmLtSBUmF4KKnaooWkBKBqZs9BYncvY6rA6TpCkAJ6cEXFEHWMHt',
+    dstChainId: BigInt(11155111),
+    bridgeType: common.v1.BridgeType.LOOP,
+});
+const depositSummary = mystiko.deposit?.summary(options);
+```
+
+`CreateDepositOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'chain_id' },
+            'Required': 'true',
+            'Description': 'Chain id.'
+        },
+        {
+            'Parameter': { code: 'asset_symbol' },
+            'Required': 'true',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Parameter': { code: 'amount' },
+            'Required': 'true',
+            'Description': 'Amount.'
+        },
+        {
+            'Parameter': { code: 'shielded_address' },
+            'Required': 'true',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Parameter': { code: 'dst_chain_id' },
+            'Required': 'false',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Parameter': { code: 'rollup_fee_amount' },
+            'Required': 'false',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Parameter': { code: 'bridge_fee_amount' },
+            'Required': 'false',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Parameter': { code: 'executor_fee_amount' },
+            'Required': 'false',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Parameter': { code: 'query_timeout_ms' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'deposit_quote' },
+            'Required': 'false',
+            'Description': 'Deposit quote.'
+        },
+        {
+            'Parameter': { code: 'bridge_type' },
+            'Required': 'false',
+            'Description': 'Bridge type.'
+        },
+    ]}
+/>
+
+`DepositSummary` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'chainId' },
+            'Type': 'bigint',
+            'Description': 'Chain id.'
+        },
+        {
+            'Property': { code: 'assetSymbol' },
+            'Type': 'string',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Property': { code: 'assetDecimals' },
+            'Type': 'number',
+            'Description': 'Asset decimals.'
+        },
+        {
+            'Property': { code: 'amount' },
+            'Type': 'number',
+            'Description': 'Amount.'
+        },
+        {
+            'Property': { code: 'decimalAmount' },
+            'Type': 'string',
+            'Description': 'Decimal amount.'
+        },
+        {
+            'Property': { code: 'shieldedAddress' },
+            'Type': 'string',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Property': { code: 'rollupFeeAmount' },
+            'Type': 'number',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Rollup fee decimal amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Rollup fee asset symbol.'
+        },
+        {
+            'Property': { code: 'rollupFeeAssetDecimals' },
+            'Type': 'number',
+            'Description': 'Rollup fee asset decimals.'
+        },
+        {
+            'Property': { code: 'dstChainId' },
+            'Type': 'bigint',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAmount' },
+            'Type': 'number',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Bridge fee decimal amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetDecimals' },
+            'Type': 'number',
+            'Description': 'Bridge fee asset decimals.'
+        },
+        {
+            'Property': { code: 'executorFeeAmount' },
+            'Type': 'number',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Property': { code: 'executorFeeDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Executor fee decimal amount.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetDecimals' },
+            'Type': 'number',
+            'Description': 'Executor fee asset decimals.'
+        },
+        {
+            'Property': { code: 'bridgeType' },
+            'Type': 'BridgeType',
+            'Description': 'Bridge type.'
+        },
+        {
+            'Property': { code: 'totalAmounts' },
+            'Type': '{[key: string]: number;}',
+            'Description': 'Total amounts.'
+        },
+        {
+            'Property': { code: 'totalDecimalAmounts' },
+            'Type': '{[key: string]: string;}',
+            'Description': 'Total decimal amounts.'
+        },
+    ]}
+/>
+
+## Create
+
+Create a Deposit request.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.CreateDepositOptions({
+    chainId: BigInt(11155111),
+    assetSymbol: 'MTT',
+    amount: 1,
+    shieldedAddress:
+      '13hMt2P6h8zp5t8Cxm5oAzTULg1boVEvzjaEPXmLtSBUmF4KKnaooWkBKBqZs9BYncvY6rA6TpCkAJ6cEXFEHWMHt',
+    dstChainId: BigInt(11155111),
+    bridgeType: common.v1.BridgeType.LOOP,
+});
+const deposit = mystiko.deposit?.create(options);
+```
+
+`Deposit` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'id' },
+            'Type': 'string',
+            'Description': 'Id.'
+        },
+        {
+            'Property': { code: 'createdAt' },
+            'Type': 'bigint',
+            'Description': 'Created at.'
+        },
+        {
+            'Property': { code: 'updatedAt' },
+            'Type': 'bigint',
+            'Description': 'Updated at.'
+        },
+        {
+            'Property': { code: 'chainId' },
+            'Type': 'bigint',
+            'Description': 'Chain id.'
+        },
+        {
+            'Property': { code: 'contractAddress' },
+            'Type': 'string',
+            'Description': 'Contract address.'
+        },
+        {
+            'Property': { code: 'poolAddress' },
+            'Type': 'string',
+            'Description': 'Pool address.'
+        },
+        {
+            'Property': { code: 'dstChainId' },
+            'Type': 'bigint',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Property': { code: 'dstChainContractAddress' },
+            'Type': 'string',
+            'Description': 'Destination chain contract address.'
+        },
+        {
+            'Property': { code: 'dstPoolAddress' },
+            'Type': 'string',
+            'Description': 'Destination pool address.'
+        },
+        {
+            'Property': { code: 'commitmentHash' },
+            'Type': 'string',
+            'Description': 'Commitment hash.'
+        },
+        {
+            'Property': { code: 'hashK' },
+            'Type': 'string',
+            'Description': 'Hash K.'
+        },
+        {
+            'Property': { code: 'randomS' },
+            'Type': 'string',
+            'Description': 'Random S.'
+        },
+        {
+            'Property': { code: 'encryptedNote' },
+            'Type': 'string',
+            'Description': 'Encrypted note.'
+        },
+        {
+            'Property': { code: 'assetSymbol' },
+            'Type': 'string',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Property': { code: 'assetDecimals' },
+            'Type': 'number',
+            'Description': 'Asset decimals.'
+        },
+        {
+            'Property': { code: 'amount' },
+            'Type': 'number',
+            'Description': 'Amount.'
+        },
+        {
+            'Property': { code: 'decimalAmount' },
+            'Type': 'string',
+            'Description': 'Decimal amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeAmount' },
+            'Type': 'number',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Rollup fee decimal amount.'
+        },
+        {
+            'Property': { code: 'shieldedAddress' },
+            'Type': 'string',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Property': { code: 'walletId' },
+            'Type': 'string',
+            'Description': 'Wallet id.'
+        },
+        {
+            'Property': { code: 'assetAddress' },
+            'Type': 'string',
+            'Description': 'Asset address.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAmount' },
+            'Type': 'number',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Bridge fee decimal amount.'
+        },
+        {
+            'Property': { code: 'executorFeeAmount' },
+            'Type': 'number',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Property': { code: 'executorFeeDecimalAmount' },
+            'Type': 'string',
+            'Description': 'Executor fee decimal amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetAddress' },
+            'Type': 'string',
+            'Description': 'Bridge fee asset address.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetDecimals' },
+            'Type': 'number',
+            'Description': 'Bridge fee asset decimals.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetAddress' },
+            'Type': 'string',
+            'Description': 'Executor fee asset address.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetDecimals' },
+            'Type': 'number',
+            'Description': 'Executor fee asset decimals.'
+        },
+        {
+            'Property': { code: 'queuedTransactionHash' },
+            'Type': 'string',
+            'Description': 'Queued transaction hash.'
+        },
+        {
+            'Property': { code: 'includedTransactionHash' },
+            'Type': 'string',
+            'Description': 'Included transaction hash.'
+        },
+        {
+            'Property': { code: 'srcChainTransactionHash' },
+            'Type': 'string',
+            'Description': 'Source chain transaction hash.'
+        },
+        {
+            'Property': { code: 'assetApproveTransactionHash' },
+            'Type': 'string[]',
+            'Description': 'Asset approve transaction hash.'
+        },
+        {
+            'Property': { code: 'errorMessage' },
+            'Type': 'string',
+            'Description': 'Error message.'
+        },
+        {
+            'Property': { code: 'bridgeType' },
+            'Type': 'BridgeType',
+            'Description': 'Bridge type.'
+        },
+        {
+            'Property': { code: 'status' },
+            'Type': 'DepositStatus',
+            'Description': 'Deposit status.'
+        },
+    ]}
+/>
+
+## Send
+
+Send a deposit transaction using a private key.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core } from '@mystikonetwork/protos';
+
+const options = new core.handler.v1.SendDepositOptions({
+    depositId: 'id',
+    privateKey: 'private key of transaction signer'
+});
+const deposit = mystiko.deposit?.send(options);
+```
+
+`SendDepositOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'depositId' },
+            'Required': 'true',
+            'Description': 'Deposit id.'
+        },
+        {
+            'Parameter': { code: 'privateKey' },
+            'Required': 'false',
+            'Description': 'Private key.'
+        },
+        {
+            'Parameter': { code: 'signerProvider' },
+            'Required': 'false',
+            'Description': 'Signer provider.'
+        },
+        {
+            'Parameter': { code: 'queryTimeoutMs' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'assetApproveConfirmations' },
+            'Required': 'false',
+            'Description': 'Asset approve confirmations.'
+        },
+        {
+            'Parameter': { code: 'depositConfirmations' },
+            'Required': 'false',
+            'Description': 'Deposit confirmations.'
+        },
+        {
+            'Parameter': { code: 'txSendTimeoutMs' },
+            'Required': 'false',
+            'Description': 'Transaction send timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'txWaitTimeoutMs' },
+            'Required': 'false',
+            'Description': 'Transaction wait timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'txWaitIntervalMs' },
+            'Required': 'false',
+            'Description': 'Transaction wait interval in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'assetApproveTx' },
+            'Required': 'false',
+            'Description': 'Asset approve transaction.'
+        },
+        {
+            'Parameter': { code: 'depositTx' },
+            'Required': 'false',
+            'Description': 'Deposit transaction.'
+        },
+        {
+            'Parameter': { code: 'screeningMessage' },
+            'Required': 'false',
+            'Description': 'Screening message.'
+        },
+    ]}
+/>
+
+### SendWithGrpc
+
+Send a deposit transaction by signing through the given gRPC interface.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { core, service } from '@mystikonetwork/protos';
+
+const options1 = new core.handler.v1.SendDepositOptions({
+    depositId: 'id',
+});
+const options2 = new service.v1.ClientOptions({});
+const deposit = mystiko.deposit?.sendWithGrpc(options1, options2);
+```
+
+`ClientOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'host' },
+            'Required': 'true',
+            'Description': 'Host.'
+        },
+        {
+            'Parameter': { code: 'port' },
+            'Required': 'true',
+            'Description': 'Port.'
+        },
+        {
+            'Parameter': { code: 'isSsl' },
+            'Required': 'false',
+            'Description': 'Is SSL.'
+        },
+        {
+            'Parameter': { code: 'sslCert' },
+            'Required': 'false',
+            'Description': 'SSL cert.'
+        },
+        {
+            'Parameter': { code: 'sslCertPath' },
+            'Required': 'false',
+            'Description': 'SSL cert path.'
+        },
+        {
+            'Parameter': { code: 'sslServerName' },
+            'Required': 'false',
+            'Description': 'SSL server name.'
+        },
+    ]}
+/>
+
+## Find
+
+Query deposit data using `Filter`.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { storage } from '@mystikonetwork/protos';
+
+const filter = new storage.v1.SubFilter({
+    column: 'id',
+    values: ['deposit1'],
+    operator: storage.v1.SubFilterOperator.IN,
+});
+const deposits = mystiko.deposit?.find(filter);
+```
+
+### FindAll
+
+Query all Deposit data.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const deposits = mystiko.deposit?.find(undefined);
+```
+
+### FindOne
+
+Find a single Deposit record using `Filter`.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { storage } from '@mystikonetwork/protos';
+
+const filter = new storage.v1.SubFilter({
+    column: 'id',
+    values: ['deposit1'],
+    operator: storage.v1.SubFilterOperator.IN,
+});
+const deposits = mystiko.deposit?.findOne(filter);
+```
+
+### FindById
+
+Find a single Deposit record by its ID.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const deposit = mystiko.deposit?.findById("id");
+```
+
+## Count
+
+Query the count of data that matches the `QueryFilter` criteria.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { storage } from '@mystikonetwork/protos';
+
+const filter = new storage.v1.SubFilter({
+    column: 'id',
+    values: ['id'],
+    operator: storage.v1.SubFilterOperator.IN,
+});
+const total = mystiko.deposit?.count(filter);
+```
+
+### CountAll
+
+Query the total count of all Deposit data.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const total = mystiko.deposit?.count(undefined);
+```
+
+## Update
+
+Update a Deposit record.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const deposit = mystiko.deposit?.findById("id");
+deposit.amount = 2000;
+const newDeposit = mystiko.deposit?.update(deposit);
+```
+
+### UpdateBatch
+
+Batch update Deposit records.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const deposit = mystiko.deposit?.findById("id");
+deposit.amount = 2000;
+const newDeposits = mystiko.deposit?.updateBatch([deposit]);
+```
+
+### UpdateByFilter
+
+Update Deposit records based on the conditions specified in the `Filter`.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { api, storage } from '@mystikonetwork/protos';
+
+const columnValues = [
+    new api.handler.v1.ColumnValuePair({
+      column: 'amount',
+      value: new storage.v1.ColumnValue({
+        value: {
+          value: 2000,
+          case: 'f64Value',
+        },
+      }),
+    }),
+];
+const filter = new storage.v1.QueryFilter({
+    conditions: [],
+    conditionsOperator: storage.v1.ConditionOperator.OR,
+});
+mystiko.deposit?.updateByValues(columnValues, filter);
+```
+
+### UpdateAll
+
+Update all Deposit records.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { api, storage } from '@mystikonetwork/protos';
+
+const columnValues = [
+    new api.handler.v1.ColumnValuePair({
+      column: 'amount',
+      value: new storage.v1.ColumnValue({
+        value: {
+          value: 2000,
+          case: 'f64Value',
+        },
+      }),
+    }),
+];
+mystiko.deposit?.updateByValues(columnValues, undefined);
+```
+
+## Delete
+
+Delete a Deposit record.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const deposit = mystiko.deposit?.findById("id");
+mystiko.deposit?.delete(deposit);
+```
+
+### DeleteBatch
+
+Batch delete Deposit records.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+const deposit = mystiko.deposit?.findById("id");
+mystiko.deposit?.deleteBatch([deposit]);
+```
+
+### DeleteByFilter
+
+Delete Deposit records based on the conditions specified in the `Filter`.
+
+```node
+import mystiko from '@mystikonetwork/node';
+import { storage } from '@mystikonetwork/protos';
+
+const filter = new storage.v1.SubFilter({
+    column: 'id',
+    values: ['id'],
+    operator: storage.v1.SubFilterOperator.IN,
+});
+const total = mystiko.deposit?.deleteByFilter(filter);
+```
+
+### DeleteAll
+
+Delete all Deposit records.
+
+```node
+import mystiko from '@mystikonetwork/node';
+
+mystiko.deposit?.deleteAll();
+```
