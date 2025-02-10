@@ -1,0 +1,269 @@
+---
+title: Config
+---
+import Table from '../components/Table';
+
+## RollerConfig
+`RollerConfig` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'log_level'},
+            'Type': 'String',
+            'Description': 'Roller logger level (error、warn、info、debug、trace).'
+        },
+        {
+            'Property': {code: 'extern_logging_level'},
+            'Type': 'String',
+            'Description': 'Extern module logger level (error、warn、info、debug、trace).'
+        },
+        {
+            'Property': {code: 'chain_id'},
+            'Type': 'u64',
+            'Description': 'Chain identifier for rollup operations'
+        },
+        {
+            'Property': {code: 'signer_provider'},
+            'Type': 'Option<String>',
+            'Description': 'signer provider url.'
+        },
+        {
+            'Property': {code: 'memory_db'},
+            'Type': 'bool',
+            'Description': 'Is roller database in memory or not.'
+        },
+        {
+            'Property': {code: 'mystiko'},
+            'Type': 'ConfigOptions',
+            'Description': 'Mystiko config options.'
+        },
+        {
+            'Property': {code: 'scheduler'},
+            'Type': 'RollerSchedulerConfig',
+            'Description': 'Roller scheduler config.'
+        },
+        {
+            'Property': {code: 'loader'},
+            'Type': 'RollerLoaderConfig',
+            'Description': 'Roller data loader config.'
+        },
+        {
+            'Property': {code: 'rollup'},
+            'Type': 'RollerRollupConfig',
+            'Description': 'Roller rollup config.'
+        }
+    ]}
+/>
+
+## Mystiko ConfigOptions
+`ConfigOptions` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'file_path'},
+            'Type': 'Option<String>',
+            'Description': 'Mystiko config file in local file path.'
+        },
+        {
+            'Property': {code: 'is_testnet'},
+            'Type': 'Option<bool>',
+            'Description': 'Is mystiko testnet or not.'
+        },
+        {
+            'Property': {code: 'is_staging'},
+            'Type': 'Option<bool>',
+            'Description': 'Is staging config or not.'
+        },
+        {
+            'Property': {code: 'remote_base_url'},
+            'Type': 'Option<String>',
+            'Description': 'Mystiko config file in remote web url.'
+        },
+        {
+            'Property': {code: 'git_revision'},
+            'Type': 'Option<String>',
+            'Description': 'Mystiko config file git revision.'
+        }    
+    ]}
+/>
+
+## RollerSchedulerConfig
+`RollerSchedulerConfig` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'schedule_interval_ms'},
+            'Type': 'u64',
+            'Description': 'Specifies the scheduler execution interval in milliseconds.'
+        },
+        {
+            'Property': {code: 'schedule_count'},
+            'Type': 'Option<u64>',
+            'Description': 'Specifies the maximum number of retries allowed per scheduler execution.'},
+        {
+            'Property': {code: 'status_server_port'},
+            'Type': 'u16',
+            'Description': 'Specifies the TCP port used for querying the server status.'}   
+    ]}
+/>
+
+## RollerLoaderConfig
+`RollerLoaderConfig` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'config'},
+            'Type': 'LoaderConfig',
+            'Description': 'Detailed configuration for the Mystiko data loader module.'}  
+    ]}
+/>
+
+## RollerRollupConfig
+`RollerRollupConfig` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'max_rollup_size'},
+            'Type': 'usize',
+            'Description': 'Max rollup size.'
+        },
+        {
+            'Property': {code: 'max_rollup_one_round'},
+            'Type': 'u32',
+            'Description': 'Max rollup transaction per scheduler execution.'
+        },
+        {
+            'Property': {code: 'merkle_tree_height'},
+            'Type': 'u32',
+            'Description': 'Merkle tree height, default is 20'
+        },
+        {
+            'Property': {code: 'chains'},
+            'Type': 'HashMap<u64, RollerRollupChainConfig>',
+            'Description': 'Roller rollup chain config.'
+        },                
+    ]}
+/>
+
+
+## RollerRollupChainConfig
+`RollerRollupChainConfig` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'max_gas_price'},
+            'Type': 'u64',
+            'Description': 'Max gas price of rollup transaction'
+        },
+        {
+            'Property': {code: 'force_rollup_block_count'},
+            'Type': 'Option<u64>',
+            'Description': 'Optional threshold that forces a rollup based on delayed block count.'
+        },
+        {
+            'Property': {code: 'gas_cost'},
+            'Type': 'HashMap<usize, u64>',
+            'Description': 'Maps each rollup size to its corresponding gas cost.'
+        }               
+    ]}
+/>
+
+
+## Example of JSON config 
+
+The following is an example of json configuration (roller.json)
+
+```JSON
+{
+  "log_level": "info",
+  "extern_logging_level": "error",
+  "chain_id": 1,
+  "mystiko": {
+    "is_testnet": false,
+    "is_staging": false
+  }
+  "scheduler": {
+    "schedule_interval_ms": 30000
+  },
+  "loader": {
+    "config": {
+      "fetchers": {
+        "1": "FETCHER_TYPE_PACKER",
+        "3": "FETCHER_TYPE_ETHERSCAN",
+        "4": "FETCHER_TYPE_PROVIDER"
+      },
+      "validators": {
+        "0": "VALIDATOR_TYPE_RULE"
+      },
+      "fetcher_config": {
+        "etherscan": {
+          "chains": {
+            "84531": {
+              "delay_num_blocks": "4"
+            }
+          }
+        },
+        "provider": {
+          "chains": {
+            "84531": {
+              "delay_num_blocks": "4"
+            }
+          }
+        }
+      },
+      "validator_config": {
+        "rule": {
+          "checkers": {
+            "0": "RULE_VALIDATOR_CHECKER_TYPE_INTEGRITY",
+            "1": "RULE_VALIDATOR_CHECKER_TYPE_SEQUENCE",
+            "2": "RULE_VALIDATOR_CHECKER_TYPE_COUNTER"
+          }
+        }
+      }
+    }
+  },
+  "rollup": {
+    "merkle_tree_height": 20,
+    "chains": {
+      "1": {
+        "max_gas_price": 100000000000,
+        "force_rollup_block_count": 60,
+        "gas_cost": {
+          "1": 331000,
+          "2": 336000,
+          "4": 340000,
+          "8": 360000,
+          "16": 410000
+        }
+      },
+      "56": {
+        "max_gas_price": 20000000000,
+        "force_rollup_block_count": 120,
+        "gas_cost": {
+          "1": 331000,
+          "2": 336000,
+          "4": 340000,
+          "8": 360000,
+          "16": 410000
+        }
+      },
+      "137": {
+        "max_gas_price": 1000000000000,
+        "force_rollup_block_count": 120,
+        "gas_cost": {
+          "1": 331000,
+          "2": 336000,
+          "4": 340000,
+          "8": 360000,
+          "16": 410000
+        }
+      }
+  }
+}
+```
