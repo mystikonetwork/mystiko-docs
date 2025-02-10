@@ -1,0 +1,889 @@
+---
+title: Config
+---
+import Table from "../../../components/Table";
+
+Details about Mystiko configuration and related interfaces.
+
+## Data Structure
+- [MystikoConfig](#get)
+- [CircuitConfig](#circuitconfig)
+- [ChainConfig](#chainconfig)
+- [BridgeConfig](#findbridge)
+- [DepositContractConfig](#depositcontractconfig)
+- [PoolContractConfig](#poolcontractconfig)
+- [ContractConfig](#findcontractbyaddress)
+
+## get
+Get `MystikoConfig`.
+```rust
+use mystiko_protos::api::config::v1::GetConfigResponse;
+use mystiko_lib::config::get;
+use mystiko_protos::api::v1::api_response;
+
+let response = get();
+let config = match response.result {
+    Some(api_response::Result::Data(data)) => match GetConfigResponse::try_from(data) {
+        Ok(config) => config,
+        Err(e) => return Err(anyhow!(format!("Failed to parse config: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+`MystikoConfig` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'version'},
+            'Type': 'String',
+            'Description': 'Mystiko version.'
+        },
+        {
+            'Property': {code: 'chain_configs'},
+            'Type': 'HashMap<u64, ChainConfig>',
+            'Description': 'Chain configs map, key is chain id.'
+        },
+        {
+            'Property': {code: 'bridge_configs'},
+            'Type': 'HashMap<i32, BridgeConfig>',
+            'Description': 'Bridge configs map, key is bridge type.'
+        },
+        {
+            'Property': {code: 'git_revision'},
+            'Type': 'String',
+            'Description': 'Git revision.'
+        },
+        {
+            'Property': {code: 'sequencer_config'},
+            'Type': 'ClientOptions',
+            'Description': 'Sequencer config.'
+        },
+        {
+            'Property': {code: 'packer_config'},
+            'Type': 'PackerConfig',
+            'Description': 'Packer config.'
+        },
+        {
+            'Property': {code: 'country_blacklist'},
+            'Type': 'Vec<String>',
+            'Description': 'Country blacklist.'
+        },
+        {
+            'Property': {code: 'circuit_configs'},
+            'Type': 'Vec<CircuitConfig>',
+            'Description': 'Circuit configs.'
+        }
+    ]}
+/>
+
+## CircuitConfig
+    `CircuitConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Circuit name.'
+            },
+            {
+                'Property': {code: 'circuit_type'},
+                'Type': 'CircuitType',
+                'Description': 'Circuit type.'
+            },
+            {
+                'Property': {code: 'is_default'},
+                'Type': 'bool',
+                'Description': 'Is default circuit.'
+            },
+            {
+                'Property': {code: 'program_file'},
+                'Type': 'Vec<String>',
+                'Description': 'Program files.'
+            },
+            {
+                'Property': {code: 'abi_file'},
+                'Type': 'Vec<String>',
+                'Description': 'ABI files.'
+            },
+            {
+                'Property': {code: 'proving_key_file'},
+                'Type': 'Vec<String>',
+                'Description': 'Proving key files.'
+            },
+            {
+                'Property': {code: 'verifying_key_file'},
+                'Type': 'Vec<String>',
+                'Description': 'Verifying key files.'
+            }
+        ]}
+    />
+
+### find_default_circuit
+Find default circuit config by circuit type.
+```rust
+use mystiko_protos::api::config::v1::{FindDefaultCircuitRequest, FindDefaultCircuitResponse};
+use mystiko_protos::common::v1::CircuitType;
+use mystiko_lib::config::find_default_circuit;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindDefaultCircuitRequest::builder()
+            .circuit_type(CircuitType::Rollup1)
+            .build();
+let response = find_default_circuit(request);
+let config = match response.result {
+    Some(api_response::Result::Data(data)) => match FindDefaultCircuitResponse::try_from(data) {
+        Ok(config) => config,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+List of supported `CircuitType`:
+```rust
+CircuitType.ROLLUP_1;
+CircuitType.ROLLUP_2;
+CircuitType.ROLLUP_4;
+CircuitType.ROLLUP_8;
+CircuitType.ROLLUP_16;
+CircuitType.ROLLUP_32;
+CircuitType.ROLLUP_64;
+CircuitType.ROLLUP_128;
+CircuitType.ROLLUP_256;
+CircuitType.ROLLUP_512;
+CircuitType.ROLLUP_1024;
+
+CircuitType.TRANSACTION1X0;
+CircuitType.TRANSACTION1X1;
+CircuitType.TRANSACTION1X2;
+CircuitType.TRANSACTION2X0;
+CircuitType.TRANSACTION2X1;
+CircuitType.TRANSACTION2X2;
+```
+
+### find_circuit
+Find circuit config by circuit name.
+```rust
+use mystiko_protos::api::config::v1::{FindCircuitRequest, FindCircuitResponse};
+use mystiko_lib::config::find_circuit;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindCircuitRequest::builder()
+            .circuit_name("zokrates-1.0-transaction1x0")
+            .build();
+let response = find_circuit(request);
+let config = match response.result {
+    Some(api_response::Result::Data(data)) => match FindCircuitResponse::try_from(data) {
+        Ok(config) => config,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## ChainConfig
+    `ChainConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'chain_id'},
+                'Type': 'u64',
+                'Description': 'Chain id.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Chain name.'
+            },
+            {
+                'Property': {code: 'asset_symbol'},
+                'Type': 'String',
+                'Description': 'Native asset symbol.'
+            },
+            {
+                'Property': {code: 'asset_decimals'},
+                'Type': 'u32',
+                'Description': 'Native asset decimals.'
+            },
+            {
+                'Property': {code: 'explorer_url'},
+                'Type': 'String',
+                'Description': 'Explorer URL.'
+            },
+            {
+                'Property': {code: 'explorer_api_url'},
+                'Type': 'String',
+                'Description': 'Explorer API URL.'
+            },
+            {
+                'Property': {code: 'explorer_prefix'},
+                'Type': 'String',
+                'Description': 'Explorer prefix.'
+            },
+            {
+                'Property': {code: 'provider_quorum_percentage'},
+                'Type': 'u32',
+                'Description': 'Provider quorum percentage.'
+            },
+            {
+                'Property': {code: 'signer_endpoint'},
+                'Type': 'String',
+                'Description': 'Signer endpoint.'
+            },
+            {
+                'Property': {code: 'event_delay_blocks'},
+                'Type': 'u64',
+                'Description': 'Event delay blocks.'
+            },
+            {
+                'Property': {code: 'event_filter_size'},
+                'Type': 'u64',
+                'Description': 'Event filter size.'
+            },
+            {
+                'Property': {code: 'sequencer_fetch_size'},
+                'Type': 'u64',
+                'Description': 'Sequencer fetch size.'
+            },
+            {
+                'Property': {code: 'main_asset_config'},
+                'Type': 'AssetConfig',
+                'Description': 'Main asset config.'
+            },
+            {
+                'Property': {code: 'provider_type'},
+                'Type': 'ProviderType',
+                'Description': 'Provider type.'
+            },
+            {
+                'Property': {code: 'transaction_type'},
+                'Type': 'TransactionType',
+                'Description': 'Transaction type.'
+            },
+            {
+                'Property': {code: 'asset_configs'},
+                'Type': 'HashMap<String], AssetConfig>',
+                'Description': 'Asset configs map, key is asset contract address.'
+            },
+            {
+                'Property': {code: 'deposit_contract_configs'},
+                'Type': 'HashMap<String, DepositContractConfig>',
+                'Description': 'Deposit contract configs map, key is deposit contract address.'
+            },
+            {
+                'Property': {code: 'pool_contract_configs'},
+                'Type': 'HashMap<String], PoolContractConfig>',
+                'Description': 'Pool contract configs map, key is pool contract address.'
+            },
+            {
+                'Property': {code: 'recommended_amounts'},
+                'Type': 'Vec<String>',
+                'Description': 'Recommended amounts.'
+            },
+            {
+                'Property': {code: 'provider_configs'},
+                'Type': 'Vec<ProviderConfig>',
+                'Description': 'Provider configs.'
+            },
+            {
+                'Property': {code: 'granularities'},
+                'Type': 'Vec<u64>',
+                'Description': 'Granularities.'
+            }
+        ]}
+    />
+
+### find_chain
+Find chain config by chain id.
+```rust
+use mystiko_protos::api::config::v1::{FindChainRequest, FindChainResponse};
+use mystiko_lib::config::find_chain;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindChainRequest::builder()
+            .chain_id("11155111")
+            .build();
+let response = find_chain(request);
+let config = match response.result {
+    Some(api_response::Result::Data(data)) => match FindChainResponse::try_from(data) {
+        Ok(config) => config,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_peer_chains
+Find peer chains by chain id.
+```rust
+use mystiko_protos::api::config::v1::{FindPeerChainsRequest, FindPeerChainsResponse};
+use mystiko_lib::config::find_peer_chains;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindPeerChainsRequest::builder()
+            .chain_id("11155111")
+            .build();
+let response = find_peer_chains(request);
+let chains = match response.result {
+    Some(api_response::Result::Data(data)) => match FindPeerChainsResponse::try_from(data) {
+        Ok(chains) => chains,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## find_asset_symbols
+Find asset symbols by chain id and peer chain id.
+```rust
+use mystiko_protos::api::config::v1::{FindAssetSymbolsRequest, FindAssetSymbolsResponse};
+use mystiko_lib::config::find_asset_symbols;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindAssetSymbolsRequest::builder()
+            .chain_id("11155111")
+            .peer_chain_id("97")
+            .build();
+let response = find_asset_symbols(request);
+let assets = match response.result {
+    Some(api_response::Result::Data(data)) => match FindAssetSymbolsResponse::try_from(data) {
+        Ok(assets) => assets,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## find_bridges
+Find bridge type by chain id, peer chain id and asset symbol.
+```rust
+use mystiko_protos::api::config::v1::{FindBridgesRequest, FindBridgesResponse};
+use mystiko_lib::config::find_bridges;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindBridgesRequest::builder()
+            .chain_id("11155111")
+            .peer_chain_id("97")
+            .asset_symbol("MTT")
+            .build();
+let response = find_bridges(request);
+let bridges = match response.result {
+    Some(api_response::Result::Data(data)) => match FindBridgesResponse::try_from(data) {
+        Ok(bridges) => bridges,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## find_bridge
+Find bridge config by bridge type.
+```rust
+use mystiko_protos::api::config::v1::{FindBridgeRequest, FindBridgeResponse};
+use mystiko_lib::config::find_bridge;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindBridgeRequest::builder()
+            .bridge_type(BridgeType.LOOP)
+            .build();
+let response = find_bridge(request);
+let bridge = match response.result {
+    Some(api_response::Result::Data(data)) => match FindBridgeResponse::try_from(data) {
+        Ok(bridge) => bridge,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+List of supported `BridgeType`:
+```rust
+BridgeType.LOOP;
+BridgeType.POLY;
+BridgeType.TBRIDGE;
+BridgeType.CELER;
+BridgeType.LAYER_ZERO;
+BridgeType.AXELAR;
+BridgeType.WORMHOLE;
+```
+    `BridgeConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Bridge name.'
+            },
+            {
+                'Property': {code: 'bridge_type'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'explorer_url'},
+                'Type': 'String',
+                'Description': 'Explorer URL.'
+            },
+            {
+                'Property': {code: 'explorer_prefix'},
+                'Type': 'String',
+                'Description': 'Explorer prefix.'
+            },
+            {
+                'Property': {code: 'api_url'},
+                'Type': 'String',
+                'Description': 'API URL.'
+            },
+            {
+                'Property': {code: 'api_prefix'},
+                'Type': 'String',
+                'Description': 'API prefix.'
+            }
+        ]}
+    />
+
+## DepositContractConfig
+    `DepositContractConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'version'},
+                'Type': 'u32',
+                'Description': 'Deposit Contract Version.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Contract name.'
+            },
+            {
+                'Property': {code: 'address'},
+                'Type': 'String',
+                'Description': 'Contract address.'
+            },
+            {
+                'Property': {code: 'start_block'},
+                'Type': 'u64',
+                'Description': 'Start block.'
+            },
+            {
+                'Property': {code: 'disabled'},
+                'Type': 'bool',
+                'Description': 'Is disabled.'
+            },
+            {
+                'Property': {code: 'min_amount'},
+                'Type': 'String',
+                'Description': 'Minimum amount.'
+            },
+            {
+                'Property': {code: 'max_amount'},
+                'Type': 'String',
+                'Description': 'Maximum amount.'
+            },
+            {
+                'Property': {code: 'pool_contract_config'},
+                'Type': 'PoolContractConfig',
+                'Description': 'Pool contract config.'
+            },
+            {
+                'Property': {code: 'bridge_type'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'contract_type'},
+                'Type': 'ContractType',
+                'Description': 'Contract type.'
+            },
+            {
+                'Property': {code: 'min_bridge_fee'},
+                'Type': 'String',
+                'Description': 'Minimum bridge fee.'
+            },
+            {
+                'Property': {code: 'min_executor_fee'},
+                'Type': 'String',
+                'Description': 'Minimum executor fee.'
+            },
+            {
+                'Property': {code: 'service_fee'},
+                'Type': 'u32',
+                'Description': 'Service fee.'
+            },
+            {
+                'Property': {code: 'service_fee_divider'},
+                'Type': 'u32',
+                'Description': 'Service fee divider.'
+            },
+            {
+                'Property': {code: 'bridge_fee_asset_config'},
+                'Type': 'AssetConfig',
+                'Description': 'Bridge fee asset config.'
+            },
+            {
+                'Property': {code: 'executor_fee_asset_config'},
+                'Type': 'AssetConfig',
+                'Description': 'Executor fee asset config.'
+            },
+            {
+                'Property': {code: 'peer_chain_id'},
+                'Type': 'u64',
+                'Description': 'Peer chain id.'
+            },
+            {
+                'Property': {code: 'peer_contract_address'},
+                'Type': 'String',
+                'Description': 'Peer contract address.'
+            }
+        ]}
+    />
+
+### find_deposit_contract
+Find deposit contract config by chain id, peer chain id, asset symbol and bridge type.
+```rust
+use mystiko_protos::api::config::v1::{FindDepositContractRequest, FindDepositContractResponse};
+use mystiko_lib::config::find_deposit_contract;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindDepositContractRequest::builder()
+            .chain_id("11155111")
+            .peer_chain_id("97")
+            .asset_symbol("MTT")
+            .bridge_type(BridgeType.Tbridge)
+            .build();
+let response = find_deposit_contract(request);
+let deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match FindDepositContractResponse::try_from(data) {
+        Ok(deposit) => deposit,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_deposit_contract_by_address
+Find deposit contract config by chain id and deposit contract address.
+```rust
+use mystiko_protos::api::config::v1::{FindDepositContractByAddressRequest, FindDepositContractByAddressResponse};
+use mystiko_lib::config::find_deposit_contract_by_address;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindDepositContractByAddressRequest::builder()
+            .chain_id("11155111")
+            .address("0x643DD956aC516808538BF979b8440AbcebC3bcdA")
+            .build();
+let response = find_deposit_contract_by_address(request);
+let deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match FindDepositContractResponse::try_from(data) {
+        Ok(deposit) => deposit,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## PoolContractConfig
+    `PoolContractConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'version'},
+                'Type': 'u32',
+                'Description': 'Pool Contract Version.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Contract name.'
+            },
+            {
+                'Property': {code: 'address'},
+                'Type': 'String',
+                'Description': 'Contract address.'
+            },
+            {
+                'Property': {code: 'start_block'},
+                'Type': 'u64',
+                'Description': 'Start block.'
+            },
+            {
+                'Property': {code: 'pool_name'},
+                'Type': 'String',
+                'Description': 'Pool name.'
+            },
+            {
+                'Property': {code: 'min_rollup_fee'},
+                'Type': 'String',
+                'Description': 'Minimum rollup fee.'
+            },
+            {
+                'Property': {code: 'contract_type'},
+                'Type': 'ContractType',
+                'Description': 'Contract type.'
+            },
+            {
+                'Property': {code: 'bridge_type'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'asset_config'},
+                'Type': 'AssetConfig',
+                'Description': 'Asset config.'
+            },
+            {
+                'Property': {code: 'circuit_configs'},
+                'Type': 'Vec<CircuitConfig>',
+                'Description': 'Circuit configs.'
+            },
+            {
+                'Property': {code: 'circuits'},
+                'Type': 'Vec<String>',
+                'Description': 'Circuits.'
+            }
+        ]}
+    />
+
+### find_pool_contract
+Find pool contract by chain id, asset symbol, bridge type and version.
+```rust
+use mystiko_protos::api::config::v1::{FindPoolContractRequest, FindPoolContractResponse};
+use mystiko_lib::config::find_pool_contract;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindPoolContractRequest::builder()
+            .chain_id("11155111")
+            .asset_symbol("MTT")
+            .bridge_type(BridgeType.Tbridge)
+            .version(6_u32)
+            .build();
+let response = find_pool_contract(request);
+let pool = match response.result {
+    Some(api_response::Result::Data(data)) => match FindPoolContractResponse::try_from(data) {
+        Ok(pool) => pool,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_pool_contracts
+Find pool contracts by chain id, asset symbol and bridge type.
+    ```rust
+use mystiko_protos::api::config::v1::{FindPoolContractsRequest, FindPoolContractsResponse};
+use mystiko_lib::config::find_pool_contracts;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindPoolContractsRequest::builder()
+            .chain_id("11155111")
+            .asset_symbol("MTT")
+            .bridge_type(BridgeType.Tbridge)
+            .build();
+let response = find_pool_contracts(request);
+let pools = match response.result {
+    Some(api_response::Result::Data(data)) => match FindPoolContractsResponse::try_from(data) {
+        Ok(pools) => pools,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_pool_contract_by_address
+Find pool contract config by chain id and pool contract address.
+```rust
+use mystiko_protos::api::config::v1::{FindPoolContractByAddressRequest, FindPoolContractByAddressResponse};
+use mystiko_lib::config::find_pool_contract_by_address;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindPoolContractByAddressRequest::builder()
+            .chain_id("11155111")
+            .address("0xAE77941b3bd4d2293E13A9a69E64A0ACFf5bBC55")
+            .build();
+let response = find_pool_contract_by_address(request);
+let pool = match response.result {
+    Some(api_response::Result::Data(data)) => match FindPoolContractByAddressResponse::try_from(data) {
+        Ok(pool) => pool,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## find_contract_by_address
+Find contract config by chain id and contract address.
+```rust
+use mystiko_protos::api::config::v1::{FindContractByAddressRequest, FindContractByAddressResponse};
+use mystiko_lib::config::find_contract_by_address;
+use mystiko_protos::api::v1::api_response;
+
+let request = FindContractByAddressRequest::builder()
+            .chain_id("11155111")
+            .address("0xAE77941b3bd4d2293E13A9a69E64A0ACFf5bBC55")
+            .build();
+let response = find_contract_by_address(request);
+let contract = match response.result {
+    Some(api_response::Result::Data(data)) => match FindContractByAddressResponse::try_from(data) {
+        Ok(contract) => contract,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+    `ContractConfig` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'version'},
+                'Type': 'u32',
+                'Description': 'Contract version.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'String',
+                'Description': 'Contract name.'
+            },
+            {
+                'Property': {code: 'address'},
+                'Type': 'String',
+                'Description': 'Contract address.'
+            },
+            {
+                'Property': {code: 'start_block'},
+                'Type': 'u64',
+                'Description': 'Start block.'
+            },
+            {
+                'Property': {code: 'disabled'},
+                'Type': 'bool',
+                'Description': 'Is disabled.'
+            },
+            {
+                'Property': {code: 'min_rollup_fee'},
+                'Type': 'String',
+                'Description': 'Minimum rollup fee.'
+            },
+            {
+                'Property': {code: 'asset_config'},
+                'Type': 'AssetConfig',
+                'Description': 'Asset config.'
+            },
+            {
+                'Property': {code: 'bridge_type'},
+                'Type': 'BridgeType',
+                'Description': 'Bridge type.'
+            },
+            {
+                'Property': {code: 'contract_type'},
+                'Type': 'ContractType',
+                'Description': 'Contract type.'
+            }
+        ]}
+    />
+List of supported `ContractType`:
+```rust
+ContractType.DEPOSIT;
+ContractType.POOL;
+```
+
+## get_transaction_url
+Get transaction url by chain id and transaction hash.
+```rust
+use mystiko_protos::api::config::v1::{GetTransactionUrlRequest, GetTransactionUrlResponse};
+use mystiko_lib::config::get_transaction_url;
+use mystiko_protos::api::v1::api_response;
+
+let request = GetTransactionUrlRequest::builder()
+            .chain_id("11155111")
+            .tx_hash("0x1803ef0489ec2bda0abb7f564fa795959c0d1f4db7651236e34f879b317c074a")
+            .build();
+let response = get_transaction_url(request);
+let tx = match response.result {
+    Some(api_response::Result::Data(data)) => match GetTransactionUrlResponse::try_from(data) {
+        Ok(tx) => tx,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```

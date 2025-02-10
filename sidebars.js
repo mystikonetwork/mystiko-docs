@@ -64,7 +64,21 @@ export default {
           collapsed: false,
           collapsible: true,
           items: [
-            'sdks/rust/overview'
+            'sdks/rust/installation',
+            {
+              type: 'category',
+              label: 'Usage',
+              items: [
+                'sdks/rust/usage/overview',
+                'sdks/rust/usage/config',
+                'sdks/rust/usage/wallet',
+                'sdks/rust/usage/account',
+                'sdks/rust/usage/deposit',
+                'sdks/rust/usage/spend',
+                'sdks/rust/usage/scanner',
+                'sdks/rust/usage/synchronizer',
+              ]
+            },
           ]
         },
         {

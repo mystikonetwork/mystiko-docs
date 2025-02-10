@@ -276,7 +276,7 @@ Find peer chains by chain id.
 ```node
 import mystiko from '@mystikonetwork/node';
 
-const chainConfig = mystiko.config?.findChain(BigInt(11155111));
+const chainConfigs = mystiko.config?.findPeerChains(BigInt(11155111));
 ```
 
 ## FindAssetSymbols

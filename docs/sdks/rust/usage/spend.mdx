@@ -1,0 +1,1175 @@
+---
+title: Spend
+---
+
+import Table from "../../../components/Table";
+
+Mystiko Spend Related APIs.
+
+## Data Structures
+
+- [SpendQuote](#quote)
+- [SpendSummary](#summary)
+- [Spend](#create)
+
+## quote
+
+Retrieve quote information for a spend.
+
+```rust
+use mystiko_protos::api::handler::v1::{SpendQuoteRequest, SpendQuoteResponse};
+use mystiko_protos::core::handler::v1::QuoteSpendOptions;
+use mystiko_protos::common::v1::BridgeType;
+use mystiko_protos::core::v1::SpendType;
+use mystiko_lib::spend::quote;
+use mystiko_protos::api::v1::api_response;
+
+let options = QuoteSpendOptions::builder()
+    .chain_id(11155111_u64)
+    .asset_symbol("MTT".to_string())
+    .bridge_type(BridgeType::Loop as i32)
+    .spend_type(SpendType::Withdraw as i32)
+    .build();
+let request = SpendQuoteRequest::builder().options(options).build();
+let response = quote(request);
+let spendQuote = match response.result {
+    Some(api_response::Result::Data(data)) => match SpendQuoteResponse::try_from(data) {
+        Ok(spendQuote) => spendQuote,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`QuoteSpendOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': {code: 'chain_id'},
+            'Required': 'true',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Parameter': {code: 'asset_symbol'},
+            'Required': 'true',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Parameter': {code: 'version'},
+            'Required': 'false',
+            'Description': 'The version of the spend.'
+        },
+        {
+            'Parameter': {code: 'amount'},
+            'Required': 'false',
+            'Description': 'The amount of the spend.'
+        },
+        {
+            'Parameter': {code: 'use_relayer'},
+            'Required': 'false',
+            'Description': 'Whether to use a relayer.'
+        },
+        {
+            'Parameter': {code: 'query_timeout_ms'},
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'spend_type'},
+            'Required': 'false',
+            'Description': 'The type of spend.'
+        },
+        {
+            'Parameter': {code: 'bridge_type'},
+            'Required': 'false',
+            'Description': 'The bridge type.'
+        },
+    ]}
+/>
+
+`SpendQuote` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'valid'},
+            'Type': 'bool',
+            'Description': 'Whether the quote is valid.'
+        },
+        {
+            'Property': {code: 'asset_symbol'},
+            'Type': 'String',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Property': {code: 'asset_decimals'},
+            'Type': 'u32',
+            'Description': 'The asset decimals.'
+        },
+        {
+            'Property': {code: 'current_balance'},
+            'Type': 'f64',
+            'Description': 'The current balance.'
+        },
+        {
+            'Property': {code: 'current_decimal_balance'},
+            'Type': 'String',
+            'Description': 'The current decimal balance.'
+        },
+        {
+            'Property': {code: 'num_of_inputs'},
+            'Type': 'u64',
+            'Description': 'The number of inputs.'
+        },
+        {
+            'Property': {code: 'num_of_outputs'},
+            'Type': 'u64',
+            'Description': 'The number of outputs.'
+        },
+        {
+            'Property': {code: 'min_rollup_fee'},
+            'Type': 'f64',
+            'Description': 'The minimum rollup fee.'
+        },
+        {
+            'Property': {code: 'min_rollup_fee_decimal'},
+            'Type': 'String',
+            'Description': 'The minimum rollup fee decimal.'
+        },
+        {
+            'Property': {code: 'rollup_fee_asset_symbol'},
+            'Type': 'String',
+            'Description': 'The rollup fee asset symbol.'
+        },
+        {
+            'Property': {code: 'rollup_fee_asset_decimals'},
+            'Type': 'u32',
+            'Description': 'The rollup fee asset decimals.'
+        },
+        {
+            'Property': {code: 'fixed_amounts'},
+            'Type': 'Vec<f64>',
+            'Description': 'The fixed amounts.'
+        },
+        {
+            'Property': {code: 'fixed_decimal_amounts'},
+            'Type': 'Vec<String>',
+            'Description': 'The fixed decimal amounts.'
+        },
+        {
+            'Property': {code: 'selected_commitments'},
+            'Type': 'Vec<String>',
+            'Description': 'The selected commitments.'
+        },
+        {
+            'Property': {code: 'gas_relayers'},
+            'Type': 'Vec<GasRelayer>',
+            'Description': 'The gas relayers.'
+        },
+        {
+            'Property': {code: 'max_gas_relayer_fee'},
+            'Type': 'Option<f64>',
+            'Description': 'The maximum gas relayer fee.'
+        },
+        {
+            'Property': {code: 'max_gas_relayer_fee_decimal'},
+            'Type': 'Option<String>',
+            'Description': 'The maximum gas relayer fee decimal.'
+        },
+        {
+            'Property': {code: 'gas_relayer_fee_asset_symbol'},
+            'Type': 'Option<String>',
+            'Description': 'The gas relayer fee asset symbol.'
+        },
+        {
+            'Property': {code: 'gas_relayer_fee_asset_decimals'},
+            'Type': 'Option<u32>',
+            'Description': 'The gas relayer fee asset decimals.'
+        },
+        {
+            'Property': {code: 'invalid_code'},
+            'Type': 'Option<SpendInvalidCode>',
+            'Description': 'The invalid code.'
+        },
+        {
+            'Property': {code: 'amount_range'},
+            'Type': 'Option<AmountRange>',
+            'Description': 'The amount range.'
+        },
+    ]}
+/>
+
+## summary
+
+Retrieve summary information for a spend.
+
+```rust
+use mystiko_protos::api::handler::v1::{SpendSummaryRequest, SpendSummaryResponse};
+use mystiko_protos::core::handler::v1::CreateSpendOptions;
+use mystiko_protos::common::v1::BridgeType;
+use mystiko_protos::core::v1::SpendType;
+use mystiko_lib::spend::summary;
+use mystiko_protos::api::v1::api_response;
+
+let options = CreateSpendOptions::builder()
+    .chain_id(11155111_u64)
+    .asset_symbol("MTT".to_string())
+    .bridge_type(BridgeType::Loop as i32)
+    .spend_type(SpendType::Withdraw as i32)
+    .amount(12)
+    .recipient("0xFE500c274F72f1d1a9978c903d97E6d45CD9121B".to_string())
+    .wallet_password("password".to_string())
+    .build();
+let request = SpendSummaryRequest::builder().options(options).build();
+let response = summary(request);
+let spendSummary = match response.result {
+    Some(api_response::Result::Data(data)) => match SpendSummaryResponse::try_from(data) {
+        Ok(spendSummary) => spendSummary,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`CreateSpendOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': {code: 'chain_id'},
+            'Required': 'true',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Parameter': {code: 'asset_symbol'},
+            'Required': 'true',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Parameter': {code: 'amount'},
+            'Required': 'true',
+            'Description': 'The amount of the spend.'
+        },
+        {
+            'Parameter': {code: 'recipient'},
+            'Required': 'true',
+            'Description': 'The recipient address.'
+        },
+        {
+            'Parameter': {code: 'wallet_password'},
+            'Required': 'true',
+            'Description': 'The wallet password.'
+        },
+        {
+            'Parameter': {code: 'version'},
+            'Required': 'false',
+            'Description': 'The version of the spend.'
+        },
+        {
+            'Parameter': {code: 'rollup_fee_amount'},
+            'Required': 'false',
+            'Description': 'The rollup fee amount.'
+        },
+        {
+            'Parameter': {code: 'gas_relayer'},
+            'Required': 'false',
+            'Description': 'The gas relayer.'
+        },
+        {
+            'Parameter': {code: 'query_timeout_ms'},
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'spend_quote'},
+            'Required': 'false',
+            'Description': 'The spend quote.'
+        },
+        {
+            'Parameter': {code: 'spend_type'},
+            'Required': 'false',
+            'Description': 'The type of spend.'
+        },
+        {
+            'Parameter': {code: 'bridge_type'},
+            'Required': 'false',
+            'Description': 'The bridge type.'
+        },
+    ]}
+/>
+
+`SpendSummary` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'asset_symbol'},
+            'Type': 'String',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Property': {code: 'asset_decimals'},
+            'Type': 'u32',
+            'Description': 'The asset decimals.'
+        },
+        {
+            'Property': {code: 'current_balance'},
+            'Type': 'f64',
+            'Description': 'The current balance.'
+        },
+        {
+            'Property': {code: 'current_Decimal_Balance'},
+            'Type': 'String',
+            'Description': 'The current decimal balance.'
+        },
+        {
+            'Property': {code: 'new_Balance'},
+            'Type': 'f64',
+            'Description': 'The new balance.'
+        },
+        {
+            'Property': {code: 'new_Decimal_Balance'},
+            'Type': 'String',
+            'Description': 'The new decimal balance.'
+        },
+        {
+            'Property': {code: 'amount'},
+            'Type': 'f64',
+            'Description': 'The amount.'
+        },
+        {
+            'Property': {code: 'decimal_Amount'},
+            'Type': 'String',
+            'Description': 'The decimal amount.'
+        },
+        {
+            'Property': {code: 'recipient'},
+            'Type': 'String',
+            'Description': 'The recipient address.'
+        },
+        {
+            'Property': {code: 'rollup_Fee_Amount'},
+            'Type': 'f64',
+            'Description': 'The rollup fee amount.'
+        },
+        {
+            'Property': {code: 'rollup_Fee_Decimal_Amount'},
+            'Type': 'String',
+            'Description': 'The rollup fee decimal amount.'
+        },
+        {
+            'Property': {code: 'rollup_Fee_Total_Amount'},
+            'Type': 'f64',
+            'Description': 'The rollup fee total amount.'
+        },
+        {
+            'Property': {code: 'rollup_Fee_Total_Decimal_Amount'},
+            'Type': 'String',
+            'Description': 'The rollup fee total decimal amount.'
+        },
+        {
+            'Property': {code: 'rollup_Fee_Asset_Symbol'},
+            'Type': 'String',
+            'Description': 'The rollup fee asset symbol.'
+        },
+        {
+            'Property': {code: 'rollup_Fee_Asset_Decimals'},
+            'Type': 'u32',
+            'Description': 'The rollup fee asset decimals.'
+        },
+        {
+            'Property': {code: 'gas_Relayer_Fee_Amount'},
+            'Type': 'Option<f64>',
+            'Description': 'The gas relayer fee amount.'
+        },
+        {
+            'Property': {code: 'gas_Relayer_Fee_Decimal_Amount'},
+            'Type': 'Option<String>',
+            'Description': 'The gas relayer fee decimal amount.'
+        },
+        {
+            'Property': {code: 'gas_Relayer_Fee_Asset_Symbol'},
+            'Type': 'Option<String>',
+            'Description': 'The gas relayer fee asset symbol.'
+        },
+        {
+            'Property': {code: 'gas_Relayer_Fee_Asset_Decimals'},
+            'Type': 'Option<u32>',
+            'Description': 'The gas relayer fee asset decimals.'
+        },
+        {
+            'Property': {code: 'gas_Relayer_Address'},
+            'Type': 'Option<String>',
+            'Description': 'The gas relayer address.'
+        },
+        {
+            'Property': {code: 'gas_Relayer_Name'},
+            'Type': 'Option<String>',
+            'Description': 'The gas relayer name.'
+        },
+        {
+            'Property': {code: 'gas_Relayer_Url'},
+            'Type': 'Option<String>',
+            'Description': 'The gas relayer URL.'
+        },
+    ]}
+/>
+
+## create
+
+Create a Spend request.
+
+```rust
+use mystiko_protos::api::handler::v1::{CreateSpendRequest, CreateSpendResponse};
+use mystiko_protos::core::handler::v1::CreateSpendOptions;
+use mystiko_protos::common::v1::BridgeType;
+use mystiko_protos::core::v1::SpendType;
+use mystiko_lib::spend::create;
+use mystiko_protos::api::v1::api_response;
+
+let options = CreateSpendOptions::builder()
+    .chain_id(11155111_u64)
+    .asset_symbol("MTT".to_string())
+    .bridge_type(BridgeType::Loop as i32)
+    .spend_type(SpendType::Withdraw as i32)
+    .amount(12)
+    .rollup_fee_amount(4.0)
+    .recipient("0xFE500c274F72f1d1a9978c903d97E6d45CD9121B".to_string())
+    .wallet_password("password".to_string())
+    .build();
+let request = CreateSpendRequest::builder().options(options).build();
+let response = create(request);
+let spend = match response.result {
+    Some(api_response::Result::Data(data)) => match CreateSpendResponse::try_from(data) {
+        Ok(spend) => spend,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`Spend` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': {code: 'id'},
+            'Type': 'String',
+            'Description': 'The ID of the spend.'
+        },
+        {
+            'Property': {code: 'created_at'},
+            'Type': 'u64',
+            'Description': 'The creation time of the spend.'
+        },
+        {
+            'Property': {code: 'updated_at'},
+            'Type': 'u64',
+            'Description': 'The update time of the spend.'
+        },
+        {
+            'Property': {code: 'chain_id'},
+            'Type': 'u64',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Property': {code: 'contract_address'},
+            'Type': 'String',
+            'Description': 'The contract address.'
+        },
+        {
+            'Property': {code: 'asset_symbol'},
+            'Type': 'String',
+            'Description': 'The asset symbol.'
+        },
+        {
+            'Property': {code: 'asset_decimals'},
+            'Type': 'u32',
+            'Description': 'The asset decimals.'
+        },
+        {
+            'Property': {code: 'amount'},
+            'Type': 'f64',
+            'Description': 'The amount.'
+        },
+        {
+            'Property': {code: 'decimal_amount'},
+            'Type': 'String',
+            'Description': 'The decimal amount.'
+        },
+        {
+            'Property': {code: 'recipient'},
+            'Type': 'String',
+            'Description': 'The recipient address.'
+        },
+        {
+            'Property': {code: 'wallet_id'},
+            'Type': 'String',
+            'Description': 'The wallet ID.'
+        },
+        {
+            'Property': {code: 'input_commitments'},
+            'Type': 'Vec<String>',
+            'Description': 'The input commitments.'
+        },
+        {
+            'Property': {code: 'output_commitments'},
+            'Type': 'Vec<String>',
+            'Description': 'The output commitments.'
+        },
+        {
+            'Property': {code: 'nullifiers'},
+            'Type': 'Vec<String>',
+            'Description': 'The nullifiers.'
+        },
+        {
+            'Property': {code: 'signature_public_key_hashes'},
+            'Type': 'Vec<String>',
+            'Description': 'The signature public key hashes.'
+        },
+        {
+            'Property': {code: 'encrypted_auditor_notes'},
+            'Type': 'Vec<String>',
+            'Description': 'The encrypted auditor notes.'
+        },
+        {
+            'Property': {code: 'rollup_fee_amount'},
+            'Type': 'Option<f64>',
+            'Description': 'The rollup fee amount.'
+        },
+        {
+            'Property': {code: 'rollup_fee_decimal_amount'},
+            'Type': 'Option<String>',
+            'Description': 'The rollup fee decimal amount.'
+        },
+        {
+            'Property': {code: 'rollup_fee_total_amount'},
+            'Type': 'Option<f64>',
+            'Description': 'The rollup fee total amount.'
+        },
+        {
+            'Property': {code: 'rollup_fee_total_decimal_amount'},
+            'Type': 'Option<String>',
+            'Description': 'The rollup fee total decimal amount.'
+        },
+        {
+            'Property': {code: 'gas_relayer_fee_amount'},
+            'Type': 'Option<f64>',
+            'Description': 'The gas relayer fee amount.'
+        },
+        {
+            'Property': {code: 'gas_relayer_fee_decimal_amount'},
+            'Type': 'Option<String>',
+            'Description': 'The gas relayer fee decimal amount.'
+        },
+        {
+            'Property': {code: 'signature_public_key'},
+            'Type': 'Option<String>',
+            'Description': 'The signature public key.'
+        },
+        {
+            'Property': {code: 'asset_address'},
+            'Type': 'Option<String>',
+            'Description': 'The asset address.'
+        },
+        {
+            'Property': {code: 'proof'},
+            'Type': 'Option<String>',
+            'Description': 'The proof.'
+        },
+        {
+            'Property': {code: 'root_hash'},
+            'Type': 'Option<String>',
+            'Description': 'The root hash.'
+        },
+        {
+            'Property': {code: 'gas_relayer_address'},
+            'Type': 'Option<String>',
+            'Description': 'The gas relayer address.'
+        },
+        {
+            'Property': {code: 'gas_relayer_url'},
+            'Type': 'Option<String>',
+            'Description': 'The gas relayer URL.'
+        },
+        {
+            'Property': {code: 'signature'},
+            'Type': 'Option<String>',
+            'Description': 'The signature.'
+        },
+        {
+            'Property': {code: 'random_auditing_public_key'},
+            'Type': 'Option<String>',
+            'Description': 'The random auditing public key.'
+        },
+        {
+            'Property': {code: 'error_message'},
+            'Type': 'Option<String>',
+            'Description': 'The error message.'
+        },
+        {
+            'Property': {code: 'transaction_hash'},
+            'Type': 'Option<String>',
+            'Description': 'The transaction hash.'
+        },
+        {
+            'Property': {code: 'bridge_type'},
+            'Type': 'BridgeType',
+            'Description': 'The bridge type.'
+        },
+        {
+            'Property': {code: 'spend_type'},
+            'Type': 'SpendType',
+            'Description': 'The spend type.'
+        },
+        {
+            'Property': {code: 'status'},
+            'Type': 'SpendStatus',
+            'Description': 'The spend status.'
+        },
+    ]}
+/>
+
+## send
+
+Send a spend transaction using a private key.
+
+```rust
+use mystiko_protos::api::handler::v1::{SendSpendRequest, SendSpendResponse};
+use mystiko_protos::core::handler::v1::SendSpendOptions;
+use mystiko_protos::common::v1::BridgeType;
+use mystiko_protos::core::v1::SpendType;
+use mystiko_lib::spend::send;
+use mystiko_protos::api::v1::api_response;
+
+let send_options = SendSpendOptions::builder()
+    .spend_id("spend id".to_string())
+    .wallet_password("P@ssw0rd".to_string())
+    .private_key("signer private key".to_string())
+    .query_timeout_ms(100_u64)
+    .spend_confirmations(10_u64)
+    .tx_send_timeout_ms(200_u64)
+    .tx_wait_interval_ms(10_u64)
+    .tx_wait_timeout_ms(300_u64)
+    .build();
+let request = SendSpendRequest::builder().options(send_options).build();
+let response = send(request);
+let spend = match response.result {
+    Some(api_response::Result::Data(data)) => match SendSpendResponse::try_from(data) {
+        Ok(spend) => spend,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`SendSpendOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': {code: 'spend_id'},
+            'Required': 'true',
+            'Description': 'The ID of the spend.'
+        },
+        {
+            'Parameter': {code: 'wallet_password'},
+            'Required': 'true',
+            'Description': 'The wallet password.'
+        },
+        {
+            'Parameter': {code: 'private_key'},
+            'Required': 'false',
+            'Description': 'The private key.'
+        },
+        {
+            'Parameter': {code: 'signer_provider'},
+            'Required': 'false',
+            'Description': 'The signer provider.'
+        },
+        {
+            'Parameter': {code: 'query_timeout_ms'},
+            'Required': 'false',
+            'Description': 'The query timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'spend_confirmations'},
+            'Required': 'false',
+            'Description': 'The spend confirmations.'
+        },
+        {
+            'Parameter': {code: 'tx_send_timeout_ms'},
+            'Required': 'false',
+            'Description': 'The transaction send timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'tx_wait_timeout_ms'},
+            'Required': 'false',
+            'Description': 'The transaction wait timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'tx_wait_interval_ms'},
+            'Required': 'false',
+            'Description': 'The transaction wait interval in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'relayer_wait_timeout_ms'},
+            'Required': 'false',
+            'Description': 'The relayer wait timeout in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'relayer_wait_interval_ms'},
+            'Required': 'false',
+            'Description': 'The relayer wait interval in milliseconds.'
+        },
+        {
+            'Parameter': {code: 'tx'},
+            'Required': 'false',
+            'Description': 'The transaction.'
+        },
+        {
+            'Parameter': {code: 'raw_merkle_tree'},
+            'Required': 'false',
+            'Description': 'The raw Merkle tree.'
+        },
+        {
+            'Parameter': {code: 'raw_zk_program'},
+            'Required': 'false',
+            'Description': 'The raw ZK program.'
+        },
+        {
+            'Parameter': {code: 'raw_zk_proving_key'},
+            'Required': 'false',
+            'Description': 'The raw ZK proving key.'
+        },
+        {
+            'Parameter': {code: 'raw_zk_verifying_key'},
+            'Required': 'false',
+            'Description': 'The raw ZK verifying key.'
+        },
+        {
+            'Parameter': {code: 'raw_zk_abi'},
+            'Required': 'false',
+            'Description': 'The raw ZK ABI.'
+        },
+    ]}
+/>
+
+### send_with_grpc
+
+Send a spend transaction by signing through the given gRPC interface.
+
+```rust
+use mystiko_protos::api::handler::v1::{SendSpendWithGrpcRequest, SendSpendResponse};
+use mystiko_protos::core::handler::v1::SendSpendOptions;
+use mystiko_protos::service::v1::ClientOptions;
+use mystiko_protos::common::v1::BridgeType;
+use mystiko_protos::core::v1::SpendType;
+use mystiko_lib::spend::send_with_grpc;
+use mystiko_protos::api::v1::api_response;
+
+let send_options = SendSpendOptions::builder()
+    .spend_id("spend id".to_string())
+    .wallet_password("P@ssw0rd".to_string())
+    .query_timeout_ms(100_u64)
+    .spend_confirmations(10_u64)
+    .tx_send_timeout_ms(200_u64)
+    .tx_wait_interval_ms(10_u64)
+    .tx_wait_timeout_ms(300_u64)
+    .build();
+let client_options = ClientOptions::builder().build();
+let request = SendSpendWithGrpcRequest::builder().send_options(send_options).client_options(client_options).build();
+let response = send_with_grpc(request);
+let spend = match response.result {
+    Some(api_response::Result::Data(data)) => match SendSpendResponse::try_from(data) {
+        Ok(spend) => spend,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`ClientOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'host' },
+            'Required': 'true',
+            'Description': 'Host.'
+        },
+        {
+            'Parameter': { code: 'port' },
+            'Required': 'true',
+            'Description': 'Port.'
+        },
+        {
+            'Parameter': { code: 'is_ssl' },
+            'Required': 'false',
+            'Description': 'Is SSL.'
+        },
+        {
+            'Parameter': { code: 'ssl_cert' },
+            'Required': 'false',
+            'Description': 'SSL cert.'
+        },
+        {
+            'Parameter': { code: 'ssl_cert_path' },
+            'Required': 'false',
+            'Description': 'SSL cert path.'
+        },
+        {
+            'Parameter': { code: 'ssl_server_name' },
+            'Required': 'false',
+            'Description': 'SSL server name.'
+        },
+    ]}
+/>
+
+## find
+
+Query Spend data using `Filter`.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter};
+use mystiko_protos::api::handler::v1::{FindSpendRequest, FindSpendResponse};
+use mystiko_lib::spend::find;
+use mystiko_protos::api::v1::api_response;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "spend id".to_string()))
+let request = FindSpendRequest::builder().filter(filter).build();
+let response = find(request);
+let spends = match response.result {
+    Some(api_response::Result::Data(data)) => match FindSpendResponse::try_from(data) {
+        Ok(spends) => spends,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_all
+
+Query all Spend data.
+
+```rust
+use mystiko_protos::api::handler::v1::FindSpendResponse;
+use mystiko_lib::spend::find_all;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_all();
+let spends = match response.result {
+    Some(api_response::Result::Data(data)) => match FindSpendResponse::try_from(data) {
+        Ok(spends) => spends,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_one
+
+Find a single Spend record using `Filter`.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter};
+use mystiko_protos::api::handler::v1::{FindSpendRequest, FindOneSpendResponse};
+use mystiko_lib::spend::find_one;
+use mystiko_protos::api::v1::api_response;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "spend id".to_string()))
+let request = FindSpendRequest::builder().filter(filter).build();
+let response = find_one(request);
+let spend = match response.result {
+    Some(api_response::Result::Data(data)) => match FindOneSpendResponse::try_from(data) {
+        Ok(spend) => spend,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_by_id
+
+Find a single Spend record by its ID.
+
+```rust
+use mystiko_protos::api::handler::v1::FindOneSpendResponse;
+use mystiko_lib::spend::find_by_id;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_by_id("spend id".to_string());
+let spend = match response.result {
+    Some(api_response::Result::Data(data)) => match FindOneSpendResponse::try_from(data) {
+        Ok(spend) => spend,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## count
+
+Query the count of data that matches the `Filter` criteria.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter};
+use mystiko_protos::api::handler::v1::CountSpendResponse;
+use mystiko_lib::spend::count;
+use mystiko_protos::api::v1::api_response;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "spend id".to_string()))
+let request = FindSpendRequest::builder().filter(filter).build();
+let response = count(request);
+let total = match response.result {
+    Some(api_response::Result::Data(data)) => match CountSpendResponse::try_from(data) {
+        Ok(total) => total,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### count_all
+
+Query the total count of all Spend data.
+
+```rust
+use mystiko_protos::api::handler::v1::CountSpendResponse;
+use mystiko_lib::spend::count_all;
+use mystiko_protos::api::v1::api_response;
+
+let response = count_all();
+let total = match response.result {
+    Some(api_response::Result::Data(data)) => match CountSpendResponse::try_from(data) {
+        Ok(total) => total,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## update
+
+Update a Spend record.
+
+```rust
+use mystiko_protos::api::handler::v1::{FindOneSpendResponse, UpdateSpendRequest, UpdateSpendResponse};
+use mystiko_lib::spend::find_by_id;
+use mystiko_lib::spend::update;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_by_id("spend id".to_string());
+let mut spend = match response.result {
+    Some(api_response::Result::Data(data)) => match FindOneSpendResponse::try_from(data) {
+        Ok(d) => d.spend.unwrap(),
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+spend.amount = 2000;
+let request = UpdateSpendRequest::builder().spend(spend).build();
+let response = update(request);
+let spend = match response.result {
+    Some(api_response::Result::Data(data)) => match UpdateSpendResponse::try_from(data) {
+        Ok(spend) => spend,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### update_batch
+
+Batch update Spend records.
+
+```rust
+use mystiko_protos::api::handler::v1::{FindOneSpendResponse, UpdateSpendBatchRequest, UpdateSpendBatchResponse};
+use mystiko_lib::spend::find_by_id;
+use mystiko_lib::spend::update_batch;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_by_id("spend id".to_string());
+let mut spend = match response.result {
+    Some(api_response::Result::Data(data)) => match FindOneSpendResponse::try_from(data) {
+        Ok(d) => d.spend.unwrap(),
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+spend.amount = 2000;
+let request = UpdateSpendBatchRequest::builder().spends(vec![spend]).build();
+let response = update_batch(request);
+let spends = match response.result {
+    Some(api_response::Result::Data(data)) => match UpdateSpendBatchResponse::try_from(data) {
+        Ok(spends) => spends,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### update_by_filter
+
+Update Spend records based on the conditions specified in the `Filter`.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter, ColumnValuePair};
+use mystiko_protos::storage::v1::UpdateSpendByFilterRequest;
+use mystiko_lib::spend::update_by_filter;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "spend id".to_string()));
+let values = vec![ColumnValuePair::builder().column("amount").value(2000_f64).build()];
+let request = UpdateSpendByFilterRequest::builder().column_values(values).filter(filter).build();
+let response = update_by_filter(request);
+assert!(response.code.unwrap().success);
+```
+
+### update_all
+
+Update all Spend records.
+
+```rust
+use mystiko_protos::storage::v1::ColumnValuePair;
+use mystiko_protos::storage::v1::UpdateAllSpendRequest;
+use mystiko_lib::spend::update_all;
+
+let values = vec![ColumnValuePair::builder().column("amount").value(2000_f64).build()];
+let request = UpdateAllSpendRequest::builder().column_values(values).build();
+let response = update_all(request);
+assert!(response.code.unwrap().success);
+```
+
+## delete
+
+Delete a Spend record.
+
+```rust
+use mystiko_protos::storage::v1::DeleteSpendRequest;
+use mystiko_lib::spend::delete;
+
+let request = DeleteSpendRequest::builder().spend(spend).build();
+let response = delete(request);
+assert!(response.code.unwrap().success);
+```
+
+### delete_batch
+
+Batch delete Spend records.
+
+```rust
+use mystiko_protos::storage::v1::DeleteSpendBatchRequest;
+use mystiko_lib::spend::delete_batch;
+
+let request = DeleteSpendBatchRequest::builder().deposits(vec![spend]).build();
+let response = delete_batch(request);
+assert!(response.code.unwrap().success);
+```
+
+### delete_by_filter
+
+Delete Spend records based on the conditions specified in the `Filter`.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter};
+use mystiko_protos::storage::v1::DeleteSpendByFilterRequest;
+use mystiko_lib::spend::delete_by_filter;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "spend id".to_string()));
+let request = DeleteSpendByFilterRequest::builder().filter(filter).build();
+let response = delete_by_filter(request);
+assert!(response.code.unwrap().success);
+```
+
+### delete_all
+
+Delete all Spend records.
+
+```rust
+use mystiko_lib::spend::delete_all;
+
+let response = delete_all();
+assert!(response.code.unwrap().success);
+```

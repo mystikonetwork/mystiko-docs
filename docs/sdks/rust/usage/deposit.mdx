@@ -1,0 +1,1117 @@
+---
+title: Deposit
+---
+
+import Table from "../../../components/Table";
+
+Mystiko Deposit Related APIs.
+
+## Data Structure
+- [DepositQuote](#quote)
+- [DepositSummary](#summary)
+- [Deposit](#create)
+
+## quote
+
+Retrieve quote information for a deposit.
+
+```rust
+use mystiko_protos::api::handler::v1::{QuoteRequest, QuoteResponse};
+use mystiko_protos::core::handler::v1::QuoteDepositOptions;
+use mystiko_lib::deposit::quote;
+use mystiko_protos::api::v1::api_response;
+
+let options = QuoteDepositOptions::builder()
+    .chain_id(11155111_u64)
+    .asset_symbol("MTT".to_string())
+    .bridge_type(BridgeType::Loop as i32)
+    .build();
+let request = QuoteRequest::builder().options(options).build();
+let response = quote(request);
+let depositQuote = match response.result {
+    Some(api_response::Result::Data(data)) => match QuoteResponse::try_from(data) {
+        Ok(depositQuote) => depositQuote,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`QuoteDepositOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'chain_id' },
+            'Required': 'true',
+            'Description': 'The chain ID of the asset.'
+        },
+        {
+            'Parameter': { code: 'asset_symbol' },
+            'Required': 'true',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Parameter': { code: 'query_timeout_ms' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'dst_chain_id' },
+            'Required': 'false',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Parameter': { code: 'bridge_type' },
+            'Required': 'false',
+            'Description': 'Bridge type.'
+        },
+    ]}
+/>
+
+`DepositQuote` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'asset_symbol' },
+            'Type': 'String',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Property': { code: 'asset_decimals' },
+            'Type': 'u32',
+            'Description': 'Asset decimals.'
+        },
+        {
+            'Property': { code: 'min_amount' },
+            'Type': 'f64',
+            'Description': 'Minimum amount.'
+        },
+        {
+            'Property': { code: 'min_decimal_amount' },
+            'Type': 'String',
+            'Description': 'Minimum decimal amount.'
+        },
+        {
+            'Property': { code: 'max_amount' },
+            'Type': 'f64',
+            'Description': 'Maximum amount.'
+        },
+        {
+            'Property': { code: 'max_decimal_amount' },
+            'Type': 'String',
+            'Description': 'Maximum decimal amount.'
+        },
+        {
+            'Property': { code: 'min_rollup_fee_amount' },
+            'Type': 'f64',
+            'Description': 'Minimum rollup fee amount.'
+        },
+        {
+            'Property': { code: 'min_rollup_fee_decimal_amount' },
+            'Type': 'String',
+            'Description': 'Minimum rollup fee decimal amount.'
+        },
+        {
+            'Property': { code: 'rollup_fee_asset_symbol' },
+            'Type': 'String',
+            'Description': 'Rollup fee asset symbol.'
+        },
+        {
+            'Property': { code: 'rollup_fee_asset_decimals' },
+            'Type': 'u32',
+            'Description': 'Rollup fee asset decimals.'
+        },
+        {
+            'Property': { code: 'min_bridge_fee_amount' },
+            'Type': 'Option<f64>',
+            'Description': 'Minimum bridge fee amount.'
+        },
+        {
+            'Property': { code: 'min_bridge_fee_decimal_amount' },
+            'Type': 'Option<String>',
+            'Description': 'Minimum bridge fee decimal amount.'
+        },
+        {
+            'Property': { code: 'bridge_fee_asset_symbol' },
+            'Type': 'Option<String>',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'bridge_fee_asset_decimals' },
+            'Type': 'Option<u32>',
+            'Description': 'Bridge fee asset decimals.'
+        },
+        {
+            'Property': { code: 'min_executor_fee_amount' },
+            'Type': 'Option<f64>',
+            'Description': 'Minimum executor fee amount.'
+        },
+        {
+            'Property': { code: 'min_executor_fee_decimal_amount' },
+            'Type': 'Option<String>',
+            'Description': 'Minimum executor fee decimal amount.'
+        },
+        {
+            'Property': { code: 'executor_fee_asset_symbol' },
+            'Type': 'Option<String>',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'executor_fee_asset_decimals' },
+            'Type': 'Option<u32>',
+            'Description': 'Executor fee asset decimals.'
+        },
+        {
+            'Property': { code: 'recommended_amounts' },
+            'Type': 'Vec<f64>',
+            'Description': 'Recommended amounts.'
+        },
+        {
+            'Property': { code: 'recommended_decimal_amounts' },
+            'Type': 'Vec<String>',
+            'Description': 'Recommended decimal amounts.'
+        },
+    ]}
+/>
+
+## summary
+
+Retrieve summary information for a deposit.
+
+```rust
+use mystiko_protos::api::handler::v1::{SummaryRequest, SummaryResponse};
+use mystiko_protos::core::handler::v1::CreateDepositOptions;
+use mystiko_lib::deposit::summary;
+use mystiko_protos::api::v1::api_response;
+
+let options = CreateDepositOptions::builder()
+    .chain_id(11155111_u64)
+    .asset_symbol("MTT".to_string())
+    .bridge_type(BridgeType::Loop as i32)
+    .shielded_address("shielded address".to_string())
+    .amount(10_f64)
+    .rollup_fee_amount(0.01_f64)
+    .deposit_quote(deposit_quote)
+    .build();
+let request = SummaryRequest::builder().options(options).build();
+let response = summary(request);
+let depositSummary = match response.result {
+    Some(api_response::Result::Data(data)) => match SummaryResponse::try_from(data) {
+        Ok(depositSummary) => depositSummary,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`CreateDepositOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'chain_id' },
+            'Required': 'true',
+            'Description': 'Chain id.'
+        },
+        {
+            'Parameter': { code: 'asset_symbol' },
+            'Required': 'true',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Parameter': { code: 'amount' },
+            'Required': 'true',
+            'Description': 'Amount.'
+        },
+        {
+            'Parameter': { code: 'shielded_address' },
+            'Required': 'true',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Parameter': { code: 'dst_chain_id' },
+            'Required': 'false',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Parameter': { code: 'rollup_fee_amount' },
+            'Required': 'false',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Parameter': { code: 'bridge_fee_amount' },
+            'Required': 'false',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Parameter': { code: 'executor_fee_amount' },
+            'Required': 'false',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Parameter': { code: 'query_timeout_ms' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'deposit_quote' },
+            'Required': 'false',
+            'Description': 'Deposit quote.'
+        },
+        {
+            'Parameter': { code: 'bridge_type' },
+            'Required': 'false',
+            'Description': 'Bridge type.'
+        },
+    ]}
+/>
+
+`DepositSummary` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'chain_id' },
+            'Type': 'u64',
+            'Description': 'Chain id.'
+        },
+        {
+            'Property': { code: 'asset_symbol' },
+            'Type': 'String',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Property': { code: 'asset_decimals' },
+            'Type': 'u32',
+            'Description': 'Asset decimals.'
+        },
+        {
+            'Property': { code: 'amount' },
+            'Type': 'f64',
+            'Description': 'Amount.'
+        },
+        {
+            'Property': { code: 'decimal_amount' },
+            'Type': 'String',
+            'Description': 'Decimal amount.'
+        },
+        {
+            'Property': { code: 'shielded_address' },
+            'Type': 'String',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Property': { code: 'rollup_fee_amount' },
+            'Type': 'f64',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Property': { code: 'rollup_fee_decimal_amount' },
+            'Type': 'String',
+            'Description': 'Rollup fee decimal amount.'
+        },
+        {
+            'Property': { code: 'rollup_fee_asset_symbol' },
+            'Type': 'String',
+            'Description': 'Rollup fee asset symbol.'
+        },
+        {
+            'Property': { code: 'rollup_fee_asset_decimals' },
+            'Type': 'u32',
+            'Description': 'Rollup fee asset decimals.'
+        },
+        {
+            'Property': { code: 'dst_chain_id' },
+            'Type': 'Option<u64>',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Property': { code: 'bridge_fee_amount' },
+            'Type': 'Option<f64>',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Property': { code: 'bridge_fee_decimal_amount' },
+            'Type': 'Option<String>',
+            'Description': 'Bridge fee decimal amount.'
+        },
+        {
+            'Property': { code: 'bridge_fee_asset_symbol' },
+            'Type': 'Option<String>',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'bridge_fee_asset_decimals' },
+            'Type': 'Option<u32>',
+            'Description': 'Bridge fee asset decimals.'
+        },
+        {
+            'Property': { code: 'executor_fee_amount' },
+            'Type': 'Option<u32>',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Property': { code: 'executor_fee_decimal_amount' },
+            'Type': 'Option<String>',
+            'Description': 'Executor fee decimal amount.'
+        },
+        {
+            'Property': { code: 'executor_fee_asset_symbol' },
+            'Type': 'Option<String>',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'executor_fee_asset_decimals' },
+            'Type': 'Option<u32>',
+            'Description': 'Executor fee asset decimals.'
+        },
+        {
+            'Property': { code: 'bridge_type' },
+            'Type': 'Option<BridgeType>',
+            'Description': 'Bridge type.'
+        },
+        {
+            'Property': { code: 'total_amounts' },
+            'Type': 'HashMap<String, u32>',
+            'Description': 'Total amounts.'
+        },
+        {
+            'Property': { code: 'total_decimal_amounts' },
+            'Type': 'HashMap<String, String>',
+            'Description': 'Total decimal amounts.'
+        },
+    ]}
+/>
+
+## create
+
+Create a Deposit request.
+
+```rust
+use mystiko_protos::api::handler::v1::{CreateDepositRequest, CreateDepositResponse};
+use mystiko_protos::core::handler::v1::CreateDepositOptions;
+use mystiko_lib::deposit::create;
+use mystiko_protos::api::v1::api_response;
+
+let options = CreateDepositOptions::builder()
+    .chain_id(97_u64)
+    .asset_symbol("BNB".to_string())
+    .bridge_type(BridgeType::Loop as i32)
+    .shielded_address(account.shielded_address.clone())
+    .amount(10_f64)
+    .rollup_fee_amount(0.01_f64)
+    .deposit_quote(deposit_quote)
+    .build();
+let request = CreateDepositRequest::builder().options(options).build();
+let response = create(request);
+let deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match CreateDepositResponse::try_from(data) {
+        Ok(deposit) => deposit,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`Deposit` data structure is as follows:
+
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'id' },
+            'Type': 'String',
+            'Description': 'Id.'
+        },
+        {
+            'Property': { code: 'created_at' },
+            'Type': 'u64',
+            'Description': 'Created at.'
+        },
+        {
+            'Property': { code: 'updated_at' },
+            'Type': 'u64',
+            'Description': 'Updated at.'
+        },
+        {
+            'Property': { code: 'chain_id' },
+            'Type': 'u64',
+            'Description': 'Chain id.'
+        },
+        {
+            'Property': { code: 'contract_address' },
+            'Type': 'String',
+            'Description': 'Contract address.'
+        },
+        {
+            'Property': { code: 'pool_address' },
+            'Type': 'String',
+            'Description': 'Pool address.'
+        },
+        {
+            'Property': { code: 'dst_chain_id' },
+            'Type': 'u64',
+            'Description': 'Destination chain id.'
+        },
+        {
+            'Property': { code: 'dst_chain_contract_address' },
+            'Type': 'String',
+            'Description': 'Destination chain contract address.'
+        },
+        {
+            'Property': { code: 'dst_pool_address' },
+            'Type': 'String',
+            'Description': 'Destination pool address.'
+        },
+        {
+            'Property': { code: 'commitment_hash' },
+            'Type': 'String',
+            'Description': 'Commitment hash.'
+        },
+        {
+            'Property': { code: 'hash_k' },
+            'Type': 'String',
+            'Description': 'Hash K.'
+        },
+        {
+            'Property': { code: 'random_s' },
+            'Type': 'String',
+            'Description': 'Random S.'
+        },
+        {
+            'Property': { code: 'encrypted_note' },
+            'Type': 'String',
+            'Description': 'Encrypted note.'
+        },
+        {
+            'Property': { code: 'asset_symbol' },
+            'Type': 'String',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Property': { code: 'asset_decimals' },
+            'Type': 'u32',
+            'Description': 'Asset decimals.'
+        },
+        {
+            'Property': { code: 'amount' },
+            'Type': 'u32',
+            'Description': 'Amount.'
+        },
+        {
+            'Property': { code: 'decimal_amount' },
+            'Type': 'String',
+            'Description': 'Decimal amount.'
+        },
+        {
+            'Property': { code: 'rollup_fee_amount' },
+            'Type': 'u32',
+            'Description': 'Rollup fee amount.'
+        },
+        {
+            'Property': { code: 'rollup_fee_decimal_amount' },
+            'Type': 'String',
+            'Description': 'Rollup fee decimal amount.'
+        },
+        {
+            'Property': { code: 'shielded_address' },
+            'Type': 'String',
+            'Description': 'Shielded address.'
+        },
+        {
+            'Property': { code: 'wallet_id' },
+            'Type': 'String',
+            'Description': 'Wallet id.'
+        },
+        {
+            'Property': { code: 'asset_address' },
+            'Type': 'Option<String>',
+            'Description': 'Asset address.'
+        },
+        {
+            'Property': { code: 'bridge_fee_amount' },
+            'Type': 'Option<f64>',
+            'Description': 'Bridge fee amount.'
+        },
+        {
+            'Property': { code: 'bridge_fee_decimal_amount' },
+            'Type': 'Option<String>',
+            'Description': 'Bridge fee decimal amount.'
+        },
+        {
+            'Property': { code: 'executor_fee_amount' },
+            'Type': 'Option<f64>',
+            'Description': 'Executor fee amount.'
+        },
+        {
+            'Property': { code: 'executor_fee_decimal_amount' },
+            'Type': 'Option<String>',
+            'Description': 'Executor fee decimal amount.'
+        },
+        {
+            'Property': { code: 'bridge_fee_asset_address' },
+            'Type': 'Option<String>',
+            'Description': 'Bridge fee asset address.'
+        },
+        {
+            'Property': { code: 'bridge_fee_asset_symbol' },
+            'Type': 'Option<String>',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'bridge_fee_asset_decimals' },
+            'Type': 'Option<u32>',
+            'Description': 'Bridge fee asset decimals.'
+        },
+        {
+            'Property': { code: 'executor_fee_asset_address' },
+            'Type': 'Option<String>',
+            'Description': 'Executor fee asset address.'
+        },
+        {
+            'Property': { code: 'executor_fee_asset_symbol' },
+            'Type': 'Option<String>',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'executor_fee_asset_decimals' },
+            'Type': 'Option<u32>',
+            'Description': 'Executor fee asset decimals.'
+        },
+        {
+            'Property': { code: 'queued_transaction_hash' },
+            'Type': 'Option<String>',
+            'Description': 'Queued transaction hash.'
+        },
+        {
+            'Property': { code: 'included_transaction_hash' },
+            'Type': 'Option<String>',
+            'Description': 'Included transaction hash.'
+        },
+        {
+            'Property': { code: 'src_chain_transaction_hash' },
+            'Type': 'Option<String>',
+            'Description': 'Source chain transaction hash.'
+        },
+        {
+            'Property': { code: 'asset_approve_transaction_hash' },
+            'Type': 'Vec<String>',
+            'Description': 'Asset approve transaction hash.'
+        },
+        {
+            'Property': { code: 'error_message' },
+            'Type': 'Option<String>',
+            'Description': 'Error message.'
+        },
+        {
+            'Property': { code: 'bridge_type' },
+            'Type': 'BridgeType',
+            'Description': 'Bridge type.'
+        },
+        {
+            'Property': { code: 'status' },
+            'Type': 'DepositStatus',
+            'Description': 'Deposit status.'
+        },
+    ]}
+/>
+
+## send
+
+Send a deposit transaction using a private key.
+
+```rust
+use mystiko_protos::api::handler::v1::{SendRequest, SendResponse};
+use mystiko_protos::core::handler::v1::SendDepositOptions;
+use mystiko_lib::deposit::send;
+use mystiko_protos::api::v1::api_response;
+
+let options = SendDepositOptions::builder()
+    .deposit_id("deposit id".to_string())
+    .build();
+let request = SendRequest::builder().options(options).build();
+let response = send(request);
+let deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match SendResponse::try_from(data) {
+        Ok(deposit) => deposit,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`SendDepositOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'deposit_id' },
+            'Required': 'true',
+            'Description': 'Deposit id.'
+        },
+        {
+            'Parameter': { code: 'private_key' },
+            'Required': 'false',
+            'Description': 'Private key.'
+        },
+        {
+            'Parameter': { code: 'signer_provider' },
+            'Required': 'false',
+            'Description': 'Signer provider.'
+        },
+        {
+            'Parameter': { code: 'query_timeout_ms' },
+            'Required': 'false',
+            'Description': 'Query timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'asset_approve_confirmations' },
+            'Required': 'false',
+            'Description': 'Asset approve confirmations.'
+        },
+        {
+            'Parameter': { code: 'deposit_confirmations' },
+            'Required': 'false',
+            'Description': 'Deposit confirmations.'
+        },
+        {
+            'Parameter': { code: 'tx_send_timeout_ms' },
+            'Required': 'false',
+            'Description': 'Transaction send timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'tx_wait_timeout_ms' },
+            'Required': 'false',
+            'Description': 'Transaction wait timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'tx_wait_interval_ms' },
+            'Required': 'false',
+            'Description': 'Transaction wait interval in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'asset_approve_tx' },
+            'Required': 'false',
+            'Description': 'Asset approve transaction.'
+        },
+        {
+            'Parameter': { code: 'deposit_tx' },
+            'Required': 'false',
+            'Description': 'Deposit transaction.'
+        },
+        {
+            'Parameter': { code: 'screening_message' },
+            'Required': 'false',
+            'Description': 'Screening message.'
+        },
+    ]}
+/>
+
+### send_with_grpc
+
+Send a deposit transaction by signing through the given gRPC interface.
+
+```rust
+use mystiko_protos::api::handler::v1::{SendWithGrpcRequest, SendResponse};
+use mystiko_protos::core::handler::v1::SendDepositOptions;
+use mystiko_protos::service::v1::ClientOptions;
+use mystiko_lib::deposit::send_with_grpc;
+use mystiko_protos::api::v1::api_response;
+
+let send_options = SendDepositOptions::builder()
+    .deposit_id("deposit id".to_string())
+    .build();
+let client_options = ClientOptions::builder().build();
+let request = SendWithGrpcRequest::builder().send_options(send_options).client_options(client_options).build();
+let response = send_with_grpc(request);
+let deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match SendResponse::try_from(data) {
+        Ok(deposit) => deposit,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+`ClientOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'host' },
+            'Required': 'true',
+            'Description': 'Host.'
+        },
+        {
+            'Parameter': { code: 'port' },
+            'Required': 'true',
+            'Description': 'Port.'
+        },
+        {
+            'Parameter': { code: 'is_ssl' },
+            'Required': 'false',
+            'Description': 'Is SSL.'
+        },
+        {
+            'Parameter': { code: 'ssl_cert' },
+            'Required': 'false',
+            'Description': 'SSL cert.'
+        },
+        {
+            'Parameter': { code: 'ssl_cert_path' },
+            'Required': 'false',
+            'Description': 'SSL cert path.'
+        },
+        {
+            'Parameter': { code: 'ssl_server_name' },
+            'Required': 'false',
+            'Description': 'SSL server name.'
+        },
+    ]}
+/>
+
+## find
+
+Query deposit data using `Filter`.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter};
+use mystiko_protos::api::handler::v1::{FindDepositRequest, FindDepositResponse};
+use mystiko_lib::deposit::find;
+use mystiko_protos::api::v1::api_response;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "deposit id".to_string()))
+let request = FindDepositRequest::builder().filter(filter).build();
+let response = find(request);
+let deposits = match response.result {
+    Some(api_response::Result::Data(data)) => match FindDepositResponse::try_from(data) {
+        Ok(deposits) => deposits,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_all
+
+Query all Deposit data.
+
+```rust
+use mystiko_protos::api::handler::v1::FindDepositResponse;
+use mystiko_lib::deposit::find_all;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_all();
+let deposits = match response.result {
+    Some(api_response::Result::Data(data)) => match FindDepositResponse::try_from(data) {
+        Ok(deposits) => deposits,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_one
+
+Find a single Deposit record using `Filter`.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter};
+use mystiko_protos::api::handler::v1::{FindDepositRequest, FindOneDepositResponse};
+use mystiko_lib::deposit::find_one;
+use mystiko_protos::api::v1::api_response;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "deposit id".to_string()))
+let request = FindDepositRequest::builder().filter(filter).build();
+let response = find_one(request);
+let deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match FindOneDepositResponse::try_from(data) {
+        Ok(deposit) => deposit,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_by_id
+
+Find a single Deposit record by its ID.
+
+```rust
+use mystiko_protos::api::handler::v1::FindOneDepositResponse;
+use mystiko_lib::deposit::find_by_id;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_by_id("deposit id".to_string());
+let deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match FindOneDepositResponse::try_from(data) {
+        Ok(deposit) => deposit,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## count
+
+Query the count of data that matches the `QueryFilter` criteria.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter};
+use mystiko_protos::api::handler::v1::CountDepositResponse;
+use mystiko_lib::deposit::count;
+use mystiko_protos::api::v1::api_response;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "deposit id".to_string()))
+let request = FindDepositRequest::builder().filter(filter).build();
+let response = count(request);
+let total = match response.result {
+    Some(api_response::Result::Data(data)) => match CountDepositResponse::try_from(data) {
+        Ok(total) => total,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### count_all
+
+Query the total count of all Deposit data.
+
+```rust
+use mystiko_protos::api::handler::v1::CountDepositResponse;
+use mystiko_lib::deposit::count_all;
+use mystiko_protos::api::v1::api_response;
+
+let response = count_all();
+let total = match response.result {
+    Some(api_response::Result::Data(data)) => match CountDepositResponse::try_from(data) {
+        Ok(total) => total,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## update
+
+Update a Deposit record.
+
+```rust
+use mystiko_protos::api::handler::v1::{FindOneDepositResponse, UpdateDepositRequest, UpdateDepositResponse};
+use mystiko_lib::deposit::find_by_id;
+use mystiko_lib::deposit::update;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_by_id("deposit id".to_string());
+let mut deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match FindOneDepositResponse::try_from(data) {
+        Ok(d) => d.deposit.unwrap(),
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+deposit.amount = 2000;
+let request = UpdateDepositRequest::builder().deposit(deposit).build();
+let response = update(request);
+let deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match UpdateDepositResponse::try_from(data) {
+        Ok(deposit) => deposit,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### update_batch
+
+Batch update Deposit records.
+
+```rust
+use mystiko_protos::api::handler::v1::{FindOneDepositResponse, UpdateDepositBatchRequest, UpdateDepositBatchResponse};
+use mystiko_lib::deposit::find_by_id;
+use mystiko_lib::deposit::update_batch;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_by_id("deposit id".to_string());
+let mut deposit = match response.result {
+    Some(api_response::Result::Data(data)) => match FindOneDepositResponse::try_from(data) {
+        Ok(d) => d.deposit.unwrap(),
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+deposit.amount = 2000;
+let request = UpdateDepositBatchRequest::builder().deposits(vec![deposit]).build();
+let response = update_batch(request);
+let deposits = match response.result {
+    Some(api_response::Result::Data(data)) => match UpdateDepositBatchResponse::try_from(data) {
+        Ok(deposits) => deposits,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### update_by_filter
+
+Update Deposit records based on the conditions specified in the `Filter`.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter, ColumnValuePair};
+use mystiko_protos::storage::v1::UpdateDepositByFilterRequest;
+use mystiko_lib::deposit::update_by_filter;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "deposit id".to_string()));
+let values = vec![ColumnValuePair::builder().column("amount").value(2000_f64).build()];
+let request = UpdateDepositByFilterRequest::builder().column_values(values).filter(filter).build();
+let response = update_by_filter(request);
+assert!(response.code.unwrap().success);
+```
+
+### update_all
+
+Update all Deposit records.
+
+```rust
+use mystiko_protos::storage::v1::ColumnValuePair;
+use mystiko_protos::storage::v1::UpdateAllDepositRequest;
+use mystiko_lib::deposit::update_all;
+
+let values = vec![ColumnValuePair::builder().column("amount").value(2000_f64).build()];
+let request = UpdateAllDepositRequest::builder().column_values(values).build();
+let response = update_all(request);
+assert!(response.code.unwrap().success);
+```
+
+## delete
+
+Delete a Deposit record.
+
+```rust
+use mystiko_protos::storage::v1::DeleteDepositRequest;
+use mystiko_lib::deposit::delete;
+
+let request = DeleteDepositRequest::builder().deposit(deposit).build();
+let response = delete(request);
+assert!(response.code.unwrap().success);
+```
+
+### delete_batch
+
+Batch delete Deposit records.
+
+```rust
+use mystiko_protos::storage::v1::DeleteDepositBatchRequest;
+use mystiko_lib::deposit::delete_batch;
+
+let request = DeleteDepositBatchRequest::builder().deposits(vec![deposit]).build();
+let response = delete_batch(request);
+assert!(response.code.unwrap().success);
+```
+
+### delete_by_filter
+
+Delete Deposit records based on the conditions specified in the `Filter`.
+
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter};
+use mystiko_protos::storage::v1::DeleteDepositByFilterRequest;
+use mystiko_lib::deposit::delete_by_filter;
+
+let filter = QueryFilter::from(SubFilter::equal(DocumentColumn::Id, "deposit id".to_string()));
+let request = DeleteDepositByFilterRequest::builder().filter(filter).build();
+let response = delete_by_filter(request);
+assert!(response.code.unwrap().success);
+```
+
+### delete_all
+
+Delete all Deposit records.
+
+```rust
+use mystiko_lib::deposit::delete_all;
+
+let response = delete_all();
+assert!(response.code.unwrap().success);
+```

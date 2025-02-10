@@ -1,0 +1,500 @@
+---
+title: Account
+---
+import Table from '../../../components/Table';
+
+The account module provides a series of methods related to Mystiko accounts.
+
+## Data Structure
+An account is an object generated from protobuf with the following properties:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'id' },
+            'Type': 'String',
+            'Description': 'The unique identifier of the account.'
+        },
+        {
+            'Property': { code: 'created_at' },
+            'Type': 'u64',
+            'Description': 'The timestamp when the account was created.'
+        },
+        {
+            'Property': { code: 'updated_at' },
+            'Type': 'u64',
+            'Description': 'The timestamp when the account was last updated.'
+        },
+        {
+            'Property': { code: 'name' },
+            'Type': 'String',
+            'Description': 'The name of the account.'
+        },
+        {
+            'Property': { code: 'shielded_address' },
+            'Type': 'String',
+            'Description': 'The shielded address of the account.'
+        },
+        {
+            'Property': { code: 'public_key' },
+            'Type': 'String',
+            'Description': 'The public key of the account.'
+        },
+        {
+            'Property': { code: 'encrypted_secret_key' },
+            'Type': 'String',
+            'Description': 'The encrypted secret key of the account.'
+        },
+        {
+            'Property': { code: 'wallet_id' },
+            'Type': 'String',
+            'Description': 'The unique identifier of the wallet to which the account belongs.'
+        },
+        {
+            'Property': { code: 'scanned_to_id' },
+            'Type': 'String',
+            'Description': 'The unique identifier of the last scanned transaction.'
+        }
+    ]}
+/>
+
+## create
+Create an Account.
+```rust
+use mystiko_protos::api::handler::v1::{CreateAccountRequest, CreateAccountResponse};
+use mystiko_protos::core::handler::v1::CreateAccountOptions;
+use mystiko_lib::account::create;
+use mystiko_protos::api::v1::api_response;
+
+let options = CreateAccountOptions::builder().wallet_password("P@ssw0rd".to_string()).build();
+let request = CreateAccountRequest::builder().options(options).build();
+let response = create(request);
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match CreateAccountResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+The parameter list for `CreateAccountOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'wallet_password' },
+            'Required': 'true',
+            'Description': 'The password of the encrypted wallet.'
+        },
+        {
+            'Parameter': { code: 'name' },
+            'Required': 'false',
+            'Description': 'The name of the account.'
+        },
+        {
+            'Parameter': { code: 'secret_key' },
+            'Required': 'false',
+            'Description': 'The secret key of the account.'
+        }
+    ]}
+/>
+
+## count
+Query the number of accounts in the wallet based on specific conditions.
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter, ConditionOperator};
+use mystiko_protos::api::handler::v1::{CountAccountRequest, CountAccountResponse};
+use mystiko_lib::account::count;
+use mystiko_protos::api::v1::api_response;
+
+let filter = SubFilter::equal("name", "test_account");
+let request= CountAccountRequest::builder()
+    .filter(
+        QueryFilter::builder()
+            .conditions_operator(ConditionOperator::And)
+            .conditions(vec![filter.clone().into()])
+            .build(),
+    )
+    .build();
+let response = count(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match CountAccountResponse::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### count_all
+Query the total number of accounts in the wallet.
+```rust
+use mystiko_protos::api::handler::v1::CountAccountResponse;
+use mystiko_lib::account::count_all;
+use mystiko_protos::api::v1::api_response;
+
+let response = count_all();
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match CountAccountResponse::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## find
+Query accounts based on specific conditions.
+```rust
+use mystiko_protos::storage::v1::{QueryFilter, SubFilter, ConditionOperator};
+use mystiko_protos::api::handler::v1::{FindAccountRequest, FindAccountResponse};
+use mystiko_lib::account::find;
+use mystiko_protos::api::v1::api_response;
+
+let filter = SubFilter::equal("name", "test_account");
+let request= FindAccountRequest::builder()
+    .filter(
+        QueryFilter::builder()
+            .conditions_operator(ConditionOperator::And)
+            .conditions(vec![filter.clone().into()])
+            .build(),
+    )
+    .build();
+let response = find(request);
+let accounts = match response.result {
+    Some(api_response::Result::Data(data)) => match FindAccountResponse::try_from(data) {
+        Ok(accounts) => accounts,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_all
+Query all accounts in the wallet.
+```rust
+use mystiko_protos::api::handler::v1::FindAccountResponse;
+use mystiko_lib::account::find_all;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_all();
+let accounts = match response.result {
+    Some(api_response::Result::Data(data)) => match FindAccountResponse::try_from(data) {
+        Ok(accounts) => accounts,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_by_id
+Query an account by its unique identifier.
+```rust
+use mystiko_protos::api::handler::v1::FindAccountByIdentifierResponse;
+use mystiko_lib::account::find_by_id;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_by_id("accountId".to_string());
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match FindAccountByIdentifierResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_by_shielded_address
+Query an account by its shielded address.
+```rust
+use mystiko_protos::api::handler::v1::FindAccountByIdentifierResponse;
+use mystiko_lib::account::find_by_shielded_address;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_by_shielded_address("shielded address".to_string());
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match FindAccountByIdentifierResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### find_by_public_key
+Query an account by its public key.
+```rust
+use mystiko_protos::api::handler::v1::FindAccountByIdentifierResponse;
+use mystiko_lib::account::find_by_public_key;
+use mystiko_protos::api::v1::api_response;
+
+let response = find_by_public_key("public key".to_string());
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match FindAccountByIdentifierResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## update
+The parameter list for `UpdateAccountOptions`:
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'wallet_password' },
+            'Required': 'true',
+            'Description': 'The password of the encrypted wallet.'
+        },
+        {
+            'Parameter': { code: 'name' },
+            'Required': 'false',
+            'Description': 'The name of the account.'
+        }
+    ]}
+/>
+
+### update_by_id
+Update an account by its unique identifier.
+```rust
+use mystiko_protos::api::handler::v1::{UpdateAccountOptions, UpdateAccountRequest, UpdateAccountResponse};
+use mystiko_lib::account::update_by_id;
+use mystiko_protos::api::v1::api_response;
+
+let request = UpdateAccountRequest::builder()
+    .identifier("accountId".to_string())
+    .options(
+        UpdateAccountOptions::builder()
+            .wallet_password("P@ssw0rd".to_string())
+            .name("new_name".to_string())
+            .build(),
+    )
+    .build();
+let response = update_by_id(request);
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match UpdateAccountResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### update_by_shielded_address
+Update an account by its shielded address.
+```rust
+use mystiko_protos::api::handler::v1::{UpdateAccountOptions, UpdateAccountRequest, UpdateAccountResponse};
+use mystiko_lib::account::update_by_shielded_address;
+use mystiko_protos::api::v1::api_response;
+
+let request = UpdateAccountRequest::builder()
+    .identifier("shielded address".to_string())
+    .options(
+        UpdateAccountOptions::builder()
+            .wallet_password("P@ssw0rd".to_string())
+            .name("new_name".to_string())
+            .build(),
+    )
+    .build();
+let response = update_by_shielded_address(request);
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match UpdateAccountResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### update_by_public_key
+Update an account by its public key.
+```rust
+use mystiko_protos::api::handler::v1::{UpdateAccountOptions, UpdateAccountRequest, UpdateAccountResponse};
+use mystiko_lib::account::update_by_public_key;
+use mystiko_protos::api::v1::api_response;
+
+let request = UpdateAccountRequest::builder()
+    .identifier("public key".to_string())
+    .options(
+        UpdateAccountOptions::builder()
+            .wallet_password("P@ssw0rd".to_string())
+            .name("new_name".to_string())
+            .build(),
+    )
+    .build();
+let response = update_by_public_key(request);
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match UpdateAccountResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### update_encryption
+Update the encryption of an account.
+```rust
+use mystiko_protos::api::handler::v1::{UpdateEncryptionRequest, UpdateEncryptionResponse};
+use mystiko_lib::account::update_encryption;
+use mystiko_protos::api::v1::api_response;
+
+let request = UpdateEncryptionRequest::builder()
+    .old_wallet_password("P@ssw0rd".to_string())
+    .new_wallet_password("new_P@ssw0rd".to_string())
+    .build();
+let response = update_encryption(request);
+let accounts = match response.result {
+    Some(api_response::Result::Data(data)) => match UpdateEncryptionResponse::try_from(data) {
+        Ok(accounts) => accounts,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## cxport
+
+### export_secret_key_by_id
+Export the secret key of an account by its unique identifier.
+```rust
+import mystiko from '@mystikonetwork/node';
+
+const key = mystiko.account?.exportSecretKeyById('walletPassword', "accountId");
+
+use mystiko_protos::api::handler::v1::{ExportSecretKeyRequest, ExportSecretKeyResponse};
+use mystiko_lib::account::export_secret_key_by_id;
+use mystiko_protos::api::v1::api_response;
+
+let request = ExportSecretKeyRequest::builder()
+    .wallet_password("P@ssw0rd".to_string())
+    .identifier("account id".to_string())
+    .build();
+let response = export_secret_key_by_id(request);
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match ExportSecretKeyResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### export_secret_key_by_public_key
+Export the secret key of an account by its public key.
+```rust
+use mystiko_protos::api::handler::v1::{ExportSecretKeyRequest, ExportSecretKeyResponse};
+use mystiko_lib::account::export_secret_key_by_public_key;
+use mystiko_protos::api::v1::api_response;
+
+let request = ExportSecretKeyRequest::builder()
+    .wallet_password("P@ssw0rd".to_string())
+    .identifier("public key".to_string())
+    .build();
+let response = export_secret_key_by_public_key(request);
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match ExportSecretKeyResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### export_secret_key_by_shielded_address
+Export the secret key of an account by its shielded address.
+```rust
+use mystiko_protos::api::handler::v1::{ExportSecretKeyRequest, ExportSecretKeyResponse};
+use mystiko_lib::account::export_secret_key_by_shielded_address;
+use mystiko_protos::api::v1::api_response;
+
+let request = ExportSecretKeyRequest::builder()
+    .wallet_password("P@ssw0rd".to_string())
+    .identifier("shieleded address".to_string())
+    .build();
+let response = export_secret_key_by_shielded_address(request);
+let account = match response.result {
+    Some(api_response::Result::Data(data)) => match ExportSecretKeyResponse::try_from(data) {
+        Ok(account) => account,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
