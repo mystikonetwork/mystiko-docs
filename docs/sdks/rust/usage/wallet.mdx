@@ -1,0 +1,215 @@
+---
+title: Wallet
+---
+import Table from "../../../components/Table";
+
+Interfaces for managing the Mystiko wallet, including creating, checking, updating, and exporting operations.
+
+## Data Structure
+`Wallet` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'id' },
+            'Type': 'String',
+            'Description': 'The wallet ID.'
+        },
+        {
+            'Property': { code: 'created_at' },
+            'Type': 'u64',
+            'Description': 'The creation time of the wallet.'
+        },
+        {
+            'Property': { code: 'updated_at' },
+            'Type': 'u64',
+            'Description': 'The last update time of the wallet.'
+        },
+        {
+            'Property': { code: 'encrypted_entropy' },
+            'Type': 'String',
+            'Description': 'The encrypted entropy of the wallet.'
+        },
+        {
+            'Property': { code: 'hashed_password' },
+            'Type': 'String',
+            'Description': 'The hashed password of the wallet.'
+        },
+        {
+            'Property': { code: 'account_nonce' },
+            'Type': 'u32',
+            'Description': 'The account nonce of the wallet.'
+        },
+        {
+            'Property': { code: 'mnemonic_type' },
+            'Type': 'MnemonicType',
+            'Description': 'The account mnemonic type.'
+        }
+    ]}
+/>
+List of supported `MnemonicType`:
+```rust
+# Represents a mnemonic phrase used in web wallets, typically consisting of 12 words.
+MnemonicType.WEB;
+# Represents a mnemonic phrase used in Rust-based wallets, typically consisting of 24 words.
+MnemonicType.RUST;
+```
+## create
+
+Create a Mystiko Wallet.
+
+```rust
+use mystiko_protos::api::handler::v1::{CreateWalletRequest, CreateWalletResponse};
+use mystiko_protos::core::handler::v1::CreateWalletOptions;
+use mystiko_lib::wallet::create;
+use mystiko_protos::api::v1::api_response;
+
+let options = CreateWalletOptions::builder().password("P@ssw0rd".to_string()).build();
+let request = CreateWalletRequest::builder().options(options).build();
+let response = create(request);
+let wallet = match response.result {
+    Some(api_response::Result::Data(data)) => match CreateWalletResponse::try_from(data) {
+        Ok(wallet) => wallet,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+The parameter list for `CreateWalletOptions`:
+
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'password' },
+            'Required': 'true',
+            'Description': 'The password for the wallet.'
+        },
+        {
+            'Parameter': { code: 'mnemonic' },
+            'Required': 'true',
+            'Description': 'MnemonicOptions for the wallet.'
+        }
+    ]}
+/>
+The parameter list for `MnemonicOptions`:
+
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'mnemonic_phrase' },
+            'Required': 'true',
+            'Description': 'Mnemonic phrase for the wallet.'
+        },
+        {
+            'Parameter': { code: 'mnemonic_type' },
+            'Required': 'true',
+            'Description': 'MnemonicType for the wallet.'
+        }
+    ]}
+/>
+## check
+
+### check_current
+Check current wallet.
+
+```rust
+use mystiko_protos::core::handler::v1::CheckCurrentResponse;
+use mystiko_lib::wallet::check_current;
+use mystiko_protos::api::v1::api_response;
+
+let response = check_current();
+let wallet = match response.result {
+    Some(api_response::Result::Data(data)) => match CheckCurrentResponse::try_from(data) {
+        Ok(wallet) => wallet,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+### check_password
+Check the password of the wallet.
+
+```rust
+use mystiko_protos::core::handler::v1::{CheckPasswordRequest, CheckPasswordResponse};
+use mystiko_lib::wallet::check_password;
+use mystiko_protos::api::v1::api_response;
+
+let request = CheckPasswordRequest::builder().password("P@ssw0rd".to_string()).build();
+let response = check_password(request);
+let wallet = match response.result {
+    Some(api_response::Result::Data(data)) => match CheckPasswordResponse::try_from(data) {
+        Ok(wallet) => wallet,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## update_password
+Update the password of the wallet.
+
+```rust
+use mystiko_protos::core::handler::v1::{UpdatePasswordRequest, UpdatePasswordResponse};
+use mystiko_lib::wallet::update_password;
+use mystiko_protos::api::v1::api_response;
+
+let request = UpdatePasswordRequest::builder()
+    .old_password("P@ssw0rd".to_string())
+    .new_password("N3wP@ssw0rd".to_string())
+    .build();
+let response = update_password(request);
+let wallet = match response.result {
+    Some(api_response::Result::Data(data)) => match UpdatePasswordResponse::try_from(data) {
+        Ok(wallet) => wallet,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## export_mnemonic_phrase
+Export the mnemonic phrase of the wallet.
+
+```rust
+use mystiko_protos::core::handler::v1::{ExportMnemonicPhraseRequest, ExportMnemonicPhraseResponse};
+use mystiko_lib::wallet::export_mnemonic_phrase;
+use mystiko_protos::api::v1::api_response;
+
+let request = ExportMnemonicPhraseRequest::builder().password("P@ssw0rd".to_string()).build();
+let response = export_mnemonic_phrase(request);
+let phrase = match response.result {
+    Some(api_response::Result::Data(data)) => match ExportMnemonicPhraseResponse::try_from(data) {
+        Ok(phrase) => phrase,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```

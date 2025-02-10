@@ -1,0 +1,314 @@
+---
+title: Synchronizer
+---
+import Table from "../../../components/Table";
+
+The Synchronizer helps you synchronize on-chain data to the local environment.
+
+## Data Structure
+`SynchronizerStatus`
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'chains' },
+            'Type': 'Vec<ChainStatus>',
+            'Description': 'The list of ChainStatus'
+        }
+    ]}
+/>
+
+`ChainStatus`
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'chain_id' },
+            'Type': 'u64',
+            'Description': 'Chain id'
+        },
+        {
+            'Property': { code: 'synced_block' },
+            'Type': 'u64',
+            'Description': 'Synced block number'
+        },
+        {
+            'Property': { code: 'target_block' },
+            'Type': 'u64',
+            'Description': 'Target block number'
+        },
+        {
+            'Property': { code: 'contracts' },
+            'Type': 'Vec<ContractStatus>',
+            'Description': 'The list of ContractStatus'
+        }
+    ]}
+/>
+
+`ContractStatus`
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'contract_address' },
+            'Type': 'String',
+            'Description': 'Contract address'
+        },
+        {
+            'Property': { code: 'synced_block' },
+            'Type': 'u64',
+            'Description': 'Synced block number'
+        }
+    ]}
+/>
+
+## chain_synced_block
+
+Sync block data according to chain id.
+
+```rust
+use mystiko_protos::api::synchronizer::v1::{ChainSyncedBlockRequest, ChainSyncedBlockResponse};
+use mystiko_lib::synchronizer::chain_synced_block;
+use mystiko_protos::api::v1::api_response;
+
+let request = ChainSyncedBlockRequest::builder().chain_id(11155111u64).build()
+let response = chain_synced_block(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match ChainSyncedBlockResponse::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## contract_synced_block
+
+Sync block data according to chain id and contract address.
+
+```rust
+use mystiko_protos::api::synchronizer::v1::{ContractSyncedBlockRequest, ContractSyncedBlockResponse};
+use mystiko_lib::synchronizer::contract_synced_block;
+use mystiko_protos::api::v1::api_response;
+
+let request = ContractSyncedBlockRequest::builder()
+              .chain_id(11155111u64)
+              .contract_address("0xAE77941b3bd4d2293E13A9a69E64A0ACFf5bBC55")
+              .build()
+let response = contract_synced_block(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match ContractSyncedBlockResponse::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## status
+
+Check the Sync Status.
+
+Parameter: `withContracts` Indicates whether to include contract-related data in the synchronization status.
+
+```rust
+use mystiko_protos::api::synchronizer::v1::{SynchronizerStatusRequest, SynchronizerStatusResponse};
+use mystiko_lib::synchronizer::status;
+use mystiko_protos::api::v1::api_response;
+
+let request = SynchronizerStatusRequest::builder().with_contracts(false).build();
+let response = status(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match SynchronizerStatusResponse::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+## sync
+
+Synchronize the transaction data for the Mystiko contract.
+
+```rust
+use mystiko_protos::api::synchronizer::v1::{SynchronizerSyncRequest, SynchronizerSyncResponse};
+use mystiko_protos::core::synchronizer::v1::SynchronizerSyncOptions;
+use mystiko_lib::synchronizer::sync;
+use mystiko_protos::api::v1::api_response;
+
+let options = SynchronizerSyncOptions::builder().chain_ids(vec![1u64]).build();
+let request = SynchronizerSyncRequest::builder().options(options).build();
+let response = sync(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match SynchronizerSyncResponse::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+The parameter list for `SynchronizerSyncOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'disable_datapacker_fetcher' },
+            'Required': 'false',
+            'Description': 'Disable the datapacker fetcher.'
+        },
+        {
+            'Parameter': { code: 'enable_datapacker_fetcher_validate' },
+            'Required': 'false',
+            'Description': 'Enable the datapacker fetcher validate.'
+        },
+        {
+            'Parameter': { code: 'disable_sequencer_fetcher' },
+            'Required': 'false',
+            'Description': 'Disable the sequencer fetcher.'
+        },
+        {
+            'Parameter': { code: 'enable_sequencer_fetcher_validate' },
+            'Required': 'false',
+            'Description': 'Enable the sequencer fetcher validate.'
+        },
+        {
+            'Parameter': { code: 'disable_provider_fetcher' },
+            'Required': 'false',
+            'Description': 'Disable the provider fetcher.'
+        },
+        {
+            'Parameter': { code: 'disable_provider_fetcher_validate' },
+            'Required': 'false',
+            'Description': 'Disable the provider fetcher validate.'
+        },
+        {
+            'Parameter': { code: 'disable_rule_validator' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator.'
+        },
+        {
+            'Parameter': { code: 'disable_rule_validator_integrity_check' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator integrity check.'
+        },
+        {
+            'Parameter': { code: 'disable_rule_validator_sequence_check' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator sequence check.'
+        },
+        {
+            'Parameter': { code: 'disable_rule_validator_counter_check' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator counter check.'
+        },
+        {
+            'Parameter': { code: 'disable_rule_validator_treecheck' },
+            'Required': 'false',
+            'Description': 'Disable the rule validator tree check.'
+        },
+        {
+            'Parameter': { code: 'fetcher_fetch_timeout_ms' },
+            'Required': 'false',
+            'Description': 'The fetcher fetch timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'fetcher_query_loaded_block_timeout_ms' },
+            'Required': 'false',
+            'Description': 'The fetcher query loaded block timeout in milliseconds.'
+        },
+        {
+            'Parameter': { code: 'validator_validate_concurrency' },
+            'Required': 'false',
+            'Description': 'The validator validate concurrency, enforced to 1 in the SDK.'
+        },
+        {
+            'Parameter': { code: 'chain_ids' },
+            'Required': 'false',
+            'Description': 'The list of chain ids.'
+        }
+    ]}
+/>
+
+## reset
+
+Reset the synchronization data.
+
+```rust
+use mystiko_protos::api::synchronizer::v1::{SynchronizerResetRequest, SynchronizerResetResponse};
+use mystiko_protos::core::synchronizer::v1::{SynchronizerResetOptions, ResetChainOptions};
+use mystiko_lib::synchronizer::reset;
+use mystiko_protos::api::v1::api_response;
+
+let chain = ResetChainOptions::builder().chain_id(1u64).build();
+let options = SynchronizerResetOptions::builder().chains(vec![chain]).build();
+let request = SynchronizerResetRequest::builder().options(options).build();
+let response = reset(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match SynchronizerResetResponse::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+The parameter list for `SynchronizerResetOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'chains' },
+            'Required': 'false',
+            'Description': 'The list of ResetChainOptions.'
+        }
+    ]}
+/>
+
+`ResetChainOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'chain_id' },
+            'Required': 'true',
+            'Description': 'The chain id.'
+        },
+        {
+            'Parameter': { code: 'contract_addresses' },
+            'Required': 'false',
+            'Description': 'The contract addresses.'
+        },
+        {
+            'Parameter': { code: 'block_number' },
+            'Required': 'false',
+            'Description': 'The block number.'
+        }
+    ]}
+/>

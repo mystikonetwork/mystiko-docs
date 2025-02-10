@@ -1,0 +1,349 @@
+---
+title: Scanner
+---
+import Table from "../../../components/Table";
+
+Mystiko Scanner Related APIs.
+
+## Sync
+
+Sync current wallet deposit and spend transaction status.
+
+```rust
+use mystiko_protos::api::scanner::v1::{ScannerSyncRequest, ScannerSyncRequest};
+use mystiko_protos::core::scanner::v1::ScannerSyncOptions;
+use mystiko_lib::scanner::sync;
+use mystiko_protos::api::v1::api_response;
+
+let options = ScannerSyncOptions::builder().wallet_password("P@ssw0rd".to_string()).build();
+let request = ScannerSyncRequest::builder().options(options).build();
+let response = sync(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match ScannerSyncRequest::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+The parameter list for `ScannerSyncOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'wallet_password' },
+            'Required': 'true',
+            'Description': 'The password of the wallet.'
+        },
+        {
+            'Parameter': { code: 'concurrency' },
+            'Required': 'false',
+            'Description': 'Concurrency level is enforced to 1 in the SDK.'
+        }
+    ]}
+/>
+
+## scan
+
+Scan transactions related to the current wallet.
+
+```rust
+use mystiko_protos::api::scanner::v1::{ScannerScanRequest, ScannerScanRequest};
+use mystiko_protos::core::scanner::v1::ScannerSyncOptions;
+use mystiko_lib::scanner::scan;
+use mystiko_protos::api::v1::api_response;
+
+let options = ScannerScanOptions::builder().wallet_password("P@ssw0rd".to_string()).build();
+let request = ScannerScanRequest::builder().options(options).build();
+let response = scan(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match ScannerScanRequest::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+The parameter list for `ScannerScanOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'wallet_password' },
+            'Required': 'true',
+            'Description': 'The password of the wallet.'
+        },
+        {
+            'Parameter': { code: 'batch_size' },
+            'Required': 'false',
+            'Description': 'The number of transactions to scan in each batch.'
+        },
+        {
+            'Parameter': { code: 'concurrency' },
+            'Required': 'false',
+            'Description': 'Concurrency level is enforced to 1 in the SDK.'
+        },
+        {
+            'Parameter': { code: 'shielded_addresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to scan.'
+        }
+    ]}
+/>
+
+## reset
+
+Scanner reset.
+
+```rust
+use mystiko_protos::api::scanner::v1::{ScannerResetRequest, ScannerResetResponse};
+use mystiko_protos::core::scanner::v1::ScannerResetOptions;
+use mystiko_lib::scanner::reset;
+use mystiko_protos::api::v1::api_response;
+
+let options = ScannerResetOptions::builder().build();
+let request = ScannerResetRequest::builder().options(options).build();
+let response = reset(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match ScannerResetResponse::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+The parameter list for `ScannerResetOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'reset_to_id' },
+            'Required': 'false',
+            'Description': 'The transaction ID to reset to.'
+        },
+        {
+            'Parameter': { code: 'shielded_addresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to reset.'
+        }
+    ]}
+/>
+
+
+## import
+
+Import asset by transaction.
+
+```rust
+use mystiko_protos::api::scanner::v1::{ScannerAssetImportRequest, ScannerAssetImportResponse};
+use mystiko_protos::core::scanner::v1::{AssetImportOptions, AssetChainImportOptions};
+use mystiko_lib::scanner::import;
+use mystiko_protos::api::v1::api_response;
+
+let chain = AssetChainImportOptions::builder()
+    .chain_id(11155111u64)
+    .tx_hashes(vec!["0x8e475d89817f12e8aec59cde31320c429cf330337267b1abb628ab4bd6e528ec".to_string()])
+    .build();
+let options = AssetImportOptions::builder().wallet_password("P@ssw0rd".to_string()).chains(vec![chain]).build();
+let request = ScannerAssetImportRequest::builder().options(options).build();
+let response = import(request);
+let result = match response.result {
+    Some(api_response::Result::Data(data)) => match ScannerAssetImportResponse::try_from(data) {
+        Ok(result) => result,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+The parameter list for `AssetImportOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'wallet_password' },
+            'Required': 'true',
+            'Description': 'The password of the wallet.'
+        },
+        {
+            'Parameter': { code: 'chains' },
+            'Required': 'true',
+            'Description': 'The list of chain import options.'
+        },
+        {
+            'Parameter': { code: 'query_timeout_ms' },
+            'Required': 'false',
+            'Description': 'Timeout when query from provider.'
+        }
+    ]}
+/>
+
+The parameter list for `AssetChainImportOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'chain_id' },
+            'Required': 'true',
+            'Description': 'The chain id.'
+        },
+        {
+            'Parameter': { code: 'tx_hashes' },
+            'Required': 'true',
+            'Description': 'The list of transactions hash to import.'
+        }
+    ]}
+/>
+
+## balance
+
+Query account total balance.
+
+```rust
+use mystiko_protos::api::scanner::v1::{BalanceRequest, BalanceResponse};
+use mystiko_protos::core::scanner::v1::BalanceOptions;
+use mystiko_lib::scanner::balance;
+use mystiko_protos::api::v1::api_response;
+
+let options = BalanceOptions::builder().chain_ids(vec![11155111u64]).build();
+let request = BalanceRequest::builder().options(options).build();
+let response = balance(request);
+let assets = match response.result {
+    Some(api_response::Result::Data(data)) => match BalanceResponse::try_from(data) {
+        Ok(assets) => assets,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+The parameter list for `BalanceOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'with_spent' },
+            'Required': 'false',
+            'Description': 'Whether to include spent transactions.'
+        },
+        {
+            'Parameter': { code: 'shielded_addresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to scan.'
+        },
+        {
+            'Parameter': { code: 'chain_ids' },
+            'Required': 'false',
+            'Description': 'The list of chain IDs to scan.'
+        },
+        {
+            'Parameter': { code: 'asset_symbols' },
+            'Required': 'false',
+            'Description': 'The list of asset symbols to scan.'
+        },
+        {
+            'Parameter': { code: 'contract_addresses' },
+            'Required': 'false',
+            'Description': 'The list of contract addresses to scan.'
+        },
+        {
+            'Parameter': { code: 'bridge_types' },
+            'Required': 'false',
+            'Description': 'The list of bridge types to scan.'
+        }
+    ]}
+/>
+
+## assets
+
+Query account assets details.
+
+```rust
+use mystiko_protos::api::scanner::v1::{AssetsRequest, AssetsResponse};
+use mystiko_protos::core::scanner::v1::AssetsOptions;
+use mystiko_lib::scanner::assets;
+use mystiko_protos::api::v1::api_response;
+
+let options = AssetsOptions::builder().shielded_addresses(vec![shielded_address]).build();
+let request = AssetsRequest::builder().options(options).build();
+let response = assets(request);
+let assets = match response.result {
+    Some(api_response::Result::Data(data)) => match AssetsResponse::try_from(data) {
+        Ok(assets) => assets,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
+
+The parameter list for `AssetsOptions`:
+<Table
+    headers={["Parameter", "Required", "Description"]}
+    data={[
+        {
+            'Parameter': { code: 'shielded_addresses' },
+            'Required': 'false',
+            'Description': 'The list of shielded addresses to scan.'
+        }
+    ]}
+/>
+
+## chain_assets
+
+Query account assets details by chain.
+
+```rust
+use mystiko_protos::api::scanner::v1::{ChainAssetsRequest, ChainAssetsResponse};
+use mystiko_protos::core::scanner::v1::AssetsOptions;
+use mystiko_lib::scanner::chain_assets;
+use mystiko_protos::api::v1::api_response;
+
+let options = AssetsOptions::builder().shielded_addresses(vec![shielded_address]).build();
+let request = ChainAssetsRequest::builder().options(options).build();
+let response = chain_assets(request);
+let assets = match response.result {
+    Some(api_response::Result::Data(data)) => match ChainAssetsResponse::try_from(data) {
+        Ok(assets) => assets,
+        Err(e) => return Err(anyhow!(format!("Failed to parse response: {}", e))),
+    },
+    Some(api_response::Result::ErrorMessage(error)) => {
+        return Err(anyhow!(format!("API error: {}", error)));
+    }
+    None => {
+        return Err(anyhow!("No result found in response"));
+    }
+};
+```
