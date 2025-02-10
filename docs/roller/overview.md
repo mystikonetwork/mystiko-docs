@@ -8,5 +8,5 @@ This document provides an overview of the Roller launch methods and configuratio
 
 - [Config](./config):
   Configuration of Mystiko Roller.
-- [Run](./Run):
+- [Run](./run):
   How to Run Roller.
