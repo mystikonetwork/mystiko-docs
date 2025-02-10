@@ -58,7 +58,7 @@ docker build -t mystiko/roller -f docker/Dockerfile .
 3. Prepare the configuration file `roller.json`, put `roller.json` in the `$(pwd)/config` directory.
 2. Start the Docker container with the appropriate configurations.
 ```Shell
-docker run -d --name ${name} \
+docker run -d --name roller \
   -v "$(pwd)/config:/home/mystiko-miner/roller/config" \
   -v "$(pwd)/data:/home/mystiko-miner/roller/data" \
   -v "$(pwd)/circuits:/home/mystiko-miner/roller/circuits" \
