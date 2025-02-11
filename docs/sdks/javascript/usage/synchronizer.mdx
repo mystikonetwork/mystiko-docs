@@ -1,0 +1,36 @@
+---
+title: Synchronizer
+---
+import Table from "../../../components/Table";
+
+The Synchronizer helps you synchronize on-chain data to the local environment.
+
+## run
+
+Run synchronization.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const status = await mystiko.synchronizer?.run({ walletPassword: 'P@assword', timeoutMs: 500, noPacker: false, skipAccountScan: true });
+```
+
+## schedule
+
+Run synchronization schedule.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+await mystiko.synchronizer?.schedule({ walletPassword: 'P@assword', noPacker: false, skipAccountScan: true });
+```
+
+## cancelSchedule
+
+Cancel synchronization schedule.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+await mystiko.synchronizer?.cancelSchedule();
+```

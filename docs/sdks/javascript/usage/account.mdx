@@ -1,0 +1,80 @@
+---
+title: Account
+---
+import Table from '../../../components/Table';
+
+The account module provides a series of methods related to Mystiko accounts.
+
+## create
+Create an Account.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const account = await mystiko.accounts?.create("P@ssword", { name: 'My Account', scanSize: 0 });
+```
+
+## count
+Query the number of accounts in the wallet based on specific conditions.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const counter = await mystiko.accounts?.count({ selector: { id: { $ne: account.id } } });
+const total = await mystiko.accounts?.count();
+```
+
+## find
+Query accounts based on specific conditions.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const account = await mystiko.accounts?.find({ selector: { id: { $ne: account.id } } });
+const allAccounts = await mystiko.accounts?.find();
+```
+
+### findOne
+Query an account by its unique identifier.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const account = mystiko.accounts?.findOne('accountId');
+```
+
+### update
+Update an account by its unique identifier.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const account = await mystiko.accounts?.update('P@asswrd', 'accountId', { name: newName });
+```
+
+### encrypt
+Update the encryption of an account.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const account = await mystiko.accounts?.encrypt(oldPassword, newPassword);
+```
+
+## export
+Export the secret key of an account by its unique identifier.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const key = await mystiko.accounts?.export('walletPassword', "accountId");
+```
+
+## scan
+Scan commitment for account
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const key = await mystiko.accounts?.scan('walletPassword', "accountId");
+```
+
+## resetScan
+Reset the scan of an account.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const key = await mystiko.accounts?.resetScan("accountId");
+```

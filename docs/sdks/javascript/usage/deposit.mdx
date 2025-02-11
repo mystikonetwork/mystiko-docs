@@ -1,0 +1,200 @@
+---
+title: Deposit
+---
+
+import Table from "../../../components/Table";
+
+Mystiko Deposit Related APIs.
+
+## quote
+
+Retrieve quote information for a deposit.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+import { BridgeType } from '@mystikonetwork/config';
+
+const depositQuote = await mystiko.deposits?.quote({
+    srcChainId: 11155111,
+    dstChainId: 97,
+    assetSymbol: 'MTT',
+    bridge: BridgeType.TBRIDGE,
+});
+```
+
+`DepositQuoteOptions`:
+
+<Table
+    headers={['Parameter', 'Required', 'Description']}
+    data={[
+        {
+            'Parameter': { code: 'srcChainId' },
+            'Required': 'true',
+            'Description': 'Source chain id.'
+        },
+        {
+            'Parameter': { code: 'dstChainId' },
+            'Required': 'true',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Parameter': { code: 'assetSymbol' },
+            'Required': 'true',
+            'Description': 'Asset symbol.'
+        },
+        {
+            'Parameter': { code: 'bridge' },
+            'Required': 'true',
+            'Description': 'Bridge type.'
+        }
+    ]}
+/>
+
+`DepositQuote` data structure is as follows:
+<Table
+    headers={['Property', 'Type', 'Description']}
+    data={[
+        {
+            'Property': { code: 'minAmount' },
+            'Type': 'number',
+            'Description': 'Minimum amount.'
+        },
+        {
+            'Property': { code: 'maxAmount' },
+            'Type': 'number',
+            'Description': 'Maximum amount.'
+        },
+        {
+            'Property': { code: 'minRollupFeeAmount' },
+            'Type': 'number',
+            'Description': 'Minimum rollup fee amount.'
+        },
+        {
+            'Property': { code: 'rollupFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Rollup fee asset symbol.'
+        },
+        {
+            'Property': { code: 'minBridgeFeeAmount' },
+            'Type': 'number',
+            'Description': 'Minimum bridge fee amount.'
+        },
+        {
+            'Property': { code: 'bridgeFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Bridge fee asset symbol.'
+        },
+        {
+            'Property': { code: 'minExecutorFeeAmount' },
+            'Type': 'number',
+            'Description': 'Minimum executor fee amount.'
+        },
+        {
+            'Property': { code: 'executorFeeAssetSymbol' },
+            'Type': 'string',
+            'Description': 'Executor fee asset symbol.'
+        },
+        {
+            'Property': { code: 'recommendedAmounts' },
+            'Type': 'number[]',
+            'Description': 'Recommended amounts.'
+        },
+        {
+            'Property': { code: 'isScreeningEnabled' },
+            'Type': 'bool',
+            'Description': 'Is screening enabled.'
+        }
+    ]}
+/>
+
+## summary
+
+Retrieve summary information for a deposit.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const depositSummary = await mystiko.deposits?.summary({
+    srcChainId: 11155111,
+    dstChainId: 97,
+    assetSymbol: 'MTT',
+    bridge: BridgeType.TBRIDGE,
+    amount: 10,
+    rollupFee: 1,
+    bridgeFee: 0.01,
+    executorFee: 0.1,
+    shieldedAddress: account.shieldedAddress,
+});
+```
+
+## create
+
+Create a Deposit request.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const deposit = await mystiko.deposits?.create({
+    srcChainId: 11155111,
+    dstChainId: 97,
+    assetSymbol: 'MTT',
+    bridge: BridgeType.TBRIDGE,
+    amount: 10,
+    rollupFee: 1,
+    bridgeFee: 0.01,
+    executorFee: 0.1,
+    shieldedAddress: account.shieldedAddress,
+    signer: privatKeySigner
+});
+```
+
+## find
+
+Query deposit data using `Filter`.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const deposits = await mystiko.deposits?.find({ selector: { chainId: 97 } });
+```
+
+## findOne
+
+Find a single Deposit record using `Filter`.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const deposits = await mystiko.deposits?.findOne('depositId');
+```
+
+## count
+
+Query the count of data that matches `Filter`.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const counter = await mystiko.deposits?.count({ selector: { chainId: 11155111 } });
+const total = await mystiko.deposits?.count();
+```
+
+## update
+
+Update a Deposit record.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const newDeposit = await mystiko.deposits?.update('depositId', {transactionHash: '0x....'});
+```
+
+## fixStatus
+
+Fix a Deposit status.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const newDeposit = await mystiko.deposits?.fixStatus('depositId');
+```
