@@ -33,7 +33,6 @@ The API is divided into multiple modules, including: `config`, `wallet`, `accoun
 
 _**mystiko must be initialized before using the API.**_
 
-```node
 ## Modules
 
 Links to sections on this page to view detailed method descriptions.

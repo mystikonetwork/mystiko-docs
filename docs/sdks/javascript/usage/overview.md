@@ -18,11 +18,10 @@ try {
   throw error;
 }
 ```
-The API is divided into multiple modules, including: `config`, `wallet`, `account`, `deposit`, `spend`, `synchronizer`. You can obtain the corresponding API object for each module using the following methods:
+The API is divided into multiple modules, including: `config`, `wallet`, `account`, `asset`, `deposit`, `spend`, `synchronizer`. You can obtain the corresponding API object for each module using the following methods:
 
 _**mystiko must be initialized before using the API.**_
 
-```javascript
 ## Modules
 
 Links to sections on this page to view detailed method descriptions.
@@ -36,7 +35,7 @@ Links to sections on this page to view detailed method descriptions.
 - [Asset](./asset):
   Methods for managing asset.
 - [Deposit](./deposit):
-  A series of methods for completing user deposits.
+  Methods for completing user deposits.
 - [Spend](./spend):
   Methods for managing spending.
 - [Synchronizer](./synchronizer):
