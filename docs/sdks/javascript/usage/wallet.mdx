@@ -1,0 +1,159 @@
+---
+title: Wallet
+---
+import Table from "../../../components/Table";
+
+Interfaces for managing the Mystiko wallet, including creating, checking, updating, and exporting operations.
+
+## create
+
+Create a Mystiko Wallet.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const wallet = await mystiko.wallets?.create({ masterSeed: 'deadbeef', password: 'P@ssw0rd' });
+```
+
+## Check
+
+### checkCurrent
+Check current wallet.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const wallet = await mystiko.wallets?.checkCurrent();
+```
+
+### checkPassword
+Check the password of the wallet.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const wallet = await mystiko.wallets?.checkPassword(walletPassword);
+```
+
+## updatePassword
+Update the password of the wallet.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const wallet = await mystiko.wallets?.updatePassword(oldPassword, newPassword);
+```
+
+## exportMasterSeed
+Export the mnemonic phrase of the wallet.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const seed = await mystiko.wallets?.exportMasterSeed(walletPassword);
+```
+
+## fullSynchronization
+Enable or disable full synchronization.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const phrase = await mystiko.wallets?.fullSynchronization('true');
+```
+
+## getFullSynchronizationOptions
+Get the full synchronization options.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const options = await mystiko.wallets?.getFullSynchronizationOptions();
+```
+
+## setFullSynchronizationOptions
+Set the full synchronization options.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+await mystiko.wallets?.setFullSynchronizationOptions({
+    chains: [
+      {
+        chainId: 11155111,
+        name: 'Ethereum Sepolia',
+        assets: [
+          { assetSymbol: 'MTT', enabled: true },
+          { assetSymbol: 'USDT', enabled: true },
+        ],
+        enabled: true,
+      },
+      {
+        chainId: 84532,
+        name: 'Base Sepolia',
+        assets: [{ assetSymbol: 'ETH', enabled: true }],
+        enabled: true,
+      },
+    ],
+  });
+```
+
+
+### FullSynchronizationOptions
+    `FullSynchronizationOptions` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'chains'},
+                'Type': 'FullSynchronizationChainOptions[]',
+                'Description': 'chains full synchronization.'
+            }
+        ]}
+    />
+
+### FullSynchronizationChainOptions
+    `FullSynchronizationChainOptions` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'chainId'},
+                'Type': 'number',
+                'Description': 'chain id.'
+            },
+            {
+                'Property': {code: 'name'},
+                'Type': 'string',
+                'Description': 'chain name.'
+            },
+            {
+                'Property': {code: 'assets'},
+                'Type': 'FullSynchronizationAssetOptions[]',
+                'Description': 'Asset synchronization options.'
+            },
+            {
+                'Property': {code: 'enabled'},
+                'Type': 'bool',
+                'Description': 'Enalbed or disabled.'
+            }
+        ]}
+    />
+
+### FullSynchronizationAssetOptions
+    `FullSynchronizationAssetOptions` data structure is as follows:
+    <Table
+        headers={['Property', 'Type', 'Description']}
+        data={[
+            {
+                'Property': {code: 'assetSymbol'},
+                'Type': 'string',
+                'Description': 'asset symbol.'
+            },
+            {
+                'Property': {code: 'enabled'},
+                'Type': 'bool',
+                'Description': 'Enabled or disabled.'
+            }
+        ]}
+    />

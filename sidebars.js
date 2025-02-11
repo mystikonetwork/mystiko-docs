@@ -110,7 +110,21 @@ export default {
           collapsed: false,
           collapsible: true,
           items: [
-            'sdks/javascript/overview'
+            'sdks/javascript/installation',
+            {
+              type: 'category',
+              label: 'Usage',
+              items: [
+                'sdks/javascript/usage/overview',
+                'sdks/javascript/usage/config',
+                'sdks/javascript/usage/wallet',
+                'sdks/javascript/usage/account',
+                'sdks/javascript/usage/asset',
+                'sdks/javascript/usage/deposit',
+                'sdks/javascript/usage/spend',
+                'sdks/javascript/usage/synchronizer',
+              ]
+            },
           ]
         },
         {

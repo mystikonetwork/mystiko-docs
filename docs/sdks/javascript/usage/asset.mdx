@@ -1,0 +1,89 @@
+---
+title: Asset
+---
+import Table from '../../../components/Table';
+
+Mystiko Asset Related APIs.
+
+## assets
+Get asset information.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const assets = await mystiko.assets?.assets(11155111);
+```
+
+## bridges
+Get asset bridge types.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const bridges = await mystiko.assets?.bridges(11155111, 'mUSD');
+```
+
+## chains
+Get asset chains.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const chains = await mystiko.assets?.chains();
+```
+
+## pools
+Get asset pool contracts information.
+```javascript
+import mystiko from '@mystikonetwork/browser';
+import { BridgeType } from '@mystikonetwork/config';
+
+const pools = await mystiko.assets?.pools(11155111, 'MTT', BridgeType.TBRIDGE);
+```
+
+## balance
+Get asset balance
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const assetBalance = await mystiko.assets?.balance({ asset: 'MTT' });
+```
+
+## balances
+Get asset multiple balance
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const balances = await mystiko.assets?.balances({
+    chainId: 97,
+    assets: ['BNB'],
+    contractAddress: '0xae5009F4B58E6eF25Fee71174A827042c543ac46',
+    shieldedAddress:
+      'EWwpfC6wxg3RA71cHimWonUfSPwZF3hjjHATdzN5hEidjLod3gEy3NNZVC8uXtzrrYPjZXCvNCDm7Pnuyd4hpxkkP',
+    bridgeType: BridgeType.LOOP,
+});
+```
+
+## import
+Import account asset by transaction hash
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const assets = await mystiko.assets?.import({
+    walletPassword: 'P@ssw0rd',
+    chain: [{
+        chainId: 97,
+        txHash: '0x...'
+    }]
+});
+```
+
+## sync
+Sync account asset status
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const status = await mystiko.assets?.sync({
+    walletPassword: 'P@ssw0rd'
+});
+```
+
+
+

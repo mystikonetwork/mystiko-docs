@@ -1,0 +1,118 @@
+---
+title: Spend
+---
+
+import Table from "../../../components/Table";
+
+Mystiko Spend Related APIs.
+
+## quote
+
+Retrieve quote information for a spend.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+import { BridgeType } from '@mystikonetwork/config';
+
+const spendQuote = await mystiko.transactions?.quote({
+    type: TransactionEnum.TRANSFER,
+    chainId: 11155111,
+    assetSymbol: 'MTT',
+    bridgeType: BridgeType.TBRIDGE,
+    version: 2,
+    amount: 6
+});
+```
+
+## summary
+
+Retrieve summary information for a spend.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const spendSummary = await mystiko.transactions?.summary({
+    walletPassword: 'P@assw0rd',
+    type: TransactionEnum.TRANSFER,
+    chainId: 11155111,
+    assetSymbol: 'MTT',
+    bridgeType: BridgeType.TBRIDGE,
+    version: 2,
+    shieldedAddress: 'shieldedAddress',
+    amount: 6,
+    rollupFee: 0.1,
+    signer: privateKeySigner,
+});
+```
+
+## create
+
+Create a Spend request.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const spend = await mystiko.transactions?.create({
+    walletPassword: 'P@assw0rd',
+    type: TransactionEnum.TRANSFER,
+    chainId: 11155111,
+    assetSymbol: 'MTT',
+    bridgeType: BridgeType.TBRIDGE,
+    version: 2,
+    shieldedAddress: 'shieldedAddress',
+    amount: 6,
+    rollupFee: 0.1,
+    signer: privateKeySigner,
+});
+```
+
+## find
+
+Query spend data using `Filter`.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const spends = await mystiko.transactions?.find({ selector: { chainId: 97 } });
+```
+
+## findOne
+
+Find a single Spend record using `Filter`.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const spends = await mystiko.transactions?.findOne('spendId');
+```
+
+## count
+
+Query the count of data that matches `Filter`.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const counter = await mystiko.transactions?.count({ selector: { chainId: 11155111 } });
+const total = await mystiko.transactions?.count();
+```
+
+## update
+
+Update a Spend record.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const newSpend = await mystiko.transactions?.update('spendId', {transactionHash: '0x....'});
+```
+
+## fixStatus
+
+Fix a Spend status.
+
+```javascript
+import mystiko from '@mystikonetwork/browser';
+
+const newSpend = await mystiko.transactions?.fixStatus('spendId');
+```
